@@ -1,0 +1,38 @@
+//Noto Serif TC 標題
+@font-face {
+    font-family: 'Noto Serif TC';
+    src: url('./fonts/NotoSerifTC-Regular.ttf') format('ttf');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Noto Serif TC';
+    src: url('./fonts/NotoSerifTC-Medium.ttf') format('ttf');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Noto Serif TC';
+    src: url('./fonts/NotoSerifTC-Bold.ttf') format('ttf');
+    font-weight: 700;
+}
+
+
+//Noto Sans TC 內文
+@font-face {
+    font-family: 'Noto Sans TC';
+    src: url('./fonts/NotoSansTC-Regular.ttf') format('ttf');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Noto Sans TC';
+    src: url('./fonts/NotoSansTC-Medium.ttf') format('ttf');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Noto Sans TC';
+    src: url('./fonts/NotoSansTC-Bold.ttf') format('ttf');
+    font-weight: 700;
+}
