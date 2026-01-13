@@ -14,4 +14,4 @@ https://www.cjkuo.net/git_log_commit_tag/
 2.BS5樣式調整 all.scss裡面有關鍵字(有任何調整務必要在 variables & all 同步備註)
 
 
-//font size 待更新
+//font size 待更新...
