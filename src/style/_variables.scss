@@ -446,6 +446,7 @@ $gradient: linear-gradient(180deg, rgba($white, .15), rgba($white, 0)) !default;
 //間距
 $spacer: 1rem !default;
 $spacers: (
+  2: $spacer    * .125,
   4: $spacer    * .25,
   8: $spacer    * .5,
   12: $spacer   * .75,
@@ -456,7 +457,9 @@ $spacers: (
   24: $spacer   * 1.5,
   28: $spacer   * 1.75,//
   32: $spacer   * 2,
+  36: $spacer   * 2.25,
   40: $spacer   * 2.5,
+  44: $spacer   * 2.75,
   48: $spacer   * 3,
   52: $spacer   * 3.25,//
   60: $spacer   * 3.75,
@@ -466,7 +469,7 @@ $spacers: (
 
   0: 0,
   1: $spacer    * .25,
-  2: $spacer    * .5,
+  //2: $spacer    * .5,
   3: $spacer        ,
   5: $spacer    * 3,
 ) !default;
@@ -711,6 +714,7 @@ $font-sizes: (
   48: $font-size-base * 3,
   //52: $h52-font-size,
 ) !default;
+
 // scss-docs-end font-sizes
 
 // scss-docs-start headings-variables
