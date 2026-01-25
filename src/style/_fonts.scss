@@ -1,4 +1,10 @@
 //Noto Serif TC 標題
+.text-serif {
+    font-family: "Noto Sans TC";
+    line-height: 1.2;
+    font-weight: 700;
+}
+
 @font-face {
     font-family: 'Noto Serif TC';
     src: url('./fonts/NotoSerifTC-Regular.ttf') format('ttf');
@@ -19,6 +25,12 @@
 
 
 //Noto Sans TC 內文
+.text-sans {
+    font-family: "Noto Sans TC";
+    line-height: 1.5;
+    font-weight: 500;
+}
+
 @font-face {
     font-family: 'Noto Sans TC';
     src: url('./fonts/NotoSansTC-Regular.ttf') format('ttf');

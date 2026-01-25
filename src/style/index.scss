@@ -1,4 +1,41 @@
+
 .test3 {
         font-family: "Noto Sans TC";
         background-color: $primary-100;
         }
+
+
+.bg-01 {
+        background-color: antiquewhite;
+}
+
+.bg-02 {
+        background-color: cadetblue;
+}
+
+.bg-03 {
+        background-color: darkgray;
+}
+
+.bg-04 {
+        background-color: rgb(154, 206, 241);
+}
+
+
+.header-style {
+        padding-top: 24px;
+        padding-bottom: 24px;
+        padding-left: 0px;
+        padding-right: 0px;
+}
+
+.nav-content {
+        font-weight: 700;
+        list-style: none;
+        display: block;
+        display: flex;
+        justify-content: end;
+        gap: 48px;
+        margin-bottom: 0px;
+        
+}
