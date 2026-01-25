@@ -1,4 +1,4 @@
-function BtnEx(){
+function Btn(){
     return(
 
         <>
@@ -27,4 +27,4 @@ function BtnEx(){
     )
 }
 
-export  default BtnEx 
+export  default Btn
