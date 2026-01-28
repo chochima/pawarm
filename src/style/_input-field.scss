@@ -1,0 +1,13 @@
+.email-input {
+    input {
+        padding: 16px;
+        border: 1px solid $primary-500;
+    }
+
+    button {
+        font-size: $h3-font-size;
+        font-weight: 700;
+        color: $white;
+        padding: 12px 44px;
+    }
+}

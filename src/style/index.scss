@@ -23,19 +23,39 @@
 
 
 .header-style {
-        padding-top: 24px;
-        padding-bottom: 24px;
-        padding-left: 0px;
-        padding-right: 0px;
+        padding: 24px 0px;
+}
+
+.footer-style {
+        display: grid;
+        gap: 24px;
+}
+.footer-style h1{
+        line-height: 0px;
+        margin-bottom: 0px;
 }
 
 .nav-content {
+        font-size: $h4-font-size;
         font-weight: 700;
         list-style: none;
         display: block;
         display: flex;
-        justify-content: end;
         gap: 48px;
         margin-bottom: 0px;
+        padding:0px, 0px, 0px, 0px ;
         
 }
+.nav-content li a{
+        color: $gray-700;
+}
+
+.nav-media-logo li a svg{
+        max-width: 40px;
+        max-height: 40px;
+
+
+
+}
+
+

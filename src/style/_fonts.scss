@@ -1,9 +1,23 @@
+//font-weight
+.fw-400 {
+    font-weight: 400;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.fw-700 {
+    font-weight: 700;
+}
+
 //Noto Serif TC 標題
 .text-serif {
     font-family: "Noto Sans TC";
     line-height: 1.2;
     font-weight: 700;
 }
+
 
 @font-face {
     font-family: 'Noto Serif TC';
