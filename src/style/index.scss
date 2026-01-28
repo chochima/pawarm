@@ -1,4 +1,61 @@
+
 .test3 {
         font-family: "Noto Sans TC";
         background-color: $primary-100;
         }
+
+
+.bg-01 {
+        background-color: antiquewhite;
+}
+
+.bg-02 {
+        background-color: cadetblue;
+}
+
+.bg-03 {
+        background-color: darkgray;
+}
+
+.bg-04 {
+        background-color: rgb(154, 206, 241);
+}
+
+
+.header-style {
+        padding: 24px 0px;
+}
+
+.footer-style {
+        display: grid;
+        gap: 24px;
+}
+.footer-style h1{
+        line-height: 0px;
+        margin-bottom: 0px;
+}
+
+.nav-content {
+        font-size: $h4-font-size;
+        font-weight: 700;
+        list-style: none;
+        display: block;
+        display: flex;
+        gap: 48px;
+        margin-bottom: 0px;
+        padding:0px, 0px, 0px, 0px ;
+        
+}
+.nav-content li a{
+        color: $gray-700;
+}
+
+.nav-media-logo li a svg{
+        max-width: 40px;
+        max-height: 40px;
+
+
+
+}
+
+
