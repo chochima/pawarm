@@ -3,6 +3,7 @@
 @import 'bootstrap/scss/bootstrap';
 
 
+
 //BS5 關鍵字//
 //顏色
 //顏色-主色 301
@@ -13,8 +14,14 @@
 //圓角控制 614
 
 
+
+
 /// 專案樣式
 @import './fonts.scss';
 @import './index.scss';
+@import './button.scss';
+@import './Lable.scss';
+
+
 @import './input-field.scss';
 
