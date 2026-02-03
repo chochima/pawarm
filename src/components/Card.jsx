@@ -2,6 +2,10 @@ import { useState,useEffect } from "react";
 import  axios from 'axios'
 import love from '../image/love.svg'
 import loveFill from '../image/love-fill.svg'
+//import animalCard from '../image/Animal-Card.svg'
+import AnimalCard from '../image/Animal-Card.svg?react';
+
+
 
 
 
@@ -10,6 +14,7 @@ const{VITE_PATH,VITE_URL}=import.meta.env;
 export default function ProductCard() {
   const [favorites, setFavorites] = useState([]);
   const [products, setProducts] = useState([]);
+  const [hover, setHover] = useState(false);
 
 
   const toggleFavorite = (id) => {
@@ -44,8 +49,8 @@ export default function ProductCard() {
         {
           products.map((product)=>{
              return(
-              <div className="col-6 col-md-3 g-12" key={product.id}>
-                <div className="card product-card" style={{ maxWidth: 320 }}>
+              <div className="col-6 col-md-3 g-12 custom-card" key={product.id}>
+                <div className="card product-card custom-card-bg" style={{ maxWidth: 320 }}>
       {/* 圖片區 */}
       <div className="position-relative ">
         {/* 標籤 */}
@@ -57,7 +62,7 @@ export default function ProductCard() {
         {/* 愛心 */}
         <button
           type="button"
-          className="position-absolute top-0 end-0 m-3 border border-0"
+          className="position-absolute top-0 end-0 m-3 bg-transparent border-0"
           onClick={() => toggleFavorite(product.id)}
         >
           {favorites.includes(product.id) ? <img src={loveFill} alt="lovefill" />:<img src={love} alt="love" /> }
@@ -74,7 +79,7 @@ export default function ProductCard() {
       {/* 內容 */}
       <div className="card-body">
         <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
-        <p className="fw-bold mb-16 fs-20 text-gray-500 ">{product.agency}</p>
+        <p className="fw-bold mb-16 fs-14 text-gray-500 ">{product.agency}</p>
 
         <div className="mb-3">
           <span className="fw-bold fs-24">${product.origin_price}</span>
@@ -91,6 +96,13 @@ export default function ProductCard() {
           })
         }
       </div>
+    </div>
+    <div
+      className="custom-card-animal"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <AnimalCard fill={hover ? "#f0f5ff" : "#ffffff"} />
     </div>
     
     </>
