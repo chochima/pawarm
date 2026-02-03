@@ -28,3 +28,13 @@
 .custom-card-bg:hover{
    background-color:$primary-50 ; 
 }
+
+
+.custom-card-animal .bg {
+  color: #ffffff;       /* 初始白色 */
+  transition: color 0.3s;
+}
+
+.custom-card-animal:hover .bg {
+  color: $primary-50;       /* hover 变色 */
+}

@@ -2,6 +2,10 @@ import { useState,useEffect } from "react";
 import  axios from 'axios'
 import love from '../image/love.svg'
 import loveFill from '../image/love-fill.svg'
+//import animalCard from '../image/Animal-Card.svg'
+import AnimalCard from '../image/Animal-Card.svg?react';
+
+
 
 
 
@@ -10,6 +14,7 @@ const{VITE_PATH,VITE_URL}=import.meta.env;
 export default function ProductCard() {
   const [favorites, setFavorites] = useState([]);
   const [products, setProducts] = useState([]);
+  const [hover, setHover] = useState(false);
 
 
   const toggleFavorite = (id) => {
@@ -91,6 +96,13 @@ export default function ProductCard() {
           })
         }
       </div>
+    </div>
+    <div
+      className="custom-card-animal"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <AnimalCard fill={hover ? "#f0f5ff" : "#ffffff"} />
     </div>
     
     </>
