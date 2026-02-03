@@ -6,14 +6,14 @@ import { createRoot } from 'react-dom/client'
 import './style/all.scss'
 import 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import ProductCard from './components/Card';
 
 
-import Label from './components/Label';
 
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Label/>
+    <ProductCard/>
   </StrictMode>,
 )
