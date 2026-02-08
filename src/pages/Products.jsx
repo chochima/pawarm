@@ -9,8 +9,8 @@ const{VITE_PATH,VITE_URL}=import.meta.env;
 
 const Products=()=>{
      const [favorites, setFavorites] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [hover, setHover] = useState(false);
+     const [products, setProducts] = useState([]);
+    
 
 
   const toggleFavorite = (id) => {
@@ -34,6 +34,22 @@ const Products=()=>{
     }
 
   }
+
+
+  const addCart= async(id, qty = 1)=>{
+    try{
+        const data={
+            product_id: id,
+            qty,
+        }
+        await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`,{data});
+        alert("已加入");
+
+
+    }catch(err){
+        console.log("加入購物車失敗")
+    }
+   }
   useEffect(()=>{
     getProducts();
   },[])
@@ -81,7 +97,7 @@ const Products=()=>{
                   <del className="text-muted fw-normal ms-2 fs-20">${product.price}</del>
                 </div>
         
-                <button className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold">
+                <button className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold" onClick={() => addCart(product.id)}>
                   加入購物車
                 </button>
               </div>
