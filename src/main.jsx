@@ -6,14 +6,14 @@ import { createRoot } from 'react-dom/client'
 import './style/all.scss'
 import 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import ProductCard from './components/Card';
+
+import { RouterProvider ,createHashRouter} from 'react-router';
+import routes from './router';
 
 
-
+const router=createHashRouter(routes);
 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <ProductCard/>
-  </StrictMode>,
+ <RouterProvider router={router}/>
 )

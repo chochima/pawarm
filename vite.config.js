@@ -8,7 +8,7 @@ export default defineConfig({
   base:process.env.NODE_ENV === 'production' ? '/pawarm/' : '/',
   plugins: [react(),
      svgr({
-      exportAsDefault: true, // 👈 就是放這裡
+      exportAsDefault: true, 
     }),
   ],
 })
