@@ -1,10 +1,11 @@
 import React from "react";
 
 const { useState } = React;
-export default function AppTest() {
+export default function Home() {
 
   return (<>
   {
+
     //HERO CTA
   <section className="hero-bg-img">
     <div className="container">

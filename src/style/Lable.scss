@@ -8,3 +8,33 @@
 .text-gray-900{
     color: $gray-900 ;
 }
+
+/* 自定義卡片樣式 */
+.custom-card {
+  transition: background-color 0.3s ease, transform 0.2s ease; /* 讓變色平滑 */
+  cursor: pointer;
+  background-color: transparent; /* 預設背景透明 */
+}
+
+/* 滑鼠移入時的狀態 */
+.custom-card:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* 淡淡的灰色 */
+  /* 或者你想變更明顯的顏色 */
+  /* background-color: #f8f9fa; */
+  
+  transform: translateY(-5px); /* 選配：讓卡片輕微向上浮起，更有互動感 */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 選配：增加陰影 */
+}
+.custom-card-bg:hover{
+   background-color:$primary-50 ; 
+}
+
+
+.custom-card-animal .bg {
+  color: #ffffff;       /* 初始白色 */
+  transition: color 0.3s;
+}
+
+.custom-card-animal:hover .bg {
+  color: $primary-50;       /* hover 变色 */
+}

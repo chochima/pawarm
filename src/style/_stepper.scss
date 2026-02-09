@@ -1,0 +1,26 @@
+/* 1. 控制 Stepper 的整體寬度，不要讓它撐滿全螢幕 */
+.stepper-wrapper {
+  max-width: 500px; /* 這裡可以調整你想要的總長度 */
+  margin: 0 auto;   /* 置中 */
+  position: relative;
+}
+
+/* 2. 控制線的位置與長度 */
+.stepper-line {
+  position: absolute;
+  /* 調整 top 值：如果圓圈直徑 40px，top 20px 就正好在圓圈中心 */
+  top: 20px; 
+  /* 縮短長度：left 和 right 給予數值，讓線不要碰到最邊邊 */
+  left: 10%; 
+  right: 10%;
+  height: 2px;
+  background-color: #dee2e6; /* 淺灰色 */
+  z-index: -1; /* 確保線在圓圈後面 */
+}
+.bg-brown {
+  background-color: #B08850 !important;
+}
+
+.text-brown {
+  color: #B08850 !important;
+}
