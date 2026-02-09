@@ -1,0 +1,10 @@
+.logos {
+    img {
+        filter: grayscale(100%);       // 初始灰白
+        transition: filter 0.3s ease;  // 平滑過渡
+
+    &:hover {
+      filter: grayscale(0%);       // 滑鼠移上去變彩色
+    }
+    }
+}

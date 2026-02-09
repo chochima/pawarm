@@ -1,12 +1,12 @@
 
 .test3 {
         font-family: "Noto Sans TC";
-          background-color: $primary-100;
+        background-color: $primary-100;
         }
 
 
 .bg-01 {
-        background-color: antiquewhite;
+        background-color: rgb(243, 188, 117);
 }
 
 .bg-02 {
@@ -53,9 +53,71 @@
 .nav-media-logo li a svg{
         max-width: 40px;
         max-height: 40px;
-
-
-
 }
+
+.hero-bg-img {
+        background-image: url("./src/image/hero-web.png");
+        background-size: cover;       /* 滿版且不變形 */
+        background-position: center;  /* 置中 */
+
+        width: 100vw;
+        padding: 120px 0px 160px 0px;
+}
+
+.milestone-section-bg {
+        width: 100vw;
+        background-color: $primary-50;
+        padding: 120px 0; 
+}
+
+
+
+
+.track-bg-img {
+        background-image: url("./src/image/track-section.png");
+        background-size: cover;       /* 滿版且不變形 */
+        background-position: center;  /* 置中 */
+
+        width: 100vw;
+        padding: 120px 0px;
+}
+
+
+.map-bg-img {
+        background-image: url("./src/image/map-bg.png");
+        background-size: cover;       /* 滿版且不變形 */
+        background-position: center;  /* 置中 */
+
+        width: 100vw;
+        padding: 120px 0px;
+}
+
+.map-icon {
+        display: flex;
+        align-items: center;
+}
+
+.map-content {
+        display: flex;
+        flex-wrap: wrap;
+        padding-bottom: 12px;
+
+        img {
+        max-width: 48px;
+        max-height: 48px;
+        margin-right: 6px;
+        }
+
+        p {
+        font-size: 20px;
+        
+        margin-bottom: 0px;
+        color: $primary-500;
+
+        display: flex;
+        flex-wrap: wrap;
+        }
+}
+
 
 

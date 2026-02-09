@@ -7,6 +7,10 @@ import './style/all.scss'
 import 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import ProductCard from './components/Card';
+import AppTest from './pages/index';
+import ImgUpload from './components/ImgUpload';
+import Longin from './pages/Longin';
+import ImgLibrary from './components/ImgLibrary';
 
 
 
@@ -14,6 +18,14 @@ import ProductCard from './components/Card';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ProductCard/>
+    {
+    //正確註釋的寫法 <ProductCard/>
+    //
+  }
+    
+    <AppTest/>
+    <ImgUpload/>
+    <ImgLibrary/>
+    
   </StrictMode>,
 )
