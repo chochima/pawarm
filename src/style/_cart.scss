@@ -1,0 +1,70 @@
+.text-gray-500 {
+    color: $gray-500;
+}
+.text-gray-900 {
+    color: $gray-900;
+}
+.bg-gray-50 {
+    background-color: $gray-50;
+}
+
+/* 設定 Swiper 分頁點的容器位置 */
+.custom-swiper .swiper-pagination {
+  bottom: 0px !important;
+}
+
+/* 未選中的點點 */
+.custom-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #d1d1d1; /* 灰色 */
+  opacity: 1;
+}
+
+/* 選中的點點：變成金色外圈 */
+.custom-swiper .swiper-pagination-bullet-active {
+  background: #b68d4c !important; /* 你的金色 */
+  outline: 2px solid #b68d4c;
+  outline-offset: 3px;
+  margin: 0 8px !important; /* 增加一點間距讓外圈不擠 */
+}
+
+/* 你的金邊按鈕與 Badge */
+.btn-outline-gold {
+  border-color: #b68d4c;
+  color: #b68d4c;
+}
+.btn-outline-gold:hover {
+  background-color: #b68d4c;
+  color: white;
+}
+.bg-gold-light {
+  background-color: #e2d1b3;
+}
+
+
+/* Logo 容器，確保高度一致且置中 */
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* 固定高度讓排版整齊 */
+  padding: 10px;
+}
+
+/* 初始狀態：黑白 + 半透明 */
+.partner-logo {
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: all 0.5s ease; /* 緩慢變色效果 */
+  max-height: 80px; /* 控制 Logo 不要太大 */
+  width: auto;
+  cursor: pointer;
+}
+
+/* Hover 狀態：恢復原色 + 完全顯示 + 微微放大 */
+.partner-logo:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.08);
+}

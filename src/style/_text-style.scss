@@ -19,3 +19,28 @@
     height: 2px;
     background-color: $primary-500;
 }
+
+
+
+.title-text-cart {
+    font-family: "Noto Serif TC" ;
+    font-size: $font-size-base * 3 ;
+    font-weight: 700;
+    line-height: 1.2;
+
+    padding-bottom: $spacer * 2;
+    //border-bottom: 2px solid $primary-500;
+
+    color: $primary-500;
+    position: relative; // 一定要有
+}
+
+.title-text-cart::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 150px;          // 控制長度
+    height: 2px;
+    background-color: $primary-500;
+}
