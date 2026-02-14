@@ -2,9 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import  axios from 'axios'
 import love from '../image/love.svg'
 import loveFill from '../image/love-fill.svg'
-import * as bootstrap from "bootstrap";
+
+
 import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
+import { NavLink } from "react-router";
+
+import 台北市立動物園 from '../image/state=hover, type=taipei zoo.png';
+
 
 // 1. 引入 Swiper React 組件
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -145,9 +150,8 @@ const toggleFavorite = (id) => {
     <div className="col-md-9">
       
       <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護清單</div>
-   
 
-    <div className="card-body">
+      <div className="card-body d-none d-md-block">
       <table className="table align-middle">
         <thead className="">
           <tr>
@@ -226,7 +230,70 @@ const toggleFavorite = (id) => {
         </tbody>
 
       </table>
+     </div>
+     {/* 手機版*/}
+     <div className="d-md-none">
+  {cart.carts.map((item) => (
+    <div key={item.id} className="py-3 border-bottom">
+      <div className="d-flex gap-3">
+        {/* 左側：商品圖片 */}
+        <div style={{ width: '80px', height: '80px' }}>
+          <img 
+            src={item.product.imageUrl} 
+            className="w-100 h-100 object-fit-cover rounded" 
+            alt={item.product.title} 
+          />
+        </div>
+
+        {/* 右側：標題、類別與操作按鈕 */}
+        <div className="flex-grow-1">
+          <div className="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 className="fw-bold mb-1">{item.product.title}</h6>
+              <p className="text-muted small mb-0">{item.product.agency}</p>
+            </div>
+            {/* 愛心與垃圾桶按鈕 */}
+            <div className="d-flex gap-3 text-muted">
+              <i className="bi bi-heart" style={{ cursor: 'pointer' }}></i>
+              <i 
+                className="bi bi-trash" 
+                style={{ cursor: 'pointer' }}
+                onClick={() => deleteCart(item.id)}
+              ></i>
+            </div>
+          </div>
+
+          {/* 下方：數量控制與金額 */}
+          <div className="d-flex justify-content-between align-items-center mt-3">
+             <div className="d-flex align-items-center justify-content-center">
+  <button 
+    className="btn btn-outline-dark btn-sm rounded-circle"
+    style={{ width: '30px', height: '30px', padding: 0 }}
+    onClick={() => updateCart(item.id, item.product_id, item.qty - 1)}
+    disabled={item.qty <= 1 || isUpdating === item.id}
+  >
+    <i className="bi bi-dash"></i>
+  </button>
+  
+  <span className="mx-3 fw-bold">{item.qty}</span>
+  
+  <button 
+    className="btn btn-outline-dark btn-sm rounded-circle"
+    style={{ width: '30px', height: '30px', padding: 0 }}
+    onClick={() => updateCart(item.id, item.product_id, item.qty + 1)}
+    disabled={isUpdating === item.id}
+  >
+    <i className="bi bi-plus"></i>
+  </button>
+</div>
+            <span className="fw-bold">${item.total.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
     </div>
+  ))}
+    </div>
+
     </div>
     <div className="col-md-3">
       <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護計畫</div>
@@ -257,7 +324,7 @@ const toggleFavorite = (id) => {
       <div className="fs-14 text-gray-900">(不含運費)</div>
     </div>
     
-    <div className="fw-bold mb-0 fs-28" style={{ color: '#b68d4c' }}>$3,500</div>
+    <div className="fw-bold mb-0 fs-28" style={{ color: '#b68d4c' }}>${currency(cart?.final_total)}</div>
   </div>
          
         <a className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16  text-center text-decoration-none">下一步</a>
@@ -265,6 +332,7 @@ const toggleFavorite = (id) => {
       </div>
     </div>
   </div>
+  
 </div>
 <div className="bg-gray-50">
   <div className="container ">
@@ -403,15 +471,78 @@ const toggleFavorite = (id) => {
      <div className="fs-36 fw-700 title-text-cart text-black mb-32">瀏覽更多保育機構</div>
      <div className="row">
       <div className="col-lg-9 col-12">
-        <div className="row g-4 g-md-5 align-items-center">
+        <div className="row g-20 g-md-32 align-items-center">
           <div className="col-6 col-md-3">
-              <div className="logo-wrapper">
+              <NavLink className="logo-wrapper">
                 <img 
-                  src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770311598297.png" 
+                  src={台北市立動物園 }
                   alt="台北市立動物園" 
                   className="img-fluid partner-logo" 
                 />
-              </div>
+              </NavLink>
+            </div>
+            <div className="col-6 col-md-3">
+              <NavLink className="logo-wrapper">
+                <img 
+                  src={台北市立動物園 }
+                  alt="台北市立動物園" 
+                  className="img-fluid partner-logo" 
+                />
+              </NavLink>
+            </div>
+            <div className="col-6 col-md-3">
+              <NavLink className="logo-wrapper">
+                <img 
+                  src={台北市立動物園 }
+                  alt="台北市立動物園" 
+                  className="img-fluid partner-logo" 
+                />
+              </NavLink>
+            </div>
+            <div className="col-6 col-md-3">
+              <NavLink className="logo-wrapper">
+                <img 
+                  src={台北市立動物園 }
+                  alt="台北市立動物園" 
+                  className="img-fluid partner-logo" 
+                />
+              </NavLink>
+            </div>
+            <div className="col-6 col-md-3">
+              <NavLink className="logo-wrapper">
+                <img 
+                  src={台北市立動物園 }
+                  alt="台北市立動物園" 
+                  className="img-fluid partner-logo" 
+                />
+              </NavLink>
+            </div>
+            <div className="col-6 col-md-3">
+              <NavLink className="logo-wrapper">
+                <img 
+                  src={台北市立動物園 }
+                  alt="台北市立動物園" 
+                  className="img-fluid partner-logo" 
+                />
+              </NavLink>
+            </div>
+            <div className="col-6 col-md-3">
+              <NavLink className="logo-wrapper">
+                <img 
+                  src={台北市立動物園 }
+                  alt="台北市立動物園" 
+                  className="img-fluid partner-logo" 
+                />
+              </NavLink>
+            </div>
+            <div className="col-6 col-md-3">
+              <NavLink className="logo-wrapper">
+                <img 
+                  src={台北市立動物園 }
+                  alt="台北市立動物園" 
+                  className="img-fluid partner-logo" 
+                />
+              </NavLink>
             </div>
       </div>
       </div>
