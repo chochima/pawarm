@@ -1,52 +1,59 @@
 import { useState, useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
-import axios from "axios";
+import  axios from 'axios'
+import love from '../image/love.svg'
+import loveFill from '../image/love-fill.svg'
 import * as bootstrap from "bootstrap";
 import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
 
+// 1. 引入 Swiper React 組件
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// 2. 引入 Swiper 核心樣式（沒引的話會排版崩潰）
+import 'swiper/css';
+import 'swiper/css/pagination'; // 如果你有用到 pagination 分頁點
+import 'swiper/css/navigation'; // 如果你有用到左右箭頭
+
+// 3. (選配) 引入你要的功能模組
+import { Pagination, Autoplay } from 'swiper/modules';
+
 const{VITE_PATH,VITE_URL}=import.meta.env;
 
 const Carts=()=>{
- const [loadingCartId, setLoadingCartId] = useState(null);
-  const [loadingProductId, setLoadingProductId] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [product, setProduct] = useState({});
-  const [pagination, setPagination] = useState({});
+  const [isAdding, setIsAdding] = useState(false);
   const [cart, setCart] = useState([]);
-  const [cartQuantity, setCartQuantity] = useState(1);
-  const productModalRef = useRef(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
-
+  const [favorites, setFavorites] = useState([]);
+  const [isUpdating, setIsUpdating] = useState("");
+  const [randomProducts, setRandomProducts] = useState([]);
  
-  const getProducts = async (page = 1) => {
-    try {
-      const res = await axios.get( `${VITE_URL}/v2/api/${VITE_PATH}/products?page=${page}`);
-      setProducts(res.data.products);
-      setPagination(res.data.pagination);
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
 
 
-  const getProduct = async (id) => {
-    setLoadingProductId(id);
-    try {
-      const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/product/${id}`);
-      setProduct(res.data.product);
-    } catch (err) {
-      console.log(err.response.data);
-    } finally {
-      setLoadingProductId(null);
-    }
-  };
+  const getSixRandomProducts = async () => {
+  try {
+    const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/products/all`);
+    const allData = res.data.products;
+
+    // 隨機打亂並取出前 6 個
+    const shuffled = [...allData]
+      .sort(() => 0.5 - Math.random()) // 利用 0.5 產生正負機率來打亂
+      .slice(0, 6); // 切取前 6 筆
+
+    setRandomProducts(shuffled);
+  } catch (err) {
+    console.error("抓取隨機資料失敗", err);
+  }
+};
+
+const toggleFavorite = (id) => {
+  if (favorites.includes(id)) {
+    // 如果已經在清單裡，就濾掉它 (取消收藏)
+    setFavorites(favorites.filter((favId) => favId !== id));
+  } else {
+    // 如果不在清單裡，就加進去 (新增收藏)
+    setFavorites([...favorites, id]);
+  }
+};
+
 
   //購物車
   const getCart = async () => {
@@ -58,40 +65,31 @@ const Carts=()=>{
       console.log(err.response.data);
     }
   };
+  const addCart= async(id, qty = 1)=>{
+    try{
+        const data={
+            product_id: id,
+            qty,
+        }
+        await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`,{data});
+        getCart();
+        alert("已成功加入守護清單！");
+
+
+    }catch(err){
+        console.log("加入購物車失敗")
+    }
+   }
+   const handleAdd = async (id) => {
+  setIsAdding(true);
+  await addCart(id); // 呼叫你原本的 addCart
+  setIsAdding(false);
+};
 
  
-  const addCart = async (id, num) => {
-    setLoadingCartId(id);
-    const data = {
-      product_id: id,
-      qty: num,
-    };
-    try {
-      const res=await axios.post( `${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
-      getCart();
-    } catch (err) {
-      console.log(err.response.data);
-    } finally {
-      setLoadingCartId(null);
-      productModalRef.current.hide();
-      
-    }
-  };
-
-  
   const deleteCart = async (id) => {
     try {
       await axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${id}`);
-      getCart();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
-
- 
-  const deleteCartAll = async () => {
-    try {
-      await axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/carts`);
       getCart();
     } catch (err) {
       console.log(err.response.data);
@@ -127,400 +125,307 @@ const Carts=()=>{
       }
   };
 
-  const openModal = async (id) => {
-    productModalRef.current.show();
-    setCartQuantity(1);
-    getProduct(id);
-  };
 
-  const handleClick = (event, page) => {
-    event.preventDefault();
-    getProducts(page);
-  };
 
   
   useEffect(() => {
-    productModalRef.current = new bootstrap.Modal("#productModal", {
-      keyboard: false,
-    });
-
-    document
-      .querySelector("#productModal")
-      .addEventListener("hide.bs.modal", () => {
-        if (document.activeElement instanceof HTMLElement) {
-          document.activeElement.blur();
-        }
-      });
-
-    getProducts();
     getCart();
+    getSixRandomProducts();
   }, []);
 
   return (
+    <>
     <div className="container my-5">
         <CheckoutStepper />
 
-  {/* Product Modal */}
-  <div className="modal fade" id="productModal" ref={productModalRef}>
-    <div className="modal-dialog modal-lg modal-dialog-centered">
-      <div className="modal-content border-0 shadow">
-        <div className="modal-header">
-          <h5 className="modal-title fw-bold">
-            {product.title}
-          </h5>
-          <button type="button" className="btn-close" data-bs-dismiss="modal" />
-        </div>
-
-        <div className="modal-body">
-          <div className="row g-4">
-            <div className="col-md-6">
-              <img
-                src={product.imageUrl}
-                className="img-fluid rounded"
-                alt={product.title}
-              />
-            </div>
-
-            <div className="col-md-6">
-              <p className="text-muted">{product.description}</p>
-
-              <p>
-                <del className="text-muted">
-                  原價 {currency(product.origin_price)} 元
-                </del>
-              </p>
-
-              <p className="fs-4 fw-bold text-danger">
-                特價 {currency(product.price)} 元
-              </p>
-
-              <div className="d-flex align-items-center gap-2 mt-3">
-                <span className="text-muted">數量</span>
-
-                <button
-                  className="btn btn-outline-secondary btn-sm"
-                  onClick={() =>
-                    setCartQuantity((q) => (q === 1 ? 1 : q - 1))
-                  }
-                >
-                  −
-                </button>
-
-                <input
-                  type="number"
-                  className="form-control text-center"
-                  style={{ width: 80 }}
-                  value={cartQuantity}
-                  min="1"
-                  onChange={(e) => setCartQuantity(Number(e.target.value))}
-                />
-
-                <button
-                  className="btn btn-outline-secondary btn-sm"
-                  onClick={() => setCartQuantity((q) => q + 1)}
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="modal-footer">
-          <button
-            className="btn btn-danger px-4"
-            onClick={() => addCart(product.id, cartQuantity)}
-          >
-            加入購物車
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {/* 產品列表 */}
-  <div className="card shadow-sm mb-5">
-    <div className="card-body">
-      <table className="table table-hover align-middle">
-        <thead className="table-light small text-muted">
-          <tr>
-            <th width="200">圖片</th>
-            <th>產品名稱</th>
-            <th width="200">價格</th>
-            <th width="180" className="text-center">操作</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {products.map((product) => (
-            <tr key={product.id}>
-              <td>
-                <div
-                  className="rounded"
-                  style={{
-                    height: 100,
-                    backgroundImage: `url(${product.imageUrl})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                />
-              </td>
-
-              <td className="fw-semibold">{product.title}</td>
-
-              <td>
-                <small className="text-muted">
-                  <del>原價 {currency(product.origin_price)}</del>
-                </small>
-                <div className="fw-bold text-danger">
-                  特價 {currency(product.price)}
-                </div>
-              </td>
-
-              <td className="text-center">
-                <div className="btn-group btn-group-sm">
-                  <button
-                    className="btn btn-outline-secondary"
-                    onClick={() => openModal(product.id)}
-                    disabled={loadingProductId === product.id}
-                  >
-                    查看
-                  </button>
-
-                  <button
-                    className="btn btn-outline-danger"
-                    onClick={() => addCart(product.id, 1)}
-                    disabled={loadingCartId === product.id}
-                  >
-                    加入
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-   {/* 分頁 */}
-      <nav aria-label="Page navigation example">
-        <ul className="pagination">
-          <li className="page-item">
-            <a
-              href="/"
-              className={`page-link ${pagination.has_pre ? "" : "disabled"}`}
-              onClick={(event) =>
-                handleClick(event, pagination.current_page - 1)
-              }
-            >
-              <span>&laquo;</span>
-            </a>
-          </li>
-          {[...new Array(pagination.total_pages)].map((_, i) => (
-            <li className="page-item" key={`${i}_page`}>
-              <a
-                className={`page-link ${
-                  i + 1 === pagination.current_page && "active"
-                }`}
-                href="/"
-                onClick={(event) => handleClick(event, i + 1)}
-              >
-                {i + 1}
-              </a>
-            </li>
-          ))}
-          <li className="page-item">
-            <a
-              className={`page-link ${pagination.has_next ? "" : "disabled"}`}
-              onClick={(event) =>
-                handleClick(event, pagination.current_page + 1)
-              }
-              href="/"
-          
-            >
-              <span >&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+   
 
   {/* 購物車 */}
-  <div className="card shadow-sm mb-5">
-    <div className="card-header d-flex justify-content-between align-items-center">
-      <h6 className="mb-0 fw-bold">購物車</h6>
-      <button className="btn btn-outline-danger btn-sm" onClick={deleteCartAll}>
-        清空
-      </button>
-    </div>
+  <div className="row gx-60">
+    <div className="col-md-9">
+      
+      <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護清單</div>
+   
 
     <div className="card-body">
       <table className="table align-middle">
+        <thead className="">
+          <tr>
+            <th width="400">守護清單</th>
+            <th width="120" className="text-start">單價</th>
+            <th width="160" className="text-center">數量</th>
+            <th width="120" className="text-start">小計</th>
+            <th width="150"></th>
+          </tr>
+        </thead>
         <tbody>
           {cart?.carts?.map((item) => (
             <tr key={item.id}>
-              <td width="50">
-                <button
-                  className="btn btn-outline-danger btn-sm"
-                  onClick={() => deleteCart(item.id)}
-                >
-                  ✕
-                </button>
+              <td> {/* 考慮到有圖片和長文字，這欄可以寬一點 */}
+  <div className="d-flex align-items-center">
+    <img 
+      src={item.product.imageUrl} 
+      alt={item.product.title}
+      className="object-fit-cover mr-3"
+      style={{ width: '100px', height: '100px' }} // 固定縮圖大小
+    />
+    <div>
+      <div className="fs-20 lh-base fw-bold">{item.product.title}</div>
+      <div className="fs-16 lh-base fw-400 text-gray-500">{item.product.agency}</div> 
+      {/* 畫面上的 Polar Bears International 可以放在這裡 */}
+    </div>
+  </div>
               </td>
 
-              <td>{item.product.title}</td>
+              <td>${currency(item.product.price)}</td>
 
-              <td width="160">
-                <input
-                  type="number"
-                  className="form-control form-control-sm"
-                  min="1"
-                  value={item.qty}
-                  onChange={(e) =>
-                    updateCart(item.id, item.product_id, Number(e.target.value))
-                  }
-                />
+              <td>
+                <div className="d-flex align-items-center justify-content-center">
+  <button 
+    className="btn btn-outline-dark btn-sm rounded-circle"
+    style={{ width: '30px', height: '30px', padding: 0 }}
+    onClick={() => updateCart(item.id, item.product_id, item.qty - 1)}
+    disabled={item.qty <= 1 || isUpdating === item.id}
+  >
+    <i className="bi bi-dash"></i>
+  </button>
+  
+  <span className="mx-3 fw-bold">{item.qty}</span>
+  
+  <button 
+    className="btn btn-outline-dark btn-sm rounded-circle"
+    style={{ width: '30px', height: '30px', padding: 0 }}
+    onClick={() => updateCart(item.id, item.product_id, item.qty + 1)}
+    disabled={isUpdating === item.id}
+  >
+    <i className="bi bi-plus"></i>
+  </button>
+</div>
               </td>
 
-              <td className="text-end fw-bold">
-                {currency(item.final_total)}
+              <td className="text-start fw-bold">
+                ${currency(item.final_total)}
+              </td>
+
+              <td >
+  <button 
+    className="btn btn-sm text-dark d-flex align-items-center justify-content-end mb-2 w-100"
+    onClick={() => deleteCart(item.id)}
+  >
+    <i className="bi bi-trash3 me-2"></i> 取消守護
+  </button>
+  <button 
+    className="btn btn-sm text-dark d-flex align-items-center justify-content-end w-100"
+    onClick={() => handleMoveToWishlist(item)}
+  >
+    <i className="bi bi-heart me-2"></i> 移至收藏
+  </button>
               </td>
             </tr>
           ))}
         </tbody>
 
-        <tfoot>
-          <tr>
-            <td colSpan="3" className="text-end text-muted">
-              總計
-            </td>
-            <td className="text-end fw-bold">
-              {currency(cart?.final_total)}
-            </td>
-          </tr>
-        </tfoot>
       </table>
     </div>
+    </div>
+    <div className="col-md-3">
+      <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護計畫</div>
+      <div className="bg-gray-50 p-20 d-flex flex-column gap-20">
+        <div className="d-flex  justify-content-between">
+          <div className="fs-18 lh-base fw-500 text-gray-900">商品總額</div>
+          <div className="fs-20 lh-base fw-500 text-gray-900">${currency(cart?.final_total)}</div>
+        </div>
+        <div className="d-flex  justify-content-between">
+          <div className="fs-18 lh-base fw-500 text-gray-900">守護回饋碼</div>
+          <div className="fs-20 lh-base fw-500 text-gray-900">-$150</div>
+        </div>
+        
+        <div className="mb-4">
+          <hr />
+    <small className="text-muted d-block mb-2">輸入守護回饋碼</small>
+    <div className="d-flex justify-content-between align-items-center bg-white p-2 border rounded">
+      <span className="text-muted small">第一次的守護計劃</span>
+      <i className="bi bi-trash text-muted"></i>
+    </div>
+    <hr />
   </div>
 
-  {/* 表單 */}
-  <div className="card shadow-sm my-5">
-  <div className="card-body">
-    <h5 className="fw-bold mb-4">填寫訂單資料</h5>
 
-    <form onSubmit={handleSubmit(onSubmit)} className="row g-3">
-
-      {/* 收件人姓名 */}
-      <div className="col-md-6">
-        <label htmlFor="name" className="form-label">
-          收件人姓名
-        </label>
-        <input
-          id="name"
-          type="text"
-          className="form-control"
-          placeholder="請輸入姓名"
-          {...register("name", { required: "請輸入收件人姓名。" })}
-        />
-        {errors.name && (
-          <small className="text-danger">{errors.name.message}</small>
-        )}
+  <div className="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <div className="fs-18 fw-bold text-gray-900">守護計畫總額</div>
+      <div className="fs-14 text-gray-900">(不含運費)</div>
+    </div>
+    
+    <div className="fw-bold mb-0 fs-28" style={{ color: '#b68d4c' }}>$3,500</div>
+  </div>
+         
+        <a className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16  text-center text-decoration-none">下一步</a>
+  <div className="fs-14 lh-base text-gray-500">✨ 本次消費將贊助 ${currency(cart?.final_total*0.15)} 給保育機構，感謝您的購買</div>
       </div>
-
-      {/* Email */}
-      <div className="col-md-6">
-        <label htmlFor="email" className="form-label">
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          className="form-control"
-          placeholder="請輸入 Email"
-          {...register("email", {
-            required: "請輸入 Email。",
-            pattern: {
-              value: /^\S+@\S+$/i,
-              message: "Email 格式不正確。",
-            },
-          })}
-        />
-        {errors.email && (
-          <small className="text-danger">{errors.email.message}</small>
-        )}
-      </div>
-
-      {/* 電話 */}
-      <div className="col-md-6">
-        <label htmlFor="tel" className="form-label">
-          收件人電話
-        </label>
-        <input
-          id="tel"
-          type="tel"
-          className="form-control"
-          placeholder="請輸入電話"
-          {...register("tel", {
-            required: "請輸入收件人電話。",
-            minLength: {
-              value: 8,
-              message: "電話號碼至少 8 碼。",
-            },
-            pattern: {
-              value: /^\d+$/,
-              message: "僅能輸入數字。",
-            },
-          })}
-        />
-        {errors.tel && (
-          <small className="text-danger">{errors.tel.message}</small>
-        )}
-      </div>
-
-      {/* 地址 */}
-      <div className="col-md-6">
-        <label htmlFor="address" className="form-label">
-          收件人地址
-        </label>
-        <input
-          id="address"
-          type="text"
-          className="form-control"
-          placeholder="請輸入地址"
-          {...register("address", {
-            required: "請輸入收件人地址。",
-          })}
-        />
-        {errors.address && (
-          <small className="text-danger">{errors.address.message}</small>
-        )}
-      </div>
-
-      {/* 留言 */}
-      <div className="col-12">
-        <label htmlFor="message" className="form-label">
-          留言
-        </label>
-        <textarea
-          id="message"
-          className="form-control"
-          rows="3"
-          placeholder="有任何備註請填寫"
-          {...register("message")}
-        />
-      </div>
-
-      {/* 送出 */}
-      <div className="col-12 text-end">
-        <button type="submit" className="btn btn-danger px-5">
-          送出訂單
-        </button>
-      </div>
-
-    </form>
+    </div>
   </div>
 </div>
-
+<div className="bg-gray-50">
+  <div className="container ">
+  <div className=" py-120">
+     <div className="fs-36 fw-700 title-text-cart text-black mb-32">與牠們相遇：「下一位等著您守護的夥伴」</div>
+     <div className="row">
+      <div className="col-lg-9 col-12">
+        {/* 手機版 Swiper 容器 */}
+    <div className="d-md-none">
+      <Swiper 
+     modules={[Pagination]}
+     spaceBetween={16}
+     slidesPerView={1.2} // 關鍵：露出一點點下一張卡片
+     pagination={{ clickable: true }}
+     className="my-5 pb-5 custom-swiper"
+      >
+        {randomProducts.map(product => (
+          <SwiperSlide key={product.id}>
+             <div className="card border-0 shadow-sm">
+                <div className="custom-card">
+                        <div className="card product-card custom-card-bg" >
+              {/* 圖片區 */}
+              <div className="position-relative ">
+                {/* 標籤 */}
+                <div className="position-absolute top-0 start-0 m-2 d-flex gap-2">
+                  <span className="bg-primary-200 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3 ms-3 " >新品</span>
+                  <span className="bg-primary-100 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3" >台灣專屬</span>
+                </div>
+        
+                {/* 愛心 */}
+                <button
+                  type="button"
+                  className="position-absolute top-0 end-0 m-3 bg-transparent border-0"
+                  onClick={() => toggleFavorite(product.id)}
+                >
+                  {favorites.includes(product.id) ? <img src={loveFill} alt="lovefill" />:<img src={love} alt="love" /> }
+                </button>
+               
+        
+                <img
+                  src={product.imageUrl}
+                  className="img-fluid shadow-sm"
+                  alt={product.imageUrl}
+                />
+              </div>
+        
+              {/* 內容 */}
+              <div className="card-body">
+                <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
+                <p className="fw-bold mb-16 fs-14 text-gray-500 ">{product.agency}</p>
+        
+                <div className="mb-3">
+                  <span className="fw-bold fs-24">${product.origin_price}</span>
+                  <del className="text-muted fw-normal ms-2 fs-20">${product.price}</del>
+                </div>
+        
+                <button className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold" onClick={() => 
+                handleAdd(product.id)}
+                disabled={isAdding}>
+                 {isAdding ? (<span className="spinner-border spinner-border-sm" role="status"></span>) : '加入購物車'}
+                </button>
+              </div>
+                         </div>
+                      </div>
+             </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+        {/* 桌機版 Grid 容器 */}
+        <div className="d-none d-md-block">
+          <div className="row g-24">
+          {
+                  randomProducts.map((product)=>{
+                     return(
+                      <div className="col-4 g-12 custom-card" key={product.id}>
+                        <div className="card product-card custom-card-bg" style={{ maxWidth: 320 }}>
+              {/* 圖片區 */}
+              <div className="position-relative ">
+                {/* 標籤 */}
+                <div className="position-absolute top-0 start-0 m-2 d-flex gap-2">
+                  <span className="bg-primary-200 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3 ms-3 " >新品</span>
+                  <span className="bg-primary-100 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3" >台灣專屬</span>
+                </div>
+        
+                {/* 愛心 */}
+                <button
+                  type="button"
+                  className="position-absolute top-0 end-0 m-3 bg-transparent border-0"
+                  onClick={() => toggleFavorite(product.id)}
+                >
+                  {favorites.includes(product.id) ? <img src={loveFill} alt="lovefill" />:<img src={love} alt="love" /> }
+                </button>
+               
+        
+                <img
+                  src={product.imageUrl}
+                  className="img-fluid shadow-sm"
+                  alt={product.imageUrl}
+                />
+              </div>
+        
+              {/* 內容 */}
+              <div className="card-body">
+                <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
+                <p className="fw-bold mb-16 fs-14 text-gray-500 ">{product.agency}</p>
+        
+                <div className="mb-3">
+                  <span className="fw-bold fs-24">${product.origin_price}</span>
+                  <del className="text-muted fw-normal ms-2 fs-20">${product.price}</del>
+                </div>
+        
+                <button className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold" onClick={() => 
+                handleAdd(product.id)}
+                disabled={isAdding}>
+                 {isAdding ? (<span className="spinner-border spinner-border-sm" role="status"></span>) : '加入購物車'}
+                </button>
+              </div>
+                         </div>
+                      </div>
+                     )
+                  })
+                }
+        </div>
+        </div>
+        
+      </div>
+      
+     </div>
+  </div>
 </div>
+</div>
+<div >
+  <div className="container ">
+  <div className=" py-120">
+     <div className="fs-36 fw-700 title-text-cart text-black mb-32">瀏覽更多保育機構</div>
+     <div className="row">
+      <div className="col-lg-9 col-12">
+        <div className="row g-4 g-md-5 align-items-center">
+          <div className="col-6 col-md-3">
+              <div className="logo-wrapper">
+                <img 
+                  src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770311598297.png" 
+                  alt="台北市立動物園" 
+                  className="img-fluid partner-logo" 
+                />
+              </div>
+            </div>
+      </div>
+      </div>
+      <div className="col-3 d-none d-lg-block">
+        </div>
+     </div>
+  </div>
+</div>
+</div>
+
+
+    </>
+    
+
 
   )
 }

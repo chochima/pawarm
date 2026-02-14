@@ -16,31 +16,31 @@ const CheckoutStepper = () => {
 
   <div className="d-flex justify-content-between">
     {/* 步驟 1 */}
-    <div className="text-center" style={{ width: '80px' }}>
-      <div className={`rounded-circle d-flex align-items-center justify-content-center mx-auto 
+    <div className="text-center" style={{ width: '120px' }}>
+      <div className={`rounded-circle d-flex align-items-center justify-content-center mx-auto fs-18 
         ${isStep1 || isStep2 || isStep3 ? 'bg-brown text-white' : 'bg-light text-muted'}`} 
         style={{ width: '40px', height: '40px' }}>1</div>
-      <p className={`mt-2 fs-14 fw-bold ${isStep1 || isStep2 || isStep3 ? 'text-brown' : 'text-muted'}`}>
+      <p className={`mt-2 fs-20 fw-bold lh text-nowrap lh-base ${isStep1 || isStep2 || isStep3 ? 'text-brown' : 'text-muted'}`}>
         確認守護清單
       </p>
     </div>
 
     {/* 步驟 2 ... 依此類推 */}
-    <div className="text-center" style={{ width: '80px' }}>
-      <div className={`rounded-circle d-flex align-items-center justify-content-center mx-auto 
+    <div className="text-center" style={{ width: '120px' }}>
+      <div className={`rounded-circle d-flex align-items-center justify-content-center mx-auto fs-18 
         ${isStep2 || isStep3 ? 'bg-brown text-white' : 'bg-light text-muted'}`} 
         style={{ width: '40px', height: '40px' }}>2</div>
-      <p className={`mt-2 fs-14 fw-bold ${isStep2 || isStep3 ? 'text-brown' : 'text-muted'}`}>
+      <p className={`mt-2 fs-20 fw-bold text-nowrap lh-base ${isStep2 || isStep3 ? 'text-brown' : 'text-muted'}`}>
         填寫安心地址
       </p>
     </div>
 
     {/* 步驟 3 ... 依此類推 */}
-    <div className="text-center" style={{ width: '80px' }}>
-      <div className={`rounded-circle d-flex align-items-center justify-content-center mx-auto 
+    <div className="text-center" style={{ width: '120px' }}>
+      <div className={`rounded-circle d-flex align-items-center justify-content-center mx-auto fs-18 
         ${isStep3 ? 'bg-brown text-white' : 'bg-light text-muted'}`} 
-        style={{ width: '40px', height: '40px' }}>3</div>
-      <p className={`mt-2 fs-14 fw-bold ${isStep3 ? 'text-brown' : 'text-muted'}`}>
+        style={ { width: '40px', height: '40px' }}>3</div>
+      <p className={`mt-2 fs-20 fw-bold text-nowrap lh-base ${isStep3 ? 'text-brown' : 'text-muted'}`}>
         啟動追蹤權限
       </p>
     </div>
