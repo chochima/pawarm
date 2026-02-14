@@ -1,0 +1,45 @@
+.title-underline {
+  position: relative;
+  display: inline-block; 
+  padding-bottom: 24px; 
+
+  &::after {
+    content: ""; 
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    
+    width: 148px;         
+    height: 2px;        
+    background-color: #B28440; 
+    
+  }
+}
+.py-58{
+    padding-top: 58px;
+    padding-bottom: 58px;
+}
+
+.height-360{
+    height: 360px;
+}
+
+.height-240{
+    height: 240px;
+
+}
+
+.test-border{
+    border: 1px solid red;
+}
+
+
+.photo-position{
+    margin-top: 146px;
+    margin-left: 629px;
+}
+
+.love-size{
+    width: 20px;
+    height: 20px;
+}
