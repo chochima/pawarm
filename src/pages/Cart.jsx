@@ -20,9 +20,47 @@ import 'swiper/css/pagination'; // 如果你有用到 pagination 分頁點
 import 'swiper/css/navigation'; // 如果你有用到左右箭頭
 
 // 3. (選配) 引入你要的功能模組
+
 import { Pagination, Autoplay } from 'swiper/modules';
 
 const{VITE_PATH,VITE_URL}=import.meta.env;
+
+// 確保這段程式碼存在，React 才不會說它是 undefined
+const mechanismImages = [
+  {
+    name: '台北市立動物園',
+    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771161922826.png"
+  },
+  {
+    name: 'WildOne 野灣',
+    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771162111383.png"
+  },
+  {
+    name: '保育機構_03.png',
+    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771163906842.png"
+  },
+  {
+    name: '保育機構_04.png',
+    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771163947004.png"
+  },
+  {
+    name: '保育機構_05.png',
+    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771164038605.png"
+  },
+  {
+    name: '保育機構_06.png',
+    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771164084617.png"
+  },
+  {
+    name: '保育機構_07.png',
+    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771164103587.png"
+  },
+  {
+    name: '保育機構_08.png',
+    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771164129948.png"
+  }
+
+];
 
 const Carts=()=>{
   const [isAdding, setIsAdding] = useState(false);
@@ -233,7 +271,7 @@ const toggleFavorite = (id) => {
      </div>
      {/* 手機版*/}
      <div className="d-md-none">
-  {cart.carts.map((item) => (
+  {cart.carts?.map((item) => (
     <div key={item.id} className="py-3 border-bottom">
       <div className="d-flex gap-3">
         {/* 左側：商品圖片 */}
@@ -472,78 +510,18 @@ const toggleFavorite = (id) => {
      <div className="row">
       <div className="col-lg-9 col-12">
         <div className="row g-20 g-md-32 align-items-center">
-          <div className="col-6 col-md-3">
-              <NavLink className="logo-wrapper">
-                <img 
-                  src={台北市立動物園 }
-                  alt="台北市立動物園" 
-                  className="img-fluid partner-logo" 
-                />
-              </NavLink>
-            </div>
-            <div className="col-6 col-md-3">
-              <NavLink className="logo-wrapper">
-                <img 
-                  src={台北市立動物園 }
-                  alt="台北市立動物園" 
-                  className="img-fluid partner-logo" 
-                />
-              </NavLink>
-            </div>
-            <div className="col-6 col-md-3">
-              <NavLink className="logo-wrapper">
-                <img 
-                  src={台北市立動物園 }
-                  alt="台北市立動物園" 
-                  className="img-fluid partner-logo" 
-                />
-              </NavLink>
-            </div>
-            <div className="col-6 col-md-3">
-              <NavLink className="logo-wrapper">
-                <img 
-                  src={台北市立動物園 }
-                  alt="台北市立動物園" 
-                  className="img-fluid partner-logo" 
-                />
-              </NavLink>
-            </div>
-            <div className="col-6 col-md-3">
-              <NavLink className="logo-wrapper">
-                <img 
-                  src={台北市立動物園 }
-                  alt="台北市立動物園" 
-                  className="img-fluid partner-logo" 
-                />
-              </NavLink>
-            </div>
-            <div className="col-6 col-md-3">
-              <NavLink className="logo-wrapper">
-                <img 
-                  src={台北市立動物園 }
-                  alt="台北市立動物園" 
-                  className="img-fluid partner-logo" 
-                />
-              </NavLink>
-            </div>
-            <div className="col-6 col-md-3">
-              <NavLink className="logo-wrapper">
-                <img 
-                  src={台北市立動物園 }
-                  alt="台北市立動物園" 
-                  className="img-fluid partner-logo" 
-                />
-              </NavLink>
-            </div>
-            <div className="col-6 col-md-3">
-              <NavLink className="logo-wrapper">
-                <img 
-                  src={台北市立動物園 }
-                  alt="台北市立動物園" 
-                  className="img-fluid partner-logo" 
-                />
-              </NavLink>
-            </div>
+          {(mechanismImages || []).map((item, index) => (
+  <div className="col-6 col-md-3" key={index}>
+    <NavLink className="logo-wrapper d-flex justify-content-center align-items-center">
+      <img 
+        src={item.imageUrl} 
+        alt={item.name}
+        className="img-fluid partner-logo" 
+        style={{ maxHeight: '80px', width: 'auto', objectFit: 'contain' }}
+      />
+    </NavLink>
+  </div>
+))}
       </div>
       </div>
       <div className="col-3 d-none d-lg-block">
