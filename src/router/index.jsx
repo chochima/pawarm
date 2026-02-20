@@ -6,6 +6,7 @@ import AnimalTracking from "../pages/animal-tracking ";
 import Login from "../pages/Login";
 import Backstage from "../Backstage/Backstage";
 import BackstageProducts from "../Backstage/BackstageProducts";
+import BackstageCoupon from "../Backstage/BackstageCoupon";
 
 
 
@@ -44,6 +45,10 @@ const routes =[
             {
                 path:'products',
                 element:<BackstageProducts/>
+            },
+            {
+                path:'coupon',
+                element:<BackstageCoupon/>
             }
         ]
 

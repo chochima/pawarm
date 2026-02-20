@@ -21,19 +21,22 @@ const  BackstageProducts=()=>{
 
 
     const [modalType, setModalType] = useState("");
-    const [templateData, setTemplateData] = useState({
-    id: "",
-    imageUrl: "",
-    title: "",
-    category: "",
-    unit: "",
-    origin_price: 0,
-    price: 0,
-    description: "",
-    content: "",
-    is_enabled: false,
-    imagesUrl: [],
-  });
+   const [templateData, setTemplateData] = useState({
+  id: "",
+  imageUrl: "",
+  title: "",
+  category: "",
+  unit: "",
+  origin_price: 0,
+  price: 0,
+  description: "",
+  content: ["", "", "", ""], 
+  is_enabled: false,
+  imagesUrl: [],
+  agency: "",
+  animal: "",
+  area: ""
+});
   const navigate = useNavigate();
 
   const openModal = (product, type) => {
@@ -46,9 +49,12 @@ const  BackstageProducts=()=>{
       origin_price: product.origin_price || 0,
       price: product.price || 0,
       description: product.description || "",
-      content: product.content || "",
+      content: product.content || ["", "", "", ""],
       is_enabled: product.is_enabled || false,
       imagesUrl: product.imagesUrl || [],
+      agency: product.agency || "", 
+      animal: product.animal || "",
+      area: product.area || "",
     });
     productModalRef.current.show();
     setModalType(type);
@@ -187,16 +193,26 @@ const  BackstageProducts=()=>{
       const res = await axios.get(
         `${VITE_URL}/v2/api/${VITE_PATH}/admin/products?page=${page}`
       );
-      console.log(res);
+      console.log(res.data.products);
       setProducts(res.data.products);
       setPagination(res.data.pagination);
     } catch (err) {
       console.log(err);
     }
   };
-  const toFrontpage =()=>{
-    navigate("/");
-  }
+  const handleContentChange = (index, value) => {
+  setTemplateData((prev) => {
+    // 1. 先拷貝一份舊的 content 陣列
+    const newContent = [...prev.content];
+    // 2. 更新指定 index 的內容
+    newContent[index] = value;
+    // 3. 回傳更新後的 state
+    return {
+      ...prev,
+      content: newContent
+    };
+  });
+};
   const logout=async()=>{
      try {
       await axios.post(`${VITE_URL}/v2/logout`);
@@ -259,9 +275,15 @@ const  BackstageProducts=()=>{
               </button>
               <button
                 className="btn btn-primary"
-                onClick={() => toFrontpage ()}
+                onClick={() => navigate("/")}
               >
                 首頁
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/backstage/coupon")}
+              >
+                Coupon
               </button>
               <button
                 className="btn btn-primary"
@@ -352,6 +374,7 @@ const  BackstageProducts=()=>{
         onRemoveImage={handleRemoveImage}
         onUpdateProduct={updateProductData}
         onDeleteProduct={delProductData}
+        onContentChange={handleContentChange}
       />
     </>)
 }

@@ -8,7 +8,7 @@ import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
 import { NavLink } from "react-router";
 
-import 台北市立動物園 from '../image/state=hover, type=taipei zoo.png';
+
 
 
 // 1. 引入 Swiper React 組件
@@ -68,6 +68,7 @@ const Carts=()=>{
   const [favorites, setFavorites] = useState([]);
   const [isUpdating, setIsUpdating] = useState("");
   const [randomProducts, setRandomProducts] = useState([]);
+  const [couponCode, setCouponCode] = useState("");
  
 
 
@@ -168,6 +169,32 @@ const toggleFavorite = (id) => {
       }
   };
 
+  // 套用優惠券
+const applyCoupon = async (code) => {
+  try {
+    const res = await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/coupon`, {
+      data: { code }
+    });
+    alert(res.data.message);
+    getCart(); 
+  } catch (err) {
+    alert(err.response?.data?.message || "套用失敗");
+  }
+};
+
+
+const removeCoupon = () => {
+  // 1. 強制讓前端顯示回原價（但不改動 API 資料庫）
+  setCart(prev => ({
+    ...prev,
+    final_total: prev.total // 把折扣後的金額補回原價
+  }));
+  
+  // 2. 讓 UI 切換回「輸入框」模式
+  setCouponCode(""); 
+  
+  alert("已暫時移除優惠（注意：重新整理後可能會恢復）");
+};
 
 
   
@@ -338,22 +365,58 @@ const toggleFavorite = (id) => {
       <div className="bg-gray-50 p-20 d-flex flex-column gap-20">
         <div className="d-flex  justify-content-between">
           <div className="fs-18 lh-base fw-500 text-gray-900">商品總額</div>
-          <div className="fs-20 lh-base fw-500 text-gray-900">${currency(cart?.final_total)}</div>
+          <div className="fs-20 lh-base fw-500 text-gray-900">${currency(cart?.total)}</div>
         </div>
-        <div className="d-flex  justify-content-between">
-          <div className="fs-18 lh-base fw-500 text-gray-900">守護回饋碼</div>
-          <div className="fs-20 lh-base fw-500 text-gray-900">-$150</div>
-        </div>
-        
-        <div className="mb-4">
-          <hr />
-    <small className="text-muted d-block mb-2">輸入守護回饋碼</small>
-    <div className="d-flex justify-content-between align-items-center bg-white p-2 border rounded">
-      <span className="text-muted small">第一次的守護計劃</span>
-      <i className="bi bi-trash text-muted"></i>
+        {cart.final_total !== cart.total && (
+  <div className="d-flex justify-content-between mb-2">
+    <div className="fs-18 lh-base fw-500 text-gray-900">
+      守護回饋碼 
     </div>
-    <hr />
+    <div className="fs-20 lh-base fw-500 ">
+      {/* 計算折扣差額 */}
+      -${Math.round(cart.total - cart.final_total).toLocaleString()}
+    </div>
   </div>
+)}
+        
+       <div className="mb-4">
+  <hr />
+  <div className="text-gray-500 mb-8">輸入守護回饋碼</div>
+  
+  {/* 優惠券 */}
+  {cart.final_total !== cart.total ? (
+    <div className="d-flex justify-content-between align-items-center  px-16 py-8 bg-gray-100  border rounded">
+      <div className="fs-16 lh-base text-gray-300">
+        {cart.carts?.[0]?.coupon?.title || "已套用折扣"}
+      </div>
+      <button 
+        className="btn btn-sm p-0 border-0"
+        onClick={() => removeCoupon()} 
+      >
+        <i className="bi bi-trash text-muted"></i>
+      </button>
+    </div>
+  ) : (
+    /* 如果沒套用，則顯示輸入框 */
+    <div className="input-group input-group-sm">
+      <input 
+        type="text" 
+        className="form-control" 
+        placeholder="請輸入折扣碼" 
+        value={couponCode}
+        onChange={(e) => setCouponCode(e.target.value)}
+      />
+      <button 
+        className="btn btn-outline-dark" 
+        type="button"
+        onClick={() => applyCoupon(couponCode)}
+      >
+        套用
+      </button>
+    </div>
+  )}
+  <hr />
+</div>
 
 
   <div className="d-flex justify-content-between align-items-center mb-4">
