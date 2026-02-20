@@ -4,10 +4,15 @@
 .text-gray-900 {
     color: $gray-900;
 }
+.text-gray-300 {
+    color: $gray-300;
+}
 .bg-gray-50 {
     background-color: $gray-50;
 }
-
+.bg-gray-100 {
+    background-color: $gray-100;
+}
 /* 設定 Swiper 分頁點的容器位置 */
 .custom-swiper .swiper-pagination {
   bottom: 0px !important;
