@@ -190,24 +190,20 @@ const  BackstageProducts=()=>{
     return { ...pre, imagesUrl: newImages };
   });
   };
-  // 1. 修改說明圖網址
-const handleContentImageChange = (index, value) => {
+  const handleContentImageChange = (index, value) => {
   setTemplateData((prev) => {
     const newImgs = [...(prev.contentImgsUrl || [])];
     newImgs[index] = value;
     return { ...prev, contentImgsUrl: newImgs };
   });
-};
-
-// 2. 新增說明圖
-const handleAddContentImage = () => {
+  };
+  const handleAddContentImage = () => {
   setTemplateData((prev) => ({
     ...prev,
     contentImgsUrl: [...(prev.contentImgsUrl || []), ""]
   }));
-};
+  };
 
-// 3. 移除說明圖
 const handleRemoveContentImage = (index) => {
   setTemplateData((prev) => ({
     ...prev,
@@ -228,11 +224,8 @@ const handleRemoveContentImage = (index) => {
   };
   const handleContentChange = (index, value) => {
   setTemplateData((prev) => {
-    // 1. 先拷貝一份舊的 content 陣列
     const newContent = [...prev.content];
-    // 2. 更新指定 index 的內容
     newContent[index] = value;
-    // 3. 回傳更新後的 state
     return {
       ...prev,
       content: newContent
