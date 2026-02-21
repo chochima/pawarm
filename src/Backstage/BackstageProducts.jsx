@@ -35,7 +35,8 @@ const  BackstageProducts=()=>{
   imagesUrl: [],
   agency: "",
   animal: "",
-  area: ""
+  area: "",
+  contentImgsUrl: [],
 });
   const navigate = useNavigate();
 
@@ -55,6 +56,7 @@ const  BackstageProducts=()=>{
       agency: product.agency || "", 
       animal: product.animal || "",
       area: product.area || "",
+      contentImgsUrl: product.contentImgsUrl || [],
     });
     productModalRef.current.show();
     setModalType(type);
@@ -188,6 +190,30 @@ const  BackstageProducts=()=>{
     return { ...pre, imagesUrl: newImages };
   });
   };
+  // 1. 修改說明圖網址
+const handleContentImageChange = (index, value) => {
+  setTemplateData((prev) => {
+    const newImgs = [...(prev.contentImgsUrl || [])];
+    newImgs[index] = value;
+    return { ...prev, contentImgsUrl: newImgs };
+  });
+};
+
+// 2. 新增說明圖
+const handleAddContentImage = () => {
+  setTemplateData((prev) => ({
+    ...prev,
+    contentImgsUrl: [...(prev.contentImgsUrl || []), ""]
+  }));
+};
+
+// 3. 移除說明圖
+const handleRemoveContentImage = (index) => {
+  setTemplateData((prev) => ({
+    ...prev,
+    contentImgsUrl: prev.contentImgsUrl.filter((_, i) => i !== index)
+  }));
+};
   const getProductData = async (page = 1) => {
     try {
       const res = await axios.get(
@@ -375,6 +401,9 @@ const  BackstageProducts=()=>{
         onUpdateProduct={updateProductData}
         onDeleteProduct={delProductData}
         onContentChange={handleContentChange}
+        onAddContentImage={handleAddContentImage}
+        onRemoveContentImage={handleRemoveContentImage}
+        onContentImageChange={handleContentImageChange}
       />
     </>)
 }
