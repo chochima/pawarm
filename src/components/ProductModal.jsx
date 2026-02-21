@@ -8,8 +8,10 @@ function ProductModal({
   onRemoveImage,
   onUpdateProduct,
   onDeleteProduct,
-  // 建議新增一個處理 content 陣列變更的 function
-  onContentChange 
+  onContentChange,
+  onAddContentImage,
+  onRemoveContentImage,
+  onContentImageChange,
 }) {
 
   return (
@@ -58,7 +60,7 @@ function ProductModal({
           type="button" 
           className="btn-close small" 
           style={{ fontSize: '0.6rem' }}
-          onClick={() => onRemoveImage(index)} // 傳入 index 以便精準刪除
+          onClick={() => onRemoveImage(index)} 
         ></button>
       </div>
       
@@ -146,7 +148,7 @@ function ProductModal({
                         <textarea id="description" className="form-control" rows="3" value={templateData.description} onChange={onInputChange} />
                       </div>
 
-                      {/* 修改：content 現在是陣列，需要用 map 渲染多個 input */}
+                      
                       <div className="mb-3">
                         <label className="form-label d-flex justify-content-between">
                           守護行動內容 (content 陣列)
@@ -163,10 +165,64 @@ function ProductModal({
                                 onChange={(e) => onContentChange(index, e.target.value)} 
                               />
                             </div>
+                            
+
+
+
                           ))
                         ) : (
                           <textarea id="content" className="form-control" value={templateData.content} onChange={onInputChange} />
                         )}
+                      </div>
+
+                      <div>
+                        {/* contentImgsUrl 區塊 */}
+<div className="mb-3 mt-4">
+  <label className="form-label d-flex justify-content-between align-items-center">
+    <span className="text-primary fw-bold">內容說明圖片 (contentImgsUrl)</span>
+    {templateData.contentImgsUrl?.length < 4 && (
+      <button 
+        type="button" 
+        className="btn btn-outline-primary btn-sm"
+        onClick={onAddContentImage}
+      >
+        + 新增說明圖
+      </button>
+    )}
+  </label>
+
+  <div className="row g-2">
+    {templateData.contentImgsUrl?.map((img, index) => (
+      <div key={index} className="col-md-6">
+        <div className="card shadow-sm border-0 bg-light">
+          <div className="card-body p-2">
+            <div className="d-flex gap-2 mb-2">
+              <input
+                type="text"
+                className="form-control form-control-sm"
+                placeholder={`說明圖 ${index + 1} 網址`}
+                value={img || ""}
+                onChange={(e) => onContentImageChange(index, e.target.value)}
+              />
+              <button 
+                type="button" 
+                className="btn btn-outline-danger btn-sm"
+                onClick={() => onRemoveContentImage(index)}
+              >
+                <i className="bi bi-trash"></i> 刪除
+              </button>
+            </div>
+            {img && (
+              <div className="ratio ratio-16x9">
+                <img src={img} className="rounded object-fit-cover" alt="" />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
                       </div>
 
                       <div className="form-check form-switch mt-4">

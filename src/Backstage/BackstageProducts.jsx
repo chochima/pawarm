@@ -35,7 +35,8 @@ const  BackstageProducts=()=>{
   imagesUrl: [],
   agency: "",
   animal: "",
-  area: ""
+  area: "",
+  contentImgsUrl: [],
 });
   const navigate = useNavigate();
 
@@ -55,6 +56,7 @@ const  BackstageProducts=()=>{
       agency: product.agency || "", 
       animal: product.animal || "",
       area: product.area || "",
+      contentImgsUrl: product.contentImgsUrl || [],
     });
     productModalRef.current.show();
     setModalType(type);
@@ -188,6 +190,26 @@ const  BackstageProducts=()=>{
     return { ...pre, imagesUrl: newImages };
   });
   };
+  const handleContentImageChange = (index, value) => {
+  setTemplateData((prev) => {
+    const newImgs = [...(prev.contentImgsUrl || [])];
+    newImgs[index] = value;
+    return { ...prev, contentImgsUrl: newImgs };
+  });
+  };
+  const handleAddContentImage = () => {
+  setTemplateData((prev) => ({
+    ...prev,
+    contentImgsUrl: [...(prev.contentImgsUrl || []), ""]
+  }));
+  };
+
+const handleRemoveContentImage = (index) => {
+  setTemplateData((prev) => ({
+    ...prev,
+    contentImgsUrl: prev.contentImgsUrl.filter((_, i) => i !== index)
+  }));
+};
   const getProductData = async (page = 1) => {
     try {
       const res = await axios.get(
@@ -202,11 +224,8 @@ const  BackstageProducts=()=>{
   };
   const handleContentChange = (index, value) => {
   setTemplateData((prev) => {
-    // 1. 先拷貝一份舊的 content 陣列
     const newContent = [...prev.content];
-    // 2. 更新指定 index 的內容
     newContent[index] = value;
-    // 3. 回傳更新後的 state
     return {
       ...prev,
       content: newContent
@@ -375,6 +394,9 @@ const  BackstageProducts=()=>{
         onUpdateProduct={updateProductData}
         onDeleteProduct={delProductData}
         onContentChange={handleContentChange}
+        onAddContentImage={handleAddContentImage}
+        onRemoveContentImage={handleRemoveContentImage}
+        onContentImageChange={handleContentImageChange}
       />
     </>)
 }
