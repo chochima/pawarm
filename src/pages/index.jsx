@@ -1,15 +1,24 @@
 import React from "react";
+import ImgUpload from "../components/ImgUpload";
+import ImgLibrary from "../components/ImgLibrary";
+import Activity from "../components/activity";
+import LogoSwiper from "../components/LogoSwiper";
+import CardSingle from "../components/CardSingle";
+import ProductSwiper from "../components/ProductSwiper";
+
+
+
 
 const { useState } = React;
 export default function Home() {
 
   return (<>
   {
-
-    //HERO CTA
+    
+  //HERO CTA
   <section className="hero-bg-img">
     <div className="container">
-    <div className="row px-0">
+    <div className="row px-0 pb-5">
 
       <div className="col-6">
         <h2 className="mb-0 px-0 title-text">
@@ -26,6 +35,20 @@ export default function Home() {
     </div>
   </section>
 
+  }
+
+  {
+    //推薦商品
+    <section className="bgImg-postion">
+      <img className="bgImg-absolute" src="./src/image/bg-product.png" alt="product-BG"/>
+
+      <div className="container">
+        <h2 className="mb-32 px-0 title-text">推薦商品</h2>
+
+        <ProductSwiper />
+      </div>
+    </section>
+    
   }
 
 
@@ -51,14 +74,13 @@ export default function Home() {
 
     </div>
 
-    <div className="row pt-32 bg-01">
-      <div className="col">
-        外部 LOGO 待補區 / + auto swiper
-      </div>
+    <div className="row pt-32">
+      <LogoSwiper />
     </div>
 
     </div>
   </section>
+  
   }
   
 
@@ -82,6 +104,7 @@ export default function Home() {
     </div>
     </div>
   </section>
+  
   }
 
 
@@ -90,10 +113,11 @@ export default function Home() {
   <section className="map-bg-img">
     <div className="container">
 
+
     <div className="row d-flex justify-content-between align-items-center">
 
       <div className="col-6 px-0">
-        <img src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770488942942.png" alt="首頁動物地圖"/>
+        <img className="logos" src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770488942942.png" alt="首頁動物地圖"/>
       </div>
 
       <div className="col-5 px-0">
@@ -134,20 +158,41 @@ export default function Home() {
 
       </div>
 
-    
-
-
     </div>
-
-    
-
-
-
-
 
     </div>
   </section>
+  
+
   }
+
+  {
+    //活動資訊
+    <section className="bgImg-postion">
+      <img className="bgImg-absolute" src="./src/image/bg-activity.png" alt="activity-BG"/>
+
+      <div className="container">
+        <h2 className="mb-32 px-0 title-text">活動資訊​</h2>
+
+        <Activity />
+
+        <button type="button" className="btn text-link text-primary-500 px-0 py-4 fs-18 fw-700">查看全部
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" className="ps-4" viewBox="0 0 15 15"><path fill="currentcolor" d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414Z"/></svg>
+        </button>
+      
+      </div>
+    </section>
+
+  }
+
+
+
+  {/*
+  <ImgUpload />
+  <ImgLibrary/>
+  */}
+  
+
   
   </>);
 }

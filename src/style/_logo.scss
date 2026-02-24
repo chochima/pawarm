@@ -8,3 +8,15 @@
     }
     }
 }
+
+.logo-swiper {
+    img {
+        height: 118px;
+    }
+
+    &:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+        transform: scale(1.03);
+    }
+}
