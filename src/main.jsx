@@ -9,11 +9,16 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import { RouterProvider ,createHashRouter} from 'react-router';
 import routes from './router';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 
 const router=createHashRouter(routes);
 
 
 createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router}/>
+  <Provider store={store}>
+    <RouterProvider router={router}/>
+  </Provider>
+  
 )

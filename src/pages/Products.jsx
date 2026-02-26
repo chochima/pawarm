@@ -1,15 +1,18 @@
 
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router"
 import  axios from 'axios'
 import love from '../image/love.svg'
 import loveFill from '../image/love-fill.svg'
+import { createAsyncGetCart } from "../slice/cartSlice";
 
 const{VITE_PATH,VITE_URL}=import.meta.env;
 
 const Products=()=>{
      const [favorites, setFavorites] = useState([]);
      const [products, setProducts] = useState([]);
+     const dispatch = useDispatch();
     
 
 
@@ -43,6 +46,7 @@ const Products=()=>{
             qty,
         }
         await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`,{data});
+        dispatch(createAsyncGetCart());
         alert("已加入");
 
 

@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { createAsyncGetCart } from "../slice/cartSlice";
 import  axios from 'axios'
 import love from '../image/love.svg'
 import loveFill from '../image/love-fill.svg'
@@ -14,7 +16,7 @@ import { NavLink } from "react-router";
 // 1. 引入 Swiper React 組件
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-// 2. 引入 Swiper 核心樣式（沒引的話會排版崩潰）
+// 2. 引入 Swiper 核心樣式
 import 'swiper/css';
 import 'swiper/css/pagination'; // 如果你有用到 pagination 分頁點
 import 'swiper/css/navigation'; // 如果你有用到左右箭頭
@@ -69,6 +71,11 @@ const Carts=()=>{
   const [isUpdating, setIsUpdating] = useState("");
   const [randomProducts, setRandomProducts] = useState([]);
   const [couponCode, setCouponCode] = useState("");
+
+
+  const dispatch = useDispatch();
+
+  
  
 
 
@@ -116,6 +123,7 @@ const toggleFavorite = (id) => {
             qty,
         }
         await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`,{data});
+        dispatch(createAsyncGetCart());
         getCart();
         alert("已成功加入守護清單！");
 
@@ -134,6 +142,7 @@ const toggleFavorite = (id) => {
   const deleteCart = async (id) => {
     try {
       await axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${id}`);
+      dispatch(createAsyncGetCart());
       getCart();
     } catch (err) {
       console.log(err.response.data);
@@ -149,6 +158,7 @@ const toggleFavorite = (id) => {
         qty,
       };
       await axios.put(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${cartId}`, { data });
+      dispatch(createAsyncGetCart());
       getCart();
     } catch (err) {
       console.log(err.response.data);
