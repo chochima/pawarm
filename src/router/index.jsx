@@ -7,6 +7,7 @@ import Login from "../pages/Login";
 import Backstage from "../Backstage/Backstage";
 import BackstageProducts from "../Backstage/BackstageProducts";
 import BackstageCoupon from "../Backstage/BackstageCoupon";
+import Checkout from "../pages/Checkout";
 
 
 
@@ -27,6 +28,10 @@ const routes =[
             {
                 path:"carts",
                 element:<Carts/>
+            },
+            {
+                path:"checkout",
+                element:<Checkout/>
             },
             {
                 path:"animaltracking",

@@ -9,7 +9,6 @@ import loveFill from '../image/love-fill.svg'
 import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
 import { NavLink } from "react-router";
-import { useNavigate } from "react-router";
 
 
 
@@ -28,7 +27,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 
 const{VITE_PATH,VITE_URL}=import.meta.env;
 
-
+// 確保這段程式碼存在，React 才不會說它是 undefined
 const mechanismImages = [
   {
     name: '台北市立動物園',
@@ -75,7 +74,6 @@ const Carts=()=>{
 
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   
  
@@ -134,7 +132,7 @@ const toggleFavorite = (id) => {
         console.log("加入購物車失敗")
     }
    }
-   const handleAdd = async (id) => {
+  const handleAdd = async (id) => {
   setIsAdding(true);
   await addCart(id); // 呼叫你原本的 addCart
   setIsAdding(false);
@@ -236,7 +234,7 @@ const removeCoupon = () => {
             <th width="120" className="text-start">單價</th>
             <th width="160" className="text-center">數量</th>
             <th width="120" className="text-start">小計</th>
-            <th width="150"></th>
+            
           </tr>
         </thead>
         <tbody>
@@ -262,25 +260,11 @@ const removeCoupon = () => {
 
               <td>
                 <div className="d-flex align-items-center justify-content-center">
-  <button 
-    className="btn btn-outline-dark btn-sm rounded-circle"
-    style={{ width: '30px', height: '30px', padding: 0 }}
-    onClick={() => updateCart(item.id, item.product_id, item.qty - 1)}
-    disabled={item.qty <= 1 || isUpdating === item.id}
-  >
-    <i className="bi bi-dash"></i>
-  </button>
+ 
   
   <span className="mx-3 fw-bold">{item.qty}</span>
   
-  <button 
-    className="btn btn-outline-dark btn-sm rounded-circle"
-    style={{ width: '30px', height: '30px', padding: 0 }}
-    onClick={() => updateCart(item.id, item.product_id, item.qty + 1)}
-    disabled={isUpdating === item.id}
-  >
-    <i className="bi bi-plus"></i>
-  </button>
+ 
 </div>
               </td>
 
@@ -288,20 +272,7 @@ const removeCoupon = () => {
                 ${currency(item.final_total)}
               </td>
 
-              <td >
-  <button 
-    className="btn btn-sm text-dark d-flex align-items-center justify-content-end mb-2 w-100"
-    onClick={() => deleteCart(item.id)}
-  >
-    <i className="bi bi-trash3 me-2"></i> 取消守護
-  </button>
-  <button 
-    className="btn btn-sm text-dark d-flex align-items-center justify-content-end w-100"
-    onClick={() => handleMoveToWishlist(item)}
-  >
-    <i className="bi bi-heart me-2"></i> 移至收藏
-  </button>
-              </td>
+             
             </tr>
           ))}
         </tbody>
@@ -440,144 +411,14 @@ const removeCoupon = () => {
     <div className="fw-bold mb-0 fs-28" style={{ color: '#b68d4c' }}>${currency(cart?.final_total)}</div>
   </div>
          
-        <NavLink to="/checkout"  className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none">下一步</NavLink>
+        <a className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16  text-center text-decoration-none">下一步</a>
   <div className="fs-14 lh-base text-gray-500">✨ 本次消費將贊助 ${currency(cart?.final_total*0.15)} 給保育機構，感謝您的購買</div>
       </div>
     </div>
   </div>
   
 </div>
-<div className="bg-gray-50">
-  <div className="container ">
-  <div className=" py-120">
-     <div className="fs-36 fw-700 title-text-cart text-black mb-32">與牠們相遇：「下一位等著您守護的夥伴」</div>
-     <div className="row">
-      <div className="col-lg-9 col-12">
-        {/* 手機版 Swiper 容器 */}
-    <div className="d-md-none">
-      <Swiper 
-     modules={[Pagination]}
-     spaceBetween={16}
-     slidesPerView={1.2} // 關鍵：露出一點點下一張卡片
-     pagination={{ clickable: true }}
-     className="my-5 pb-5 custom-swiper"
-      >
-        {randomProducts.map(product => (
-          <SwiperSlide key={product.id}>
-             <div className="card border-0 shadow-sm">
-                <div className="custom-card">
-                        <div className="card product-card custom-card-bg" >
-              {/* 圖片區 */}
-              <div className="position-relative ">
-                {/* 標籤 */}
-                <div className="position-absolute top-0 start-0 m-2 d-flex gap-2">
-                  <span className="bg-primary-200 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3 ms-3 " >新品</span>
-                  <span className="bg-primary-100 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3" >台灣專屬</span>
-                </div>
-        
-                {/* 愛心 */}
-                <button
-                  type="button"
-                  className="position-absolute top-0 end-0 m-3 bg-transparent border-0"
-                  onClick={() => toggleFavorite(product.id)}
-                >
-                  {favorites.includes(product.id) ? <img src={loveFill} alt="lovefill" />:<img src={love} alt="love" /> }
-                </button>
-               
-        
-                <img
-                  src={product.imageUrl}
-                  className="img-fluid shadow-sm"
-                  alt={product.imageUrl}
-                />
-              </div>
-        
-              {/* 內容 */}
-              <div className="card-body">
-                <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
-                <p className="fw-bold mb-16 fs-14 text-gray-500 ">{product.agency}</p>
-        
-                <div className="mb-3">
-                  <span className="fw-bold fs-24">${product.origin_price}</span>
-                  <del className="text-muted fw-normal ms-2 fs-20">${product.price}</del>
-                </div>
-        
-                <button className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold" onClick={() => 
-                handleAdd(product.id)}
-                disabled={isAdding}>
-                 {isAdding ? (<span className="spinner-border spinner-border-sm" role="status"></span>) : '加入購物車'}
-                </button>
-              </div>
-                         </div>
-                      </div>
-             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
-        {/* 桌機版 Grid 容器 */}
-        <div className="d-none d-md-block">
-          <div className="row g-24">
-          {
-                  randomProducts.map((product)=>{
-                     return(
-                      <div className="col-4 g-12 custom-card" key={product.id}>
-                        <div className="card product-card custom-card-bg" style={{ maxWidth: 320 }}>
-              {/* 圖片區 */}
-              <div className="position-relative ">
-                {/* 標籤 */}
-                <div className="position-absolute top-0 start-0 m-2 d-flex gap-2">
-                  <span className="bg-primary-200 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3 ms-3 " >新品</span>
-                  <span className="bg-primary-100 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3" >台灣專屬</span>
-                </div>
-        
-                {/* 愛心 */}
-                <button
-                  type="button"
-                  className="position-absolute top-0 end-0 m-3 bg-transparent border-0"
-                  onClick={() => toggleFavorite(product.id)}
-                >
-                  {favorites.includes(product.id) ? <img src={loveFill} alt="lovefill" />:<img src={love} alt="love" /> }
-                </button>
-               
-        
-                <img
-                  src={product.imageUrl}
-                  className="img-fluid shadow-sm"
-                  alt={product.imageUrl}
-                />
-              </div>
-        
-              {/* 內容 */}
-              <div className="card-body">
-                <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
-                <p className="fw-bold mb-16 fs-14 text-gray-500 ">{product.agency}</p>
-        
-                <div className="mb-3">
-                  <span className="fw-bold fs-24">${product.origin_price}</span>
-                  <del className="text-muted fw-normal ms-2 fs-20">${product.price}</del>
-                </div>
-        
-                <button className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold" onClick={() => 
-                handleAdd(product.id)}
-                disabled={isAdding}>
-                 {isAdding ? (<span className="spinner-border spinner-border-sm" role="status"></span>) : '加入購物車'}
-                </button>
-              </div>
-                         </div>
-                      </div>
-                     )
-                  })
-                }
-        </div>
-        </div>
-        
-      </div>
-      
-     </div>
-  </div>
-</div>
-</div>
+
 <div >
   <div className="container ">
   <div className=" py-120">
