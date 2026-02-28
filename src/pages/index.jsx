@@ -6,6 +6,8 @@ import LogoSwiper from "../components/LogoSwiper";
 import CardSingle from "../components/CardSingle";
 import ProductSwiper from "../components/ProductSwiper";
 
+import { NavLink ,Outlet} from "react-router"
+
 
 
 
@@ -28,7 +30,7 @@ export default function Home() {
         <p className="fs-20 pt-32 px-0 mb-48">你​的​每​一​次​購買，​都​是​對​動物​保育​的​貢獻​。​<br/>
         透過​真實​動物​追蹤，​見證​生命​的​軌跡。​</p>
 
-        <button type="button" className="btn btn-outline-primary-500 btn-text btn-outline px-44 py-16">選擇我的動物</button>
+        <NavLink to='products' className='btn btn-outline-primary-500 btn-text btn-outline px-44 py-16 text-decoration-none'>選擇​我​的​動物​​​</NavLink>
     </div>
     
     </div>
@@ -97,8 +99,7 @@ export default function Home() {
         <p className="fs-20 pt-32 px-0 mb-48">​
         ​體驗​激動​人心​的​揭密、​精彩​的​旅程​，​<br/>
         ​​為​全球​保育​工作​做出​貢​獻​。​</p>
-
-        <button type="button" className="btn btn-outline-primary-500 btn-text btn-outline px-44 py-16">追蹤我的動物</button>
+        <NavLink to='animaltracking' className="btn btn-outline-primary-500 btn-text btn-outline px-44 py-16">追蹤​動物​​</NavLink>
       </div>
     
     </div>
