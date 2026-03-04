@@ -9,7 +9,6 @@ import loveFill from '../image/love-fill.svg'
 import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
 import { NavLink } from "react-router";
-import { useNavigate } from "react-router";
 
 
 
@@ -75,7 +74,7 @@ const Carts=()=>{
 
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  
 
   
  

@@ -1,6 +1,7 @@
 import App from "../App";
 import Home from "../pages/index";
-import Products from "../pages/products";
+import Products from "../pages/Products";
+import ProductDetail from "../pages/ProductDetail";
 import Carts from "../pages/Cart";
 import AnimalTracking from "../pages/animal-tracking ";
 import Login from "../pages/Login";
@@ -24,6 +25,10 @@ const routes =[
             {
                 path:'products',
                 element:<Products/>
+            },
+            {
+                path:'product/:id',
+                element:<ProductDetail/>
             },
             {
                 path:"carts",
