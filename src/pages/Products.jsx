@@ -4,7 +4,7 @@ import axios from 'axios';
 import love from '../image/love.svg';
 import loveFill from '../image/love-fill.svg';
 import { createAsyncGetCart } from "../slice/cartSlice";
-import { NavLink } from "react-router";
+import { NavLink,Link } from "react-router";
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
@@ -83,7 +83,7 @@ const Products = () => {
 
   useEffect(() => {
     getProducts();
-    dispatch(createAsyncGetCart()); // 初始化購物車數量
+    dispatch(createAsyncGetCart()); 
   }, [dispatch]);
 
   // 🚀 2. 核心邏輯：計算過濾後的產品清單
@@ -152,42 +152,70 @@ const Products = () => {
           {/* 🚀 4. 使用過濾後的資料渲染 */}
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <div className="col-6 col-md-3 g-12 custom-card mb-4" key={product.id}>
-                <div className="card product-card custom-card-bg" style={{ maxWidth: 320 }}>
-                  <div className="position-relative">
-                    <div className="position-absolute top-0 start-0 m-2 d-flex gap-2">
-                      <span className="bg-primary-200 border border-primary-300 fs-14 px-12 py-4 newItem badge rounded-pill fw-bold mt-3 ms-3">新品</span>
-                    </div>
+  <div className="col-6 col-md-3 g-12 custom-card mb-4" key={product.id}>
+    <div className="card product-card custom-card-bg border-0 h-100 shadow-sm" style={{ maxWidth: 320 }}>
+      
+      {/* 🚀 圖片區：包裹 Link 連結至詳細頁 */}
+      <div className="position-relative overflow-hidden">
+        <Link to={`/product/${product.id}`}>
+          <img 
+            src={product.imageUrl} 
+            className="img-fluid w-100 object-fit-cover transition-transform" 
+            style={{ height: '280px' }} // 設定固定高度讓排版整齊
+            alt={product.title} 
+          />
+        </Link>
 
-                    <button
-                      type="button"
-                      className="position-absolute top-0 end-0 m-3 bg-transparent border-0"
-                      onClick={() => toggleFavorite(product.id)}
-                    >
-                      {favorites.includes(product.id) ? <img src={loveFill} alt="lovefill" /> : <img src={love} alt="love" />}
-                    </button>
+        {/* 標籤區 */}
+        <div className="position-absolute top-0 start-0 m-2 d-flex gap-2">
+           <span className="bg-primary-200 border border-primary-300 fs-14 px-12 py-4 newItem badge rounded-pill fw-bold mt-3 ms-3">新品</span>
+        </div>
 
-                    <img src={product.imageUrl} className="img-fluid shadow-sm" alt={product.title} />
-                  </div>
+        {/* 愛心按鈕：使用 e.preventDefault() 防止觸發 Link 跳轉 */}
+        <button
+          type="button"
+          className="position-absolute top-0 end-0 m-3 bg-transparent border-0 z-3"
+          onClick={(e) => {
+            e.preventDefault(); 
+            toggleFavorite(product.id);
+          }}
+        >
+          {favorites.includes(product.id) ? (
+            <img src={loveFill} alt="lovefill" />
+          ) : (
+            <img src={love} alt="love" />
+          )}
+        </button>
+      </div>
 
-                  <div className="card-body">
-                    <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
-                    <p className="fw-bold mb-16 fs-14 text-gray-500">{product.agency}</p>
+      <div className="card-body d-flex flex-column">
+        {/* 🚀 標題區：同樣包裹 Link */}
+        <Link to={`/product/${product.id}`} className="text-decoration-none">
+          <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
+        </Link>
+        
+        <p className="fw-bold mb-16 fs-14 text-gray-500">{product.agency}</p>
 
-                    <div className="mb-3">
-                      <span className="fw-bold fs-24">${product.price}</span>
-                      <del className="text-muted fw-normal ms-2 fs-20">${product.origin_price}</del>
-                    </div>
+        {/* mt-auto 確保價格與按鈕永遠在底部對齊 */}
+        <div className="mt-auto">
+          <div className="mb-3">
+            <span className="fw-bold fs-24 text-primary-500">${product.price.toLocaleString()}</span>
+            <del className="text-muted fw-normal ms-2 fs-20">${product.origin_price.toLocaleString()}</del>
+          </div>
 
-                    <button 
-                      className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold" 
-                      onClick={() => addCart(product.id)}
-                    >
-                      加入購物車
-                    </button>
-                  </div>
-                </div>
-              </div>
+          <button 
+            className="btn btn-outline-primary-500 w-100 fs-18 py-12 fw-bold" 
+            onClick={(e) => {
+              e.preventDefault();
+              addCart(product.id);
+            }}
+          >
+            加入購物車
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
             ))
           ) : (
             <div className="col-12 text-center py-5">
