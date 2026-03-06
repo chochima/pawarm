@@ -9,17 +9,17 @@ app.use(express.json());
 // 產品評價 API
 app.get('/api/reviews', (req, res) => {
   const reviews = [
-  { id: 1, userName: "Tina Liu", rating: 5, date: "2025-12-08", comment: "這款好看又可愛，質感超乎預期！", images: ["img1.jpg", "img2.jpg"] },
-  { id: 2, userName: "Gary Wu", rating: 5, date: "2025-12-07", comment: "很喜歡！分享給大家。很喜歡！分享給大家。", images: ["img3.jpg"] },
+  { id: 1, userName: "Tina Liu", rating: 5, date: "2025-12-08", comment: "這款好看又可愛，質感超乎預期！", images: ["https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1772813398169.png", "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1772813435873.png"] },
+  { id: 2, userName: "Gary Wu", rating: 5, date: "2025-12-07", comment: "很喜歡！分享給大家。很喜歡！分享給大家。", images: [] },
   { id: 3, userName: "王小明", rating: 4, date: "2025-11-20", comment: "出貨速度很快，包裝也很精緻，唯一的缺點是顏色比照片稍微深一點。", images: [] },
-  { id: 4, userName: "陳雅婷", rating: 5, date: "2025-11-18", comment: "送給朋友當生日禮物，她超級開心！", images: ["img4.jpg"] },
+  { id: 4, userName: "陳雅婷", rating: 5, date: "2025-11-18", comment: "送給朋友當生日禮物，她超級開心！", images: ["https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1772813486601.png"] },
   { id: 5, userName: "張志偉", rating: 3, date: "2025-11-15", comment: "東西是不錯，但盒子有點壓到了，希望能加強保護。", images: [] },
-  { id: 6, userName: "李淑芬", rating: 5, date: "2025-11-10", comment: "買了兩次了，品質依然穩定，非常推薦。", images: ["img5.jpg", "img6.jpg"] },
-  { id: 7, userName: "林大同", rating: 4, date: "2025-11-05", comment: "CP值很高，實體比照片看起來更有質感。", images: ["img7.jpg"] },
-  { id: 8, userName: "周杰", rating: 2, date: "2025-11-02", comment: "有點失望，收到時有些小刮痕。", images: ["img8.jpg"] },
+  { id: 6, userName: "李淑芬", rating: 5, date: "2025-11-10", comment: "買了兩次了，品質依然穩定，非常推薦。", images: [] },
+  { id: 7, userName: "林大同", rating: 4, date: "2025-11-05", comment: "CP值很高，實體比照片看起來更有質感。", images: ["https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1772813525442.png"] },
+  { id: 8, userName: "周杰", rating: 2, date: "2025-11-02", comment: "有點失望，收到時有些小刮痕。", images: [] },
   { id: 9, userName: "吳美玲", rating: 5, date: "2025-10-28", comment: "超級滿意！包裝非常用心，還有手寫卡片，很溫馨。", images: [] },
-  { id: 10, userName: "鄭小豪", rating: 4, date: "2025-10-25", comment: "質感很好，但希望能有更多顏色可以選。", images: ["img9.jpg"] },
-  { id: 11, userName: "黃百合", rating: 5, date: "2025-10-20", comment: "非常精緻的工藝，擺在桌上賞心悅目。", images: ["img10.jpg", "img11.jpg"] },
+  { id: 10, userName: "鄭小豪", rating: 4, date: "2025-10-25", comment: "質感很好，但希望能有更多顏色可以選。", images: ["https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1772813571846.png"] },
+  { id: 11, userName: "黃百合", rating: 5, date: "2025-10-20", comment: "非常精緻的工藝，擺在桌上賞心悅目。", images: [] },
   { id: 12, userName: "劉志明", rating: 4, date: "2025-10-15", comment: "大致上很棒，物流速度也能接受。", images: [] }
 ];
 
