@@ -14,12 +14,14 @@ import 'swiper/css/thumbs';
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
+
 const ProductDetail = () => {
   const { id } = useParams(); 
   const [product, setProduct] = useState({});
   const [qty, setQty] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [mainImage, setMainImage] = useState(""); 
+  const [data, setData] = useState({ summary: { averageRating: 0, totalReviews: 0 }, reviews: [] });
   const dispatch = useDispatch();
 
   // 取得單一產品資料
@@ -34,6 +36,10 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
+    fetch('https://pawarm-api.onrender.com/api/reviews')
+      .then(res => res.json())
+      .then(data => setData(data))
+      .catch(err => console.error("抓取失敗:", err));
     getProduct();
   }, [id]);
 
@@ -224,47 +230,62 @@ const ProductDetail = () => {
 </div>
       </div>
     </div>
-    <section className="container py-5 mt-5">
-  <div className="fw-bold fs-48 title-text-product mb-32">客戶評價</div>
-  
-  {/* 評分摘要卡片 */}
-  <div className="review-summary d-flex align-items-center justify-content-center mb-5">
-    <div className="text-center me-5">
-      <div className="fs-48 fw-bold">4.5 <span className="fs-24 text-warning">★★★★★</span></div>
-      <div className="text-gray-500">(共 10 則評價)</div>
-    </div>
-    
-    <div className="flex-grow-1" style={{ maxWidth: '400px' }}>
-      {[5, 4, 3, 2, 1].map(num => (
-        <div key={num} className="d-flex align-items-center mb-1">
-          <span className="fs-14" style={{ minWidth: '30px' }}>{num}.0</span>
-          <div className="rating-bar"><div className="rating-fill" style={{ width: num >= 4 ? '50%' : '0%' }}></div></div>
-          <span className="fs-14 text-gray-400">50%</span>
+    <div className="container py-5 mt-5">
+       <div className="fw-bold fs-48 title-text-product mb-32">客戶評價</div>
+      
+      {/* 統計區塊 */}
+      <div className=" p-24 mb-5 bg-gray-50">
+        <div className="row align-items-center">
+          <div className="col-md-4 text-center">
+            <h1 className="display-4 fw-bold text-gray-900 ">{data.summary.averageRating}</h1>
+            <div className="text-gray-900  mb-2">★★★★★</div>
+            <small className="text-muted">(共 {data.summary.totalReviews} 則評價)</small>
+          </div>
+          <div className="col-md-6">
+            {[5, 4, 3, 2, 1].map((star) => (
+              <div key={star} className="row align-items-center mb-1">
+                <div className="col-2 text-end small">{star}.0</div>
+                <div className="col-8">
+                  <div className="progress" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-warning" style={{ width: star >= 4 ? '50%' : '0%' }}></div>
+                  </div>
+                </div>
+                <div className="col-2 small text-muted">{star >= 4 ? '50%' : '0%'}</div>
+              </div>
+            ))}
+          </div>
+          <div className="col-md-2"></div>
         </div>
-      ))}
-    </div>
-  </div>
+      </div>
 
-  {/* 篩選按鈕 */}
-  <div className="d-flex justify-content-end gap-2 mb-4">
-    <button className="btn btn-outline-dark px-4">最新評論 <i className="bi bi-chevron-down"></i></button>
-    <button className="btn btn-outline-dark px-4">附圖片評價</button>
-  </div>
-
-  {/* 單一評論項目 (範例) */}
-  <div className="border-bottom py-4">
-    <div className="d-flex justify-content-between align-items-center mb-2">
-      <div className="fw-bold"><img src="avatar.jpg" className="rounded-circle me-2" width="30"/> Tina Liu <span className="text-warning ms-2">★★★★★</span></div>
-      <div className="text-gray-400 fs-14">2025-12-08</div>
+      {/* 評論列表區塊 */}
+      <div className="review-list">
+        {data.reviews.map((review) => (
+          <div key={review.id} className="border-bottom py-4">
+            <div className="d-flex justify-content-between mb-2">
+              <h6 className="fw-bold ">{review.userName}</h6>
+              <small className="text-muted">{review.date}</small>
+            </div>
+            <div className="text-warning mb-2">
+              {[...Array(5)].map((_, i) => (
+                <span key={i}>{i < review.rating ? '★' : '☆'}</span>
+              ))}
+            </div>
+            <div className="d-flex justify-content-between">
+              <p className="mb-3">{review.comment}</p>
+            
+            {/* 圖片展示 */}
+            <div className="d-flex gap-2">
+              {review.images.map((img, idx) => (
+                <img key={idx} src={img} alt="review-img" className="img-thumbnail" style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
+              ))}
+            </div>
+            </div>
+            
+          </div>
+        ))}
+      </div>
     </div>
-    <p>這款好看又可愛</p>
-    <div className="d-flex gap-2">
-      {product.imagesUrl?.slice(0, 3).map((img, i) => (
-        <img key={i} src={img} className="review-img" />
-      ))}
-    </div>
-  </div>
-</section>
     
     </>
     
