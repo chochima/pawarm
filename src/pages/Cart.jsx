@@ -27,7 +27,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 
 const{VITE_PATH,VITE_URL}=import.meta.env;
 
-// 確保這段程式碼存在，React 才不會說它是 undefined
+
 const mechanismImages = [
   {
     name: '台北市立動物園',
@@ -74,6 +74,7 @@ const Carts=()=>{
 
 
   const dispatch = useDispatch();
+  
 
   
  
@@ -165,19 +166,7 @@ const toggleFavorite = (id) => {
     }
   };
 
-  const onSubmit = async (data) => {
-      try {
-        if(!cart.carts.length) {
-          alert("購物車沒有商品！");
-          return;
-        }
-        await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/order`, { data: { user: data, message: data.message } });
-        reset();
-        getCart();
-      } catch (err) {
-        console.err(err);
-      }
-  };
+  
 
   // 套用優惠券
 const applyCoupon = async (code) => {
@@ -438,7 +427,7 @@ const removeCoupon = () => {
     <div className="fw-bold mb-0 fs-28" style={{ color: '#b68d4c' }}>${currency(cart?.final_total)}</div>
   </div>
          
-        <a className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16  text-center text-decoration-none">下一步</a>
+        <NavLink to="/checkout"  className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none">下一步</NavLink>
   <div className="fs-14 lh-base text-gray-500">✨ 本次消費將贊助 ${currency(cart?.final_total*0.15)} 給保育機構，感謝您的購買</div>
       </div>
     </div>
