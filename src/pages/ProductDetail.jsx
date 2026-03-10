@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router"; // 取得 URL 參數
+import { useParams } from "react-router"; 
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { createAsyncGetCart } from "../slice/cartSlice";
@@ -23,6 +23,7 @@ const ProductDetail = () => {
   const [mainImage, setMainImage] = useState(""); 
   const [data, setData] = useState({ summary: { averageRating: 0, totalReviews: 0 }, reviews: [] });
   const dispatch = useDispatch();
+
 
   // 取得單一產品資料
   const getProduct = async () => {
@@ -275,9 +276,9 @@ const ProductDetail = () => {
               <p className="mb-3">{review.comment}</p>
             
             {/* 圖片展示 */}
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-3">
               {review.images.map((img, idx) => (
-                <img key={idx} src={img} alt="review-img" className="img-thumbnail" style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
+                <img key={idx} src={img} alt="review-img"  style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
               ))}
             </div>
             </div>

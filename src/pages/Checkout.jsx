@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { createAsyncGetCart } from "../slice/cartSlice";
 import  axios from 'axios'
-import love from '../image/love.svg'
-import loveFill from '../image/love-fill.svg'
+
 
 
 import { currency} from"../utils/filter";
@@ -12,59 +11,11 @@ import { NavLink } from "react-router";
 
 
 
-
-// 1. 引入 Swiper React 組件
-import { Swiper, SwiperSlide } from 'swiper/react';
-
-// 2. 引入 Swiper 核心樣式
-import 'swiper/css';
-import 'swiper/css/pagination'; // 如果你有用到 pagination 分頁點
-import 'swiper/css/navigation'; // 如果你有用到左右箭頭
-
-// 3. (選配) 引入你要的功能模組
-
-import { Pagination, Autoplay } from 'swiper/modules';
-
 const{VITE_PATH,VITE_URL}=import.meta.env;
 
-// 確保這段程式碼存在，React 才不會說它是 undefined
-const mechanismImages = [
-  {
-    name: '台北市立動物園',
-    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771161922826.png"
-  },
-  {
-    name: 'WildOne 野灣',
-    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771162111383.png"
-  },
-  {
-    name: '保育機構_03.png',
-    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771163906842.png"
-  },
-  {
-    name: '保育機構_04.png',
-    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771163947004.png"
-  },
-  {
-    name: '保育機構_05.png',
-    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771164038605.png"
-  },
-  {
-    name: '保育機構_06.png',
-    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771164084617.png"
-  },
-  {
-    name: '保育機構_07.png',
-    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771164103587.png"
-  },
-  {
-    name: '保育機構_08.png',
-    imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771164129948.png"
-  }
 
-];
 
-const Carts=()=>{
+const Checkout=()=>{
   const [isAdding, setIsAdding] = useState(false);
   const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -79,31 +30,9 @@ const Carts=()=>{
  
 
 
-  const getSixRandomProducts = async () => {
-  try {
-    const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/products/all`);
-    const allData = res.data.products;
+  
 
-    // 隨機打亂並取出前 6 個
-    const shuffled = [...allData]
-      .sort(() => 0.5 - Math.random()) // 利用 0.5 產生正負機率來打亂
-      .slice(0, 6); // 切取前 6 筆
 
-    setRandomProducts(shuffled);
-  } catch (err) {
-    console.error("抓取隨機資料失敗", err);
-  }
-};
-
-const toggleFavorite = (id) => {
-  if (favorites.includes(id)) {
-    // 如果已經在清單裡，就濾掉它 (取消收藏)
-    setFavorites(favorites.filter((favId) => favId !== id));
-  } else {
-    // 如果不在清單裡，就加進去 (新增收藏)
-    setFavorites([...favorites, id]);
-  }
-};
 
 
   //購物車
@@ -116,54 +45,7 @@ const toggleFavorite = (id) => {
       console.log(err.response.data);
     }
   };
-  const addCart= async(id, qty = 1)=>{
-    try{
-        const data={
-            product_id: id,
-            qty,
-        }
-        await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`,{data});
-        dispatch(createAsyncGetCart());
-        getCart();
-        alert("已成功加入守護清單！");
 
-
-    }catch(err){
-        console.log("加入購物車失敗")
-    }
-   }
-  const handleAdd = async (id) => {
-  setIsAdding(true);
-  await addCart(id); // 呼叫你原本的 addCart
-  setIsAdding(false);
-};
-
- 
-  const deleteCart = async (id) => {
-    try {
-      await axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${id}`);
-      dispatch(createAsyncGetCart());
-      getCart();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
-
- 
-  const updateCart = async (cartId, productId, qty = 1) => {
-    try {
-
-      const data = {
-        product_id: productId,
-        qty,
-      };
-      await axios.put(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${cartId}`, { data });
-      dispatch(createAsyncGetCart());
-      getCart();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
 
   const onSubmit = async (data) => {
       try {
@@ -175,7 +57,7 @@ const toggleFavorite = (id) => {
         reset();
         getCart();
       } catch (err) {
-        console.err(err);
+        console.error(err);
       }
   };
 
@@ -210,7 +92,6 @@ const removeCoupon = () => {
   
   useEffect(() => {
     getCart();
-    getSixRandomProducts();
   }, []);
 
   return (
@@ -343,7 +224,7 @@ const removeCoupon = () => {
     </div>
 
     </div>
-    <div className="col-md-3">
+    <div className="col-md-3 ">
       <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護計畫</div>
       <div className="bg-gray-50 p-20 d-flex flex-column gap-20">
         <div className="d-flex  justify-content-between">
@@ -410,42 +291,17 @@ const removeCoupon = () => {
     
     <div className="fw-bold mb-0 fs-28" style={{ color: '#b68d4c' }}>${currency(cart?.final_total)}</div>
   </div>
-         
-        <a className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16  text-center text-decoration-none">下一步</a>
+        <NavLink to="/carts"  className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none">上一步</NavLink>
+        <NavLink to="/checkout"  className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none">下一步</NavLink>
   <div className="fs-14 lh-base text-gray-500">✨ 本次消費將贊助 ${currency(cart?.final_total*0.15)} 給保育機構，感謝您的購買</div>
       </div>
     </div>
   </div>
   
+  
 </div>
 
-<div >
-  <div className="container ">
-  <div className=" py-120">
-     <div className="fs-36 fw-700 title-text-cart text-black mb-32">瀏覽更多保育機構</div>
-     <div className="row">
-      <div className="col-lg-9 col-12">
-        <div className="row g-20 g-md-32 align-items-center">
-          {(mechanismImages || []).map((item, index) => (
-  <div className="col-6 col-md-3" key={index}>
-    <NavLink className="logo-wrapper d-flex justify-content-center align-items-center">
-      <img 
-        src={item.imageUrl} 
-        alt={item.name}
-        className="img-fluid partner-logo" 
-        style={{ maxHeight: '80px', width: 'auto', objectFit: 'contain' }}
-      />
-    </NavLink>
-  </div>
-))}
-      </div>
-      </div>
-      <div className="col-3 d-none d-lg-block">
-        </div>
-     </div>
-  </div>
-</div>
-</div>
+
 
 
     </>
@@ -455,4 +311,4 @@ const removeCoupon = () => {
   )
 }
 
-export default Carts;
+export default Checkout;
