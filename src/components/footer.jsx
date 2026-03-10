@@ -2,6 +2,8 @@ import React from "react";
 import { useSelector , useDispatch} from "react-redux";
 import { NavLink ,Outlet} from "react-router"
 
+import logoPawarm from "../assets/images/pawarm.svg";
+
 const { useState } = React;
 export default function Footer() {
 
@@ -13,7 +15,7 @@ export default function Footer() {
   <div className="row">
 
     <div className="col-12 col-md-6 px-md-0 footer-style">
-      <h1><NavLink to="/"><img src="/pawarm.svg" alt="pawarm LOGO" /></NavLink></h1>
+      <h1><NavLink to="/"><img src={logoPawarm} alt="pawarm LOGO" /></NavLink></h1>
       
       <div className="col align-self-center ps-0 pe-0 pb-48 footer-style">
         <ul className="footer-content ps-0 gap-16 d-flex flex-column flex-md-row">

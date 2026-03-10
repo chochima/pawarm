@@ -8,6 +8,11 @@ import LogoSwiper from "../components/LogoSwiper";
 import CardSingle from "../components/CardSingle";
 import ProductSwiper from "../components/ProductSwiper";
 
+import bgProduct from "../image/bg-product.png";
+import bgActivity from "../image/bg-activity.png";
+import iconShield from "../image/icon-shield.png";
+import iconGPS from "../image/icon-GPS.png";
+
 
 
 
@@ -43,7 +48,7 @@ export default function Home() {
   {
     //推薦商品
     <section className="bgImg-postion">
-      <img className="bgImg-absolute" src="./src/image/bg-product.png" alt="product-BG"/>
+      <img className="bgImg-absolute" src={bgProduct} alt="product-BG"/>
 
       <div className="container">
         <h2 className="mb-32 px-0 title-text">推薦商品</h2>
@@ -133,7 +138,7 @@ export default function Home() {
         
         <div className="row map-content pe-0">
           <div className="col-auto map-icon pe-0">
-            <img src="./src/image/icon-GPS.png" alt="定位icon" />
+            <img src={iconGPS} alt="定位icon" />
           </div>
 
           <div className="col ps-0">
@@ -144,7 +149,7 @@ export default function Home() {
 
         <div className="row map-content pe-0">
           <div className="col-auto map-icon pe-0">
-            <img src="./src/image/icon-shield.png" alt="定位icon" />
+            <img src={iconShield} alt="定位icon" />
           </div>
 
           <div className="col ps-0">
@@ -167,7 +172,7 @@ export default function Home() {
   {
     //活動資訊
     <section className="bgImg-postion">
-      <img className="bgImg-absolute" src="./src/image/bg-activity.png" alt="activity-BG"/>
+      <img className="bgImg-absolute" src={bgActivity} alt="activity-BG"/>
 
       <div className="container">
         <h2 className="mb-20 mb-md-32 px-0 title-text">活動資訊​</h2>

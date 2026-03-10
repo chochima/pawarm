@@ -3,6 +3,9 @@ import { useSelector , useDispatch} from "react-redux";
 import { NavLink ,Outlet} from "react-router"
 import HeaderMobile from "./header-mobile";
 
+import logoPawarm from "../assets/images/pawarm.svg";
+import iconLogin from "../image/icon-login.png";
+
 
 const { useState } = React;
 export default function Header() {
@@ -30,7 +33,7 @@ return (
     
     {   //LOGO
     <div className="col-auto">
-        <NavLink to='/'><img className="d-none d-md-block" src="/pawarm.svg" alt="pawarm LOGO" /></NavLink>
+        <NavLink to='/'><img className="d-none d-md-block" src={logoPawarm} alt="pawarm LOGO" /></NavLink>
     </div> 
     }
 
@@ -55,7 +58,7 @@ return (
         {   //登入
         <div className="col-auto px-0 nav-content">
             <span className="header-login">
-                <img src="./src/image/icon-login.png" alt="登入icon" />
+                <img src={iconLogin} alt="登入icon" />
                 <NavLink to="login">登入</NavLink>
             </span>
             

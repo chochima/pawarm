@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector , useDispatch} from "react-redux";
 import { NavLink ,Outlet} from "react-router"
+
+import iconLogin from "../image/icon-login.png";
 {/*遮罩待補*/}
 
 function HeaderMobile({ className }) {
@@ -27,7 +29,7 @@ return (<div className= "{ className }">
     {   //登入
     <div className="col-auto px-0 nav-content">
             <span className="header-login">
-                <img src="./src/image/icon-login.png" alt="登入icon" />
+                <img src={iconLogin} alt="登入icon" />
                 <NavLink to="login">登入</NavLink>
             </span>
             
