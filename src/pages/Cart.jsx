@@ -166,19 +166,7 @@ const toggleFavorite = (id) => {
     }
   };
 
-  const onSubmit = async (data) => {
-      try {
-        if(!cart.carts.length) {
-          alert("購物車沒有商品！");
-          return;
-        }
-        await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/order`, { data: { user: data, message: data.message } });
-        reset();
-        getCart();
-      } catch (err) {
-        console.err(err);
-      }
-  };
+  
 
   // 套用優惠券
 const applyCoupon = async (code) => {

@@ -26,3 +26,18 @@
   object-fit: cover;
   border-radius: 2px;
 }
+
+/* 修改 Bootstrap 按鈕為你的金色系 */
+.btn-primary {
+  background-color: #B28B45 !important;
+  border-color: #B28B45 !important;
+  color: #fff !important;
+}
+.btn-outline-primary {
+  color: #B28B45 !important;
+  border-color: #B28B45 !important;
+}
+.btn-outline-primary:hover {
+  background-color: #B28B45 !important;
+  color: #fff !important;
+}
