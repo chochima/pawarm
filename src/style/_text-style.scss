@@ -6,7 +6,7 @@
     padding-bottom: $spacer * 2;
     //border-bottom: 2px solid $primary-500;
 
-    color: $primary-500;
+    color: $gray-900;
     position: relative; // 一定要有
 }
 
@@ -43,4 +43,35 @@
     width: 150px;          // 控制長度
     height: 2px;
     background-color: $primary-500;
+}
+
+.body-text {
+    font-size: 20px;
+}
+
+//手機板
+@media (max-width: 768px) {
+
+.title-text {
+    font-size: $font-size-base * 1.75 ;
+    padding-bottom: $spacer * 1.25;
+}
+.title-text::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 120px;          // 控制長度
+    height: 2px;
+    background-color: $primary-500;
+}
+
+
+.body-text {
+    font-size: 16px;
+}
+
+
+
+
 }

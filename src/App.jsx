@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { useSelector , useDispatch} from "react-redux";
 import { NavLink ,Outlet} from "react-router"
 import { createAsyncGetCart } from "./slice/cartSlice";
-
+import Header from "./components/header";
+import Footer from "./components/footer";
 
 function App() {
   
@@ -15,7 +16,13 @@ function App() {
   },[dispatch])
   return (
     <>
+    <Header/>
+      <Outlet/>
+    <Footer/>
+      
 
+      
+    {/*
     <div className="container text-sans">
     <div className="row header-style">
 
@@ -54,8 +61,8 @@ function App() {
     <hr />
 
     </div>
-</div>
-     
+</div> }
+     {
      <Outlet/>
 
 
@@ -98,9 +105,10 @@ function App() {
     <p className="fw-400 text-secondary-900 px-0 mb-0 border-top border-secondary-1 border-1 pt-48">Copyright ©​ 2025 Pawarm |​ 本​網站​僅供個人​作品​使用，​不​提供​商​業用​途</p>
   </div>
   </div>
-</div>
+</div>*/}
     </>
   )
+    
 }
 
 export default App

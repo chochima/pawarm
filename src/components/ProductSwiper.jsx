@@ -20,7 +20,7 @@ export default function ProductSwiper() {
     return (
     <>
     <Swiper
-        slidesPerView={4}
+        //slidesPerView={4}
         spaceBetween={24}
         loop={true}
         freeMode={true}
@@ -30,6 +30,11 @@ export default function ProductSwiper() {
         }}
         navigation={true}
         modules={[Pagination]}
+        breakpoints={{
+            0: { slidesPerView: 1.2 },    // 手機
+            768: { slidesPerView: 4 }  // 平板以上
+        }}
+
         className="my-swiper">
         
 

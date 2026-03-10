@@ -20,3 +20,15 @@
         transform: scale(1.03);
     }
 }
+
+
+//手機板
+@media (max-width: 768px) {
+.logo-swiper {
+    img {
+        padding: 0px;
+        width: auto;
+        height: 60px;
+    }
+}
+}

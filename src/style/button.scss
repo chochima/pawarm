@@ -1,7 +1,7 @@
 //btn-hover
 .btn-filled {
   transition: background-color .2s ease, transform .2s ease;
-   @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 
@@ -26,7 +26,7 @@
 .btn-outline {
   transition: background-color .2s ease, transform .2s ease;
   border-radius: 0%;
-   @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 
@@ -44,7 +44,7 @@
 .btn-text {
   transition: background-color .2s ease, transform .2s ease;
   border-radius: 0%;
-   @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 
@@ -54,14 +54,14 @@
 
   &.selected {
     color: $primary-600 !important;
-     border-bottom: solid 2px $primary-600;
+    border-bottom: solid 2px $primary-600;
   
   }
 }
 .text-link {
   transition: background-color .2s ease, transform .2s ease;
   border-radius: 0%;
-   @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 

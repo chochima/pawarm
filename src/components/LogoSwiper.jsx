@@ -70,54 +70,36 @@ export default function LogoSwiper() {
     return (
     <>
     <Swiper
-        slidesPerView={6}
-        spaceBetween={24}
         loop={true}
         freeMode={true}
         speed={3500}
-        loopedSlides={allLogos.length}
         autoplay={{
             delay: 0,
             disableOnInteraction: false,
         }}
         
         modules={[Autoplay]}
+        breakpoints={{
+            0: { 
+                slidesPerView: 3.5,
+                spaceBetween: 4
+             },    // 手機
+            768: { 
+                slidesPerView: 6,
+                spaceBetween: 24
+             }  // 平板以上
+        }}
         className="logos">
         
-
-        <SwiperSlide className="logo-swiper">
-            <a href={logos[0].agencyUrl}>
-            <img src={logos[0].logo} alt={logos[0].agency} /></a>
-        </SwiperSlide>
-        <SwiperSlide className="logo-swiper">
-            <a href={logos[1].agencyUrl}>
-            <img src={logos[1].logo} alt={logos[1].agency} /></a>
-        </SwiperSlide>
-        <SwiperSlide className="logo-swiper">
-            <a href={logos[2].agencyUrl}>
-            <img src={logos[2].logo} alt={logos[2].agency} /></a>
-        </SwiperSlide>
-        <SwiperSlide className="logo-swiper">
-            <a href={logos[3].agencyUrl}>
-            <img src={logos[3].logo} alt={logos[3].agency} /></a>
-        </SwiperSlide>
-        <SwiperSlide className="logo-swiper">
-            <a href={logos[4].agencyUrl}>
-            <img src={logos[4].logo} alt={logos[4].agency} /></a>
-        </SwiperSlide>
-        <SwiperSlide className="logo-swiper">
-            <a href={logos[5].agencyUrl}>
-            <img src={logos[5].logo} alt={logos[5].agency} /></a>
-        </SwiperSlide>
-        <SwiperSlide className="logo-swiper">
-            <a href={logos[6].agencyUrl}>
-            <img src={logos[6].logo} alt={logos[6].agency} /></a>
-        </SwiperSlide>
-        <SwiperSlide className="logo-swiper">
-            <a href={logos[7].agencyUrl}>
-            <img src={logos[7].logo} alt={logos[7].agency} /></a>
-        </SwiperSlide>
-
+        {allLogos.map((logo, index) => (
+    <SwiperSlide key={index}>
+      <div className="logo-swiper">
+        <a href={logo.agencyUrl}>
+          <img src={logo.logo} alt={logo.agency} />
+        </a>
+      </div>
+    </SwiperSlide>
+ ))}
 
     </Swiper>
     </>

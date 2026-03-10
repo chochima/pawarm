@@ -26,12 +26,12 @@ return (
 <div className="row justify-content-between gy-16">
 
 {/*左邊活動資訊*/}
-    <div className="col-7 mx-0 pe-0">
+    <div className="col-auto col-md-7 mx-0 pe-md-0 order-2 order-md-1">
         {tempActitive.map((act) => (
     <div key={act.id}>
     
 
-    <div className="row product-card custom-card-bg activity-card mb-32"
+    <div className="row product-card custom-card-bg activity-card mb-16 mb-md-32"
         onMouseEnter={() => setHoverId(act.id)}
         onMouseLeave={() => setHoverId(null)}>
     
@@ -57,7 +57,7 @@ return (
             </div>
 
             <div className="col-1 text-end align-self-end px-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" className="mx-8 my-8" viewBox="0 0 24 24"><path fill="none" stroke="#3D3D3D" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m13 15l3-3m0 0l-3-3m3 3H8m13 0a9 9 0 1 0-18 0a9 9 0 0 0 18 0Z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" className="mx-10 my-10" viewBox="0 0 24 24"><path fill="none" stroke="#3D3D3D" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m13 15l3-3m0 0l-3-3m3 3H8m13 0a9 9 0 1 0-18 0a9 9 0 0 0 18 0Z"/></svg>
             </div>
 
         </div>
@@ -70,12 +70,23 @@ return (
     </div>
 
 {/*右邊活動圖片*/}
-    <div className="col-4 px-0 mt-0">
+    <div className="col col-md-4 px-0 mt-0 order-1 order-md-2 d-none d-md-block">
         <img
             src={hoverActivity.imageUrl}
             alt={hoverActivity.title}
         />
         <p className="text-center">{hoverActivity.title}</p>
+
+        
+    </div>
+
+    
+
+    <div className="col d-block d-md-none">
+        <img
+            src={hoverActivity.imageUrl}
+            alt={hoverActivity.title}
+        />
     </div>
 
 

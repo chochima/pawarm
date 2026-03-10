@@ -54,25 +54,38 @@ const toggleFavorite = (id) => {
       console.log(err.response.data);
     }
   };
-  const addCart= async(id, qty = 1)=>{
-    try{
-        const data={
-            product_id: id,
-            qty,
-        }
-        await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`,{data});
-        getCart();
-        alert("已成功加入守護清單！");
+  // handleAdd + addCart 改寫
+const addCart = async (id, qty = 1) => {
+  try {
+    const data = { product_id: id, qty };
+    await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
 
+    // 直接更新本地 cart，不再呼叫 getCart()
+    setCart(prevCart => {
+      // 檢查是否已經有這個商品
+      const existIndex = prevCart.findIndex(item => item.product_id === id);
+      if (existIndex !== -1) {
+        // 已有商品，更新數量
+        const newCart = [...prevCart];
+        newCart[existIndex].qty += qty;
+        return newCart;
+      } else {
+        // 新商品，加入陣列
+        return [...prevCart, { product_id: id, qty }];
+      }
+    });
 
-    }catch(err){
-        console.log("加入購物車失敗")
-    }
-    }
-    const handleAdd = async (id) => {
-    setIsAdding(true);
-    await addCart(id); // 呼叫你原本的 addCart
-    setIsAdding(false);
+    alert("已成功加入守護清單！");
+  } catch (err) {
+    console.log("加入購物車失敗", err);
+  }
+};
+
+const handleAdd = async (id) => {
+  if (isAdding) return; // 防止快速重複點擊
+  setIsAdding(true);
+  await addCart(id);
+  setIsAdding(false);
 };
 
 
@@ -86,7 +99,7 @@ const toggleFavorite = (id) => {
     <>
     <div className="">
         {randomProducts.map(product => (
-             <div className="card border-0 shadow-sm key={product.id}">
+             <div className="card border-0 shadow-sm" key={product.id}>
                 <div className="custom-card">
                         <div className="card product-card custom-card-bg" >
               {/* 圖片區 */}
@@ -124,11 +137,17 @@ const toggleFavorite = (id) => {
                   <del className="text-muted fw-normal ms-2 fs-20">${product.price}</del>
                 </div>
         
-                <button className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold" onClick={() => 
-                handleAdd(product.id)}
-                disabled={isAdding}>
-                 {isAdding ? (<span className="spinner-border spinner-border-sm" role="status"></span>) : '加入購物車'}
-                </button>
+                <button
+  className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold"
+  onClick={() => handleAdd(product.id)}
+  disabled={isAdding}
+>
+  {isAdding ? (
+    <span className="spinner-border spinner-border-sm" role="status"></span>
+  ) : (
+    "加入購物車"
+  )}
+</button>
               </div>
                          </div>
                       </div>

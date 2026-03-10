@@ -17,8 +17,8 @@ const routes =[
         element:<App/>,
         children:[
             {
-              path:'',
-              element:<Home/>
+                path:'',
+                element:<Home/>
             },
             {
                 path:'products',
@@ -56,4 +56,4 @@ const routes =[
     }
     
 ]
- export default routes;
+    export default routes;
