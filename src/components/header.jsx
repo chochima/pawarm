@@ -47,6 +47,7 @@ return (
             <li><NavLink to='products'>選擇​我​的​動物​​​</NavLink></li>
             <li><NavLink href="#">查看公益里程碑</NavLink></li>
             <li><NavLink to='animaltracking'>追蹤​動物​​​​</NavLink></li>
+            <li><NavLink to='membercenter'>會員中心</NavLink></li> {/*暫時*/}
             <li><NavLink href="#">活動資訊​​​</NavLink></li>
             <li><NavLink href="#">關於我們​​​​</NavLink></li>
             <li className="border-start border border-secondary-1 border-1 me-48"></li>
