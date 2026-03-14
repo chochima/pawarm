@@ -96,7 +96,7 @@ const removeCoupon = () => {
 
   return (
     <>
-    <div className="container my-5">
+    <div className="container my-5 overflow-hidden">
         <CheckoutStepper />
 
    

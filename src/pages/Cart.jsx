@@ -435,7 +435,7 @@ const removeCoupon = () => {
   
 </div>
 <div className="bg-gray-50">
-  <div className="container ">
+  <div className="container  overflow-hidden">
   <div className=" py-120">
      <div className="fs-36 fw-700 title-text-cart text-black mb-32">與牠們相遇：「下一位等著您守護的夥伴」</div>
      <div className="row">
