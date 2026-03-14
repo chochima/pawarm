@@ -5,7 +5,7 @@ import love from '../image/love.svg';
 import loveFill from '../image/love-fill.svg';
 import { createAsyncGetCart } from "../slice/cartSlice";
 import { NavLink,Link } from "react-router";
-
+import toast from 'react-hot-toast';
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
 const mechanismImages = [
@@ -75,7 +75,15 @@ const Products = () => {
       const data = { product_id: id, qty };
       await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
       dispatch(createAsyncGetCart());
-      alert("已加入守護清單");
+
+      toast.success('已加入守護清單！', {
+    duration: 3000, // 持續 3 秒
+    position: 'top-right', // 顯示在右上角
+    style: {
+      background: '#333',
+      color: '#fff',
+    },
+  });
     } catch (err) {
       console.log("加入購物車失敗");
     }

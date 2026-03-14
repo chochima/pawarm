@@ -85,22 +85,34 @@ const CheckoutForm = ({ cart, getCart}) => {
             <div className="container">
                 <div className="row">
           {/* 左：運送與付款 */}
-          <div className="col-md-4">
-            <div className="fs-36 fw-700 title-text-cart text-black mb-32">運送方式</div>
-            <div className="mb-4">
-              <label className="form-label small text-muted">送貨方式</label>
-              <select className="form-select bg-gray-100 border-0 py-2" {...register("delivery")}>
-                <option value="宅配">宅配</option>
-              </select>
+          <div className="col-md-4 d-flex flex-column justify-content-between">
+            <div>
+               <div className="fs-36 fw-700 title-text-cart text-black mb-32">運送方式</div>
+               <div className="mb-4">
+                 <label className="form-label small text-muted">送貨方式</label>
+                  <select className="form-select bg-gray-100 border-0 py-2" {...register("delivery")}>
+                   <option value="宅配">宅配 (黑貓/新竹物流)</option>
+                   <option value="7-11">7-11 超商取貨</option>
+                   <option value="FamilyMart">全家超商取貨</option>
+                   <option value="Hi-Life">萊爾富超商取貨</option>
+                 </select>
+             </div>
             </div>
-
             
-            <div className="fs-36 fw-700 title-text-cart text-black mb-32">付款方式</div>
-            <div className="mb-3">
-              <select className="form-select bg-gray-100 border-0 py-2" {...register("payment")}>
-                <option value="信用卡">信用卡 (Visa/MasterCard/JCB/銀聯)</option>
-              </select>
+
+            <div>
+              <div className="fs-36 fw-700 title-text-cart text-black mb-32">付款方式</div>
+              <div className="mb-3">
+                <select className="form-select bg-gray-100 border-0 py-2" {...register("payment")}>
+                   <option value="信用卡">信用卡 (Visa/MasterCard/JCB)</option>
+                   <option value="LINEPay">LINE Pay</option>
+                   <option value="JKOPay">街口支付</option>
+                   <option value="ATM">ATM 虛擬帳號轉帳</option>
+                   <option value="COD">貨到付款</option>
+                </select>
+              </div>
             </div>
+            
           </div>
 
           {/* 右：收件資訊 */}
@@ -137,7 +149,7 @@ const CheckoutForm = ({ cart, getCart}) => {
                 <label className="form-label small text-muted">E-mail</label>
                <input 
     type="email" 
-    className={`form-control ${errors.email ? 'is-invalid' : ''}`} // 如果有錯，加上紅框
+    className={`form-control bg-gray-100 ${errors.email ? 'is-invalid' : ''}`} // 如果有錯，加上紅框
     placeholder="請輸入 Email"
     {...register("email", { 
       required: "請輸入 Email",
@@ -180,13 +192,18 @@ const CheckoutForm = ({ cart, getCart}) => {
               <div className="mb-3">
                 <label className="form-label small text-muted">發票類型</label>
                 <select className="form-select bg-gray-50 border-0 py-2" {...register("invoiceType")}>
-                  <option value="二聯式">二聯式</option>
+                  <option value="二聯式">二聯式電子發票</option>
+                  <option value="三聯式">三聯式電子發票 (需打統編)</option>
+                  <option value="捐贈">捐贈發票</option>
                 </select>
               </div>
               <div className="mb-3">
                 <label className="form-label small text-muted">發票載具</label>
                 <select className="form-select bg-gray-50 border-0 py-2" {...register("invoiceTool")}>
-                  <option value="電子發票載具">電子發票載具</option>
+                  <option value="手機條碼">手機條碼 (載具條碼)</option>
+                  <option value="自然人憑證">自然人憑證</option>
+                  <option value="會員載具">會員載具</option>
+                  <option value="愛心碼">捐贈發票 (愛心碼)</option>
                 </select>
               </div>
               <div className="mb-3">
@@ -195,9 +212,9 @@ const CheckoutForm = ({ cart, getCart}) => {
               </div>
             </div>
 
-            <div className="col-md-6 d-flex align-items-center">
-              <div className="p-4 border border-2 rounded-4 w-100 bg-white shadow-sm" style={{ borderColor: '#b68d4c' }}>
-                <p className="fw-bold mb-3" style={{ color: '#b68d4c' }}>信用卡資訊</p>
+            <div className="col-md-6 d-flex flex-column ">
+              <div className="fs-36 fw-700 title-text-cart text-black mb-32">信用卡資訊</div>
+              <div className="p-4 border border-primary-500 border-3 rounded-4 w-100 bg-white shadow-sm p-24" style={{ borderColor: '#b68d4c' }}>
                 <input type="text" className="form-control mb-3 bg-gray-50 border-0" placeholder="卡號 (0000 0000 0000 0000)" />
                 <input type="text" className="form-control mb-3 bg-gray-50 border-0" placeholder="持卡人姓名" />
                 <div className="row g-2">
