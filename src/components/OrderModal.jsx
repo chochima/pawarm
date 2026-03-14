@@ -4,7 +4,6 @@ const OrderModal = ({ order, onUpdateOrder }) => {
   const [tempData, setTempData] = useState({});
 
   useEffect(() => {
-    // 確保初始化時包含巢狀結構，避免 undefined 錯誤
     setTempData({
       ...order,
       user: {
@@ -21,8 +20,6 @@ const OrderModal = ({ order, onUpdateOrder }) => {
 
   const handleUserChange = (e) => {
     const { name, value } = e.target;
-    
-    // 如果是 invoice 相關欄位
     if (['type', 'tool', 'email'].includes(name)) {
       setTempData({
         ...tempData,
@@ -32,7 +29,6 @@ const OrderModal = ({ order, onUpdateOrder }) => {
         }
       });
     } else {
-      // 一般 user 欄位 (name, tel, address, delivery, payment)
       setTempData({
         ...tempData,
         user: { ...tempData.user, [name]: value }
@@ -41,9 +37,23 @@ const OrderModal = ({ order, onUpdateOrder }) => {
   };
 
   const handleQtyChange = (e, productId) => {
+    const newQty = Number(e.target.value);
     const newProducts = { ...tempData.products };
-    newProducts[productId].qty = Number(e.target.value);
-    setTempData({ ...tempData, products: newProducts });
+    
+    // 1. 更新數量與單項小計
+    newProducts[productId].qty = newQty;
+    newProducts[productId].total = newProducts[productId].product.price * newQty;
+    
+    // 2. 重新計算訂單總額
+    const newTotal = Object.values(newProducts).reduce((acc, item) => {
+      return acc + (item.product.price * item.qty);
+    }, 0);
+
+    setTempData({ 
+      ...tempData, 
+      products: newProducts,
+      total: newTotal 
+    });
   };
 
   if (!tempData.id) return null;
@@ -75,17 +85,19 @@ const OrderModal = ({ order, onUpdateOrder }) => {
 
             <h6>商品明細</h6>
             <table className="table">
-              <thead><tr><th>商品</th><th>數量</th><th>單價</th></tr></thead>
+              <thead><tr><th>商品</th><th>數量</th><th>單價</th><th>小計</th></tr></thead>
               <tbody>
                 {Object.entries(tempData.products || {}).map(([id, item]) => (
                   <tr key={id}>
                     <td>{item.product.title}</td>
-                    <td><input type="number" className="form-control w-25" value={item.qty} onChange={(e) => handleQtyChange(e, id)} /></td>
+                    <td><input type="number" className="form-control w-50" value={item.qty} onChange={(e) => handleQtyChange(e, id)} /></td>
                     <td>${item.product.price}</td>
+                    <td>${item.total || (item.product.price * item.qty)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            <div className="text-end fw-bold fs-4">總計: ${tempData.total}</div>
 
             <div className="mb-3">
               <label>訂單備註</label>
