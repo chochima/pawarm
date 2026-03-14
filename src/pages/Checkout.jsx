@@ -4,7 +4,7 @@ import  axios from 'axios'
 
 
 
-import { NavLink } from "react-router";
+
 import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
 import CheckoutForm from "../components/CheckoutForm";
@@ -19,7 +19,7 @@ const{VITE_PATH,VITE_URL}=import.meta.env;
 const Checkout=()=>{
   const [cart, setCart] = useState([]);
   const [couponCode, setCouponCode] = useState("");
-
+  
 
 
 
@@ -43,20 +43,6 @@ const Checkout=()=>{
     }
   };
 
-
-  const onSubmit = async (data) => {
-      try {
-        if(!cart.carts.length) {
-          alert("購物車沒有商品！");
-          return;
-        }
-        await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/order`, { data: { user: data, message: data.message } });
-        reset();
-        getCart();
-      } catch (err) {
-        console.error(err);
-      }
-  };
 
   // 套用優惠券
 const applyCoupon = async (code) => {

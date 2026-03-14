@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import * as bootstrap from "bootstrap";
 import Pagination from "../components/Pagination";
-import CouponModal from "../components/CouponModal"; // 記得建立這個組件
+import CouponModal from "../components/CouponModal"; 
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
@@ -127,18 +127,7 @@ const BackstageCoupons = () => {
     <div className="container">
       <div className="d-flex justify-content-between mt-4">
         <h2>優惠券管理</h2>
-        <button
-                className="btn btn-primary"
-                onClick={() => navigate("/")}
-              >
-                首頁
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/backstage/products")}
-              >
-                產品
-              </button>
+        
         <button className="btn btn-primary" onClick={() => openModal({}, "new")}>
           建立新優惠券
         </button>

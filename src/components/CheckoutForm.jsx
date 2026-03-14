@@ -1,12 +1,18 @@
 import React from 'react';
 import { NavLink } from "react-router";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { createAsyncGetCart } from "../slice/cartSlice";
 import axios from 'axios';
 
 // 假設這些環境變數與工具函數已定義
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
 const CheckoutForm = ({ cart, getCart}) => {
+  const dispatch = useDispatch();
+
+
+
   const {
     register,
     handleSubmit,
@@ -50,6 +56,7 @@ const CheckoutForm = ({ cart, getCart}) => {
         alert("訂單已送出！感謝您的愛心守護。");
         reset();   // 重置表單
         getCart(); // 刷新購物車
+        dispatch(createAsyncGetCart());
       }
     } catch (err) {
       console.error(err);

@@ -292,18 +292,7 @@ const handleRemoveContentImage = (index) => {
               >
                 建立新的產品
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/")}
-              >
-                首頁
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/backstage/coupon")}
-              >
-                Coupon
-              </button>
+              
               <button
                 className="btn btn-primary"
                 onClick={() => logout()}
