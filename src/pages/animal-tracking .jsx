@@ -2,9 +2,11 @@ import { useState ,useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import '../style/_fonts.scss';
-import "../style/all.scss"
+import "../style/all.scss";
+import { NavLink } from 'react-router-dom';
 const API_BASE = import.meta.env.VITE_URL;
 const API_PATH = import.meta.env.VITE_PATH;
+
 
 function AnimalTracking() {
 
@@ -65,7 +67,6 @@ function AnimalTracking() {
   return (
     <div className="animal-tracking-page overflow-hidden">
       <div>
-
       </div>
       <div className="pt-120 container px-12 px-xl-0">{/* RWD ok 字體大小還沒*/}
         <h1 className='text-serif title-underline fs-48 ' >我守護的動物們</h1>
@@ -146,7 +147,7 @@ function AnimalTracking() {
         <img src="src\image\track-img\wave-down.png" alt="wave-down" className='w-100 d-block' />
       </div>
       <div className="pt-120 container px-12 px-xl-0">
-        <p className='text-serif fs-48 title-underline' >臺灣石虎保育機構</p>
+        <p className='text-serif fs-48 title-underline' >{articles[currentIndex]?.title}保育機構</p>
       </div>
       <div className="pt-32 container px-12 px-xl-0">
         <div className='d-flex flex-nowrap overflow-x-auto  pb-2 hide-scrollbar'>

@@ -1,0 +1,17 @@
+.content-preview {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  cursor: pointer;
+  transition: max-height 0.3s ease; // 雖然 line-clamp 不支援 transition，但保留這行未來重構好用
+
+  &.collapsed {
+    -webkit-line-clamp: 1; // 限制只顯示 1 行
+    line-clamp: 1;
+  }
+
+  &.expanded {
+    -webkit-line-clamp: unset; // 取消限制
+    line-clamp: unset;
+  }
+}
