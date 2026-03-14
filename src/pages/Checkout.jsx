@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { createAsyncGetCart } from "../slice/cartSlice";
+
+import { useState, useEffect} from "react";
 import  axios from 'axios'
 
 
 
+import { NavLink } from "react-router";
 import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
-import { NavLink } from "react-router";
+import CheckoutForm from "../components/CheckoutForm";
+
 
 
 
@@ -16,15 +17,11 @@ const{VITE_PATH,VITE_URL}=import.meta.env;
 
 
 const Checkout=()=>{
-  const [isAdding, setIsAdding] = useState(false);
   const [cart, setCart] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [isUpdating, setIsUpdating] = useState("");
-  const [randomProducts, setRandomProducts] = useState([]);
   const [couponCode, setCouponCode] = useState("");
 
 
-  const dispatch = useDispatch();
+
 
   
  
@@ -181,39 +178,13 @@ const removeCoupon = () => {
               <h6 className="fw-bold mb-1">{item.product.title}</h6>
               <p className="text-muted small mb-0">{item.product.agency}</p>
             </div>
-            {/* 愛心與垃圾桶按鈕 */}
-            <div className="d-flex gap-3 text-muted">
-              <i className="bi bi-heart" style={{ cursor: 'pointer' }}></i>
-              <i 
-                className="bi bi-trash" 
-                style={{ cursor: 'pointer' }}
-                onClick={() => deleteCart(item.id)}
-              ></i>
-            </div>
+  
           </div>
 
-          {/* 下方：數量控制與金額 */}
           <div className="d-flex justify-content-between align-items-center mt-3">
              <div className="d-flex align-items-center justify-content-center">
-  <button 
-    className="btn btn-outline-dark btn-sm rounded-circle"
-    style={{ width: '30px', height: '30px', padding: 0 }}
-    onClick={() => updateCart(item.id, item.product_id, item.qty - 1)}
-    disabled={item.qty <= 1 || isUpdating === item.id}
-  >
-    <i className="bi bi-dash"></i>
-  </button>
-  
-  <span className="mx-3 fw-bold">{item.qty}</span>
-  
-  <button 
-    className="btn btn-outline-dark btn-sm rounded-circle"
-    style={{ width: '30px', height: '30px', padding: 0 }}
-    onClick={() => updateCart(item.id, item.product_id, item.qty + 1)}
-    disabled={isUpdating === item.id}
-  >
-    <i className="bi bi-plus"></i>
-  </button>
+ 
+  <span className="mx-3 fw-bold">{item.qty}份</span>
 </div>
             <span className="fw-bold">${item.total.toLocaleString()}</span>
           </div>
@@ -291,15 +262,15 @@ const removeCoupon = () => {
     
     <div className="fw-bold mb-0 fs-28" style={{ color: '#b68d4c' }}>${currency(cart?.final_total)}</div>
   </div>
-        <NavLink to="/carts"  className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none">上一步</NavLink>
-        <NavLink to="/checkout"  className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none">下一步</NavLink>
-  <div className="fs-14 lh-base text-gray-500">✨ 本次消費將贊助 ${currency(cart?.final_total*0.15)} 給保育機構，感謝您的購買</div>
+       <div className="fs-14 lh-base text-gray-500">✨ 本次消費將贊助 ${currency(cart?.final_total*0.15)} 給保育機構，感謝您的購買</div>
       </div>
     </div>
   </div>
   
   
-</div>
+   </div>
+
+   <CheckoutForm cart={cart} getCart={getCart}/>
 
 
 
