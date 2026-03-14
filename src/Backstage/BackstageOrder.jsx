@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router";
 import axios from "axios";
 import * as bootstrap from "bootstrap";
 import Pagination from "../components/Pagination";
@@ -26,6 +25,28 @@ const BackstageOrder = () => {
       console.error(err);
     }
   };
+ // 增加處理更新的邏輯
+const updateOrder = async (orderData) => {
+  try {
+    await axios.put(`${VITE_URL}/v2/api/${VITE_PATH}/admin/order/${orderData.id}`, { data: orderData });
+    alert("訂單已更新");
+    getOrders(); // 成功後刷新列表
+    orderModalRef.current.hide(); // 關閉視窗
+  } catch (err) {
+    alert("更新失敗");
+  }
+};
+
+// 增加刪除的邏輯
+const deleteOrder = async (id) => {
+  if (!window.confirm("確定刪除此訂單？")) return;
+  try {
+    await axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/admin/order/${id}`);
+    getOrders();
+  } catch (err) {
+    alert("刪除失敗");
+  }
+};
 
   // 修改付款狀態 (這是訂單管理最常用的功能)
   const updatePaid = async (order) => {
@@ -37,10 +58,11 @@ const BackstageOrder = () => {
       alert("狀態更新失敗");
     }
   };
+  
+  
  const openOrderModal = (order) => {
   setTempOrder(order);
   
-  // 延遲一點點時間，確保 React 已經把 <OrderModal /> 渲染出來了
   setTimeout(() => {
     if (!orderModalRef.current) {
       orderModalRef.current = new bootstrap.Modal(document.querySelector("#orderModal"));
@@ -113,10 +135,10 @@ const BackstageOrder = () => {
                 </button>
               </td>
               <td>
-                <button 
-                className="btn btn-outline-primary btn-sm"
-                onClick={() => openOrderModal(order)}
-                >檢視</button>
+               <div className="btn-group btn-group-sm">
+                  <button className="btn btn-outline-primary" onClick={() => openOrderModal(order)}>檢視/編輯</button>
+                  <button className="btn btn-outline-danger" onClick={() => deleteOrder(order.id)}>刪除</button>
+               </div>
               </td>
             </tr>
           ))}
@@ -125,9 +147,10 @@ const BackstageOrder = () => {
       <Pagination pagination={pagination} changePage={getOrders} />
 
       <OrderModal 
-      order={tempOrder} 
-      onUpdatePaid={updatePaid} 
-      />
+  order={tempOrder} 
+  onUpdatePaid={updatePaid} 
+  onUpdateOrder={updateOrder} 
+/>
     </div>
   );
 };
