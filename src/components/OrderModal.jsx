@@ -4,7 +4,14 @@ const OrderModal = ({ order, onUpdateOrder }) => {
   const [tempData, setTempData] = useState({});
 
   useEffect(() => {
-    setTempData(order);
+    // 確保初始化時包含巢狀結構，避免 undefined 錯誤
+    setTempData({
+      ...order,
+      user: {
+        ...order.user,
+        invoice: order.user?.invoice || { type: '', tool: '', email: '' }
+      }
+    });
   }, [order]);
 
   const handleInputChange = (e) => {
@@ -14,7 +21,23 @@ const OrderModal = ({ order, onUpdateOrder }) => {
 
   const handleUserChange = (e) => {
     const { name, value } = e.target;
-    setTempData({ ...tempData, user: { ...tempData.user, [name]: value } });
+    
+    // 如果是 invoice 相關欄位
+    if (['type', 'tool', 'email'].includes(name)) {
+      setTempData({
+        ...tempData,
+        user: {
+          ...tempData.user,
+          invoice: { ...tempData.user.invoice, [name]: value }
+        }
+      });
+    } else {
+      // 一般 user 欄位 (name, tel, address, delivery, payment)
+      setTempData({
+        ...tempData,
+        user: { ...tempData.user, [name]: value }
+      });
+    }
   };
 
   const handleQtyChange = (e, productId) => {
@@ -33,14 +56,21 @@ const OrderModal = ({ order, onUpdateOrder }) => {
             <h5 className="modal-title">編輯訂單：{tempData.id}</h5>
           </div>
           <div className="modal-body">
-            <h6>顧客資料</h6>
-            <div className="row mb-3">
+            <h6>顧客基本資料</h6>
+            <div className="row mb-3 g-2">
               <div className="col-4"><input name="name" className="form-control" value={tempData.user?.name || ''} onChange={handleUserChange} placeholder="姓名" /></div>
               <div className="col-4"><input name="email" className="form-control" value={tempData.user?.email || ''} onChange={handleUserChange} placeholder="Email" /></div>
               <div className="col-4"><input name="tel" className="form-control" value={tempData.user?.tel || ''} onChange={handleUserChange} placeholder="電話" /></div>
-              <div className="col-12 mt-2">
-                <input name="address" className="form-control" value={tempData.user?.address || ''} onChange={handleUserChange} placeholder="地址" />
-              </div>
+              <div className="col-12"><input name="address" className="form-control" value={tempData.user?.address || ''} onChange={handleUserChange} placeholder="地址" /></div>
+            </div>
+
+            <h6>購物細節</h6>
+            <div className="row mb-3 g-2">
+              <div className="col-6"><input name="delivery" className="form-control" value={tempData.user?.delivery || ''} onChange={handleUserChange} placeholder="配送方式" /></div>
+              <div className="col-6"><input name="payment" className="form-control" value={tempData.user?.payment || ''} onChange={handleUserChange} placeholder="付款方式" /></div>
+              <div className="col-4"><input name="type" className="form-control" value={tempData.user?.invoice?.type || ''} onChange={handleUserChange} placeholder="發票類型" /></div>
+              <div className="col-4"><input name="tool" className="form-control" value={tempData.user?.invoice?.tool || ''} onChange={handleUserChange} placeholder="發票載具" /></div>
+              <div className="col-4"><input name="email" className="form-control" value={tempData.user?.invoice?.email || ''} onChange={handleUserChange} placeholder="發票 Email" /></div>
             </div>
 
             <h6>商品明細</h6>
@@ -50,9 +80,7 @@ const OrderModal = ({ order, onUpdateOrder }) => {
                 {Object.entries(tempData.products || {}).map(([id, item]) => (
                   <tr key={id}>
                     <td>{item.product.title}</td>
-                    <td>
-                      <input type="number" className="form-control w-25" value={item.qty} onChange={(e) => handleQtyChange(e, id)} />
-                    </td>
+                    <td><input type="number" className="form-control w-25" value={item.qty} onChange={(e) => handleQtyChange(e, id)} /></td>
                     <td>${item.product.price}</td>
                   </tr>
                 ))}
@@ -61,13 +89,7 @@ const OrderModal = ({ order, onUpdateOrder }) => {
 
             <div className="mb-3">
               <label>訂單備註</label>
-              <textarea 
-                name="message" 
-                className="form-control" 
-                rows="8" // 將備註區塊高度加大
-                value={tempData.message || ''} 
-                onChange={handleInputChange} 
-              />
+              <textarea name="message" className="form-control" rows="3" value={tempData.message || ''} onChange={handleInputChange} />
             </div>
           </div>
           <div className="modal-footer">

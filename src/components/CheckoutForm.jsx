@@ -35,20 +35,32 @@ const CheckoutForm = ({ cart, getCart}) => {
         return;
       }
 
-      // 整理 API 接受的格式
-      // 將 user 基本欄位以外的資訊（付款、發票、備註）合併到 message
-      const { name, email, tel, address, note, ...others } = data;
       
-      const orderData = {
-        data: {
-          user: { name, email, tel, address },
-          message: `
-            備註: ${note || '無'}
-            付款方式: ${others.payment}
-            發票資訊: ${others.invoiceType} - ${others.invoiceTool} (${others.invoiceEmail || '未填'})
-          `.trim()
-        }
-      };
+     const { 
+      name, email, tel, address, note, 
+      delivery, payment, invoiceType, invoiceTool, invoiceEmail 
+    } = data;
+
+    // 2. 組合 API 需要的格式
+    const orderData = {
+      data: {
+        user: { 
+          name, 
+          email, 
+          tel, 
+          address,
+          delivery, 
+          payment,
+          invoice: {
+            type: invoiceType,
+            tool: invoiceTool,
+            email: invoiceEmail
+          }
+        },
+        // 僅保留備註在 message 中
+        message: note || '無'
+      }
+    };
 
       const res = await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/order`, orderData);
       
