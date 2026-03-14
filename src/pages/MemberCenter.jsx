@@ -309,6 +309,243 @@ function MemberCenter(){
                                 </div>
                             </div>
                             </div>
+                            {/* 訂單資訊 */}
+                            <div className="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab" tabIndex="0">
+                            <div className="bg-white" style={{ borderRadius: '16px' }}>
+                                <div className=" ">
+                                <div className="d-flex justify-content-between align-items-center p-24">
+                                    <div className="fs-24 fw-bold text-primary-600">訂單資訊</div>
+                                    <div className="d-flex align-items-center gap-8">
+                                    <div className="d-none">篩選</div>
+                                    <div>
+                                        <select 
+                                        className="form-select form-select-lg fs-14" 
+                                        aria-label=".form-select-lg example"
+                                        style={{ borderRadius: '100px' }}
+                                        defaultValue="0"
+                                        >
+                                        <option value="0">3個月內</option>
+                                        <option value="1">6個月內</option>
+                                        <option value="2">1年內</option>
+                                        </select>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <table className="table align-middle mb-0 table-borderless">
+                                    <thead>
+                                        <tr className="text-center">
+                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
+                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
+                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
+                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
+                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">合計</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr className="text-center">
+                                        <td className="py-lg-16">
+                                            <a href="#" className="text-decoration-none fw-bold text-primary-600 order">4081864</a>
+                                        </td>
+                                        <td>
+                                            <div className="text-secondary-400 fw-medium">2024-08-18</div>
+                                            <div className="text-secondary-400 fw-medium">01:44:13</div>
+                                        </td>
+                                        <td>處理中</td>
+                                        <td>已付款</td>
+                                        <td className="text-danger fw-medium">$2100</td>
+                                        </tr>
+                                        <tr className="text-center">
+                                        <td className="py-lg-16">
+                                            <a href="#" className="text-decoration-none fw-bold text-primary-600 order">3080511</a>
+                                        </td>
+                                        <td>
+                                            <div className="text-secondary-400 fw-medium">2025-08-05</div>
+                                            <div className="text-secondary-400 fw-medium">22:26:41</div>
+                                        </td>
+                                        <td>已取消</td>
+                                        <td>超過付款時間</td>
+                                        <td className="text-danger fw-medium">$900</td>
+                                        </tr>
+                                        <tr className="text-center">
+                                        <td className="py-lg-16">
+                                            <a href="./shopping-cart4.html" className="text-decoration-none fw-bold text-primary-600 order">2068439</a>
+                                        </td>
+                                        <td>
+                                            <div className="text-secondary-400 fw-medium">2025-07-22</div>
+                                            <div className="text-secondary-400 fw-medium">21:13:08</div>
+                                        </td>
+                                        <td>已完成</td>
+                                        <td>已付款</td>
+                                        <td className="text-danger fw-medium">$1500</td>
+                                        </tr>
+                                    </tbody>
+                                    </table>
+
+                                    <div 
+                                    className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
+                                    style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
+                                    >
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            {/* 我的關注 */}
+                            <div className="tab-pane fade" id="v-pills-follow" role="tabpanel" aria-labelledby="v-pills-follow-tab" tabIndex="0">
+                            <div className="bg-white" style={{ borderRadius: '16px' }}>
+                                <div>
+                                {/* header */}
+                                <div className="d-flex justify-content-between align-items-center p-24">
+                                    <div>
+                                    <div className="fs-24 fw-bold text-primary-600">我的收藏</div>
+                                    </div>
+
+                                    <div className="d-flex align-items-center gap-8">
+                                    <div className="">順序</div>
+                                    <div>
+                                        <select 
+                                        className="form-select form-select-lg fs-8" 
+                                        aria-label=".form-select-lg example"
+                                        style={{ borderRadius: '100px' }}
+                                        defaultValue="由新至舊"
+                                        >
+                                        <option value="由新至舊">新至舊</option>
+                                        <option value="舊至新">舊至新</option>
+                                        </select>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                {/* content */}
+                                <div className="p-24">
+                                    <ul className="nav nav-tabs mb-12" id="favTabs" role="tablist">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link active" id="pets-tab" data-bs-toggle="tab" data-bs-target="#pets" type="button" role="tab">
+                                        寶貝
+                                        </button>
+                                    </li>
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link" id="org-tab" data-bs-toggle="tab" data-bs-target="#org" type="button" role="tab">
+                                        機構
+                                        </button>
+                                    </li>
+                                    </ul>
+
+                                    {/* Tab 內容 */}
+                                    <div className="tab-content">
+                                    {/* 寶貝 */}
+                                    <div className="tab-pane fade show active" id="pets" role="tabpanel">
+                                        <div className="container scroll-area">
+                                            <div className="row g-16">
+                                                {/* 卡片：阿橘橘 */}
+                                                <div className="col-md-4 col-12">
+                                                    <div className="card border-primary rounded-4" >
+                                                        <img src="src\image\pet_4_阿橘橘.jpg" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
+                                                        <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
+                                                        <div className="card-body">
+                                                        <div className="text-center py-12">
+                                                            <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿橘橘</div>
+                                                            <div className="fw-medium fs-16 text-secondary-800 lh-sm">喵了個咪中途之家</div>
+                                                        </div>
+                                                        <div className="d-flex justify-content-between text-center gap-8">
+                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">新北市</div>
+                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">已結紮</div>
+                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">可領養</div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* 卡片：阿財 */}
+                                                <div className="col-md-4 col-12">
+                                                    <div className="card border-primary rounded-4">
+                                                        <img src="src\image\pet_3_阿財.png" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
+                                                        <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
+                                                        <div className="card-body">
+                                                        <div className="text-center py-12">
+                                                            <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿財</div>
+                                                            <div className="fw-medium fs-16 text-secondary-800 lh-sm">毛茸茸中途咖啡</div>
+                                                        </div>
+                                                        <div className="d-flex justify-content-between text-center gap-8">
+                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >新北市</div>
+                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >已結紮</div>
+                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >可領養</div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* 機構 */}
+                                    <div className="tab-pane fade" id="org" role="tabpanel">
+                                        <div className="container scroll-area">
+                                        <div className="row g-16">
+                                            {/* 機構卡片範例 */}
+                                            <div className="col-lg-4 col-6">
+                                                <div className="card border-primary rounded-4">
+                                                <img src="src\image\dog and doctor 1.jpg" alt="#" className="w-100 rounded-4"
+                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
+                                                <img src="src\image\love-fill.svg" alt="heat"
+                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
+                                                <div className="card-body">
+                                                    <div className="text-center ">
+
+                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">毛寶寶基金會</div>
+                                                    </div>
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-lg-4 col-6">
+                                                <div className="card border-primary rounded-4">
+                                                <img src="src\image\pet with people.jpg" alt="#" className="w-100 rounded-4"
+                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
+                                                <img src="src\image\love-fill.svg" alt="heat"
+                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
+                                                <div className="card-body">
+                                                    <div className="text-center ">
+
+                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">喵了個咪中途之家</div>
+                                                    </div>
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-lg-4 col-6">
+                                                <div className="card border-primary rounded-4">
+                                                <img src="src\image\vet.jpg" alt="#" className="w-100 rounded-4"
+                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
+                                                <img src="src\image\love-fill.svg" alt="heat"
+                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
+                                                <div className="card-body">
+                                                    <div className="text-center ">
+
+                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">小腳印之家</div>
+                                                    </div>
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                            {/* 其他機構卡片以此類推... */}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+
+                                {/* footer */}
+                                <div 
+                                className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
+                                style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
+                                >
+                                </div>
+                            </div>
+                            </div>
                         </div>
                     </div>
                 </div>
