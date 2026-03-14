@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router"; 
+import { useNavigate } from "react-router";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { createAsyncGetCart } from "../slice/cartSlice";
 import { NavLink } from "react-router";
+import toast from 'react-hot-toast';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
@@ -23,6 +25,7 @@ const ProductDetail = () => {
   const [mainImage, setMainImage] = useState(""); 
   const [data, setData] = useState({ summary: { averageRating: 0, totalReviews: 0 }, reviews: [] });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
 
   // 取得單一產品資料
@@ -52,11 +55,23 @@ const ProductDetail = () => {
       const data = { product_id: id, qty };
       await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
       dispatch(createAsyncGetCart()); // 更新 Navbar 數量
-      alert("已加入購物車");
+      toast.success('已加入守護清單！', {
+    duration: 3000, // 持續 3 秒
+    position: 'top-right', // 顯示在右上角
+    style: {
+      background: '#333',
+      color: '#fff',
+    },
+  });
     } catch (err) {
       alert("加入失敗");
     }
   };
+  const handleBuyNow = async()=>{
+    await addToCart();
+    toast.success('已加入守護清單，準備前往結帳！')
+    navigate("/checkout")
+  }
 
   return (
     <>
@@ -181,7 +196,7 @@ const ProductDetail = () => {
 
           <div className="row g-12 mb-32">
             <div className="col-6">
-              <button className="btn btn-outline-primary-500 w-100 py-3 fw-bold">立即購買</button>
+              <button className="btn btn-outline-primary-500 w-100 py-3 fw-bold" onClick={handleBuyNow}>立即購買</button>
             </div>
             <div className="col-6">
               <button className="btn btn-primary-500 text-white w-100 py-3 fw-bold" onClick={addToCart}>加入購物車</button>
