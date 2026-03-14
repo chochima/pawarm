@@ -246,9 +246,9 @@ const CheckoutForm = ({ cart, getCart}) => {
         </div>
 
         <div className="text-center py-60">
-          <div className="mb-4 d-flex justify-content-center align-items-center gap-2">
+          <div className="mb-4  d-flex justify-content-center align-items-center gap-2">
             <input type="checkbox" className="form-check-input mt-0" id="terms" {...register("terms", { required: true })} />
-            <label htmlFor="terms" className="form-check-label fs-14">
+            <label htmlFor="terms" className="form-check-label fs-20">
               我接受<span className="text-primary fw-bold mx-1">服務條款</span>和<span className="text-primary fw-bold mx-1">隱私權政策</span>
             </label>
           </div>
