@@ -204,7 +204,7 @@ const removeCoupon = () => {
 
   return (
     <>
-    <div className="container my-5">
+    <div className="container my-5 overflow-hidden">
         <CheckoutStepper />
 
    
@@ -359,7 +359,7 @@ const removeCoupon = () => {
     </div>
 
     </div>
-    <div className="col-md-3">
+    <div className="col-lg-3">
       <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護計畫</div>
       <div className="bg-gray-50 p-20 d-flex flex-column gap-20">
         <div className="d-flex  justify-content-between">
@@ -567,13 +567,13 @@ const removeCoupon = () => {
 </div>
 <div >
   <div className="container ">
-  <div className=" py-120">
+  <div className=" py-120 overflow-x-hidden">
      <div className="fs-36 fw-700 title-text-cart text-black mb-32">瀏覽更多保育機構</div>
      <div className="row">
       <div className="col-lg-9 col-12">
         <div className="row g-20 g-md-32 align-items-center">
           {(mechanismImages || []).map((item, index) => (
-  <div className="col-6 col-md-3" key={index}>
+  <div className="col-6 col-lg-3" key={index}>
     <NavLink className="logo-wrapper d-flex justify-content-center align-items-center">
       <img 
         src={item.imageUrl} 
@@ -586,7 +586,7 @@ const removeCoupon = () => {
 ))}
       </div>
       </div>
-      <div className="col-3 d-none d-lg-block">
+      <div className="d-none d-lg-block">
         </div>
      </div>
   </div>

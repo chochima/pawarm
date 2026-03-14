@@ -218,7 +218,7 @@ const Products = () => {
   </div>
             ))
           ) : (
-            <div className="col-12 text-center py-5">
+            <div className="col-12 text-center py-5 ">
               <h3 className="text-gray-400">找不到符合「{searchQuery}」的計畫 🐾</h3>
               <button className="btn btn-link" onClick={() => {setSearchQuery(""); setFilterCategory("全部");}}>
                 清除搜尋條件
@@ -229,7 +229,7 @@ const Products = () => {
       </div>
 
       {/* 保育機構區塊 */}
-      <div className="bg-primary-50">
+      <div className="bg-primary-50 overflow-x-hidden">
         <div className="container py-120">
           <div className="fs-36 fw-700 title-text-cart text-black mb-32">瀏覽更多保育機構</div>
           <div className="row g-20 g-md-32 align-items-center">
