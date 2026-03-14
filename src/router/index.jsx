@@ -8,6 +8,7 @@ import Login from "../pages/Login";
 import Backstage from "../Backstage/Backstage";
 import BackstageProducts from "../Backstage/BackstageProducts";
 import BackstageCoupon from "../Backstage/BackstageCoupon";
+import BackstageOrder from "../Backstage/BackstageOrder";
 import Checkout from "../pages/Checkout";
 
 
@@ -59,6 +60,10 @@ const routes =[
             {
                 path:'coupon',
                 element:<BackstageCoupon/>
+            },
+            {
+                path:'order',
+                element:<BackstageOrder/>
             }
         ]
 
