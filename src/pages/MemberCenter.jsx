@@ -1,11 +1,73 @@
-import { useEffect } from 'react';
+
+import axios from "axios";
+import { useState ,useEffect } from "react";
+import { NavLink } from 'react-router-dom';
 import '../style/_fonts.scss';
 import "../style/all.scss";
+const API_BASE = import.meta.env.VITE_URL;
+const API_PATH = import.meta.env.VITE_PATH;
+
 
 
 function MemberCenter(){
+    const formatTime = (timestamp) => {
+        const date = new Date(timestamp * 1000); // Unix Timestamp 是秒，Date 需要毫秒
+        return {
+            date: date.toLocaleDateString(), 
+            time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+        };
+    };
+    const [orders, setOrders] = useState([]);
+    const [formData, setFormData] = useState({
+        username:"pawarm@gmail.com",
+        password:"pawarm"
+    });
+    const autoLogin = async () =>{
+        try {
+            // e.preventDefault();
+            const response = await axios.post(`${API_BASE}/admin/signin`,formData)
+            console.log(response.data);
+            const { token, expired} = response.data;
+            document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+            axios.defaults.headers.common['Authorization'] = token;
+            getOrders();
+
+
+        } catch (error) {
+            // setIsAuth(false);
+            console.log(error.response)
+        }
+    }
+    const getOrders = async ()=>{
+        try {
+        const response = await axios.get(`${API_BASE}/api/${API_PATH}/admin/orders`)
+        
+        // console.log('訂單內容:',response.data)
+        if (response.data.success) {
+                setOrders(response.data.orders); 
+            }
+
+        } catch (error) {
+        console.log(error.response);
+        }
+        
+    };
+
 // 2. 加入這段 JS 邏輯
     useEffect(() => {
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("hexToken="))
+            ?.split("=")[1];
+        if (token){
+            axios.defaults.headers.common['Authorization'] = token;
+            getOrders();
+        } else{
+            autoLogin();
+        }
+
+
+
         const initNotificationToggle = () => {
             const previews = document.querySelectorAll('.content-preview');
             
@@ -26,6 +88,8 @@ function MemberCenter(){
         const timer = setTimeout(initNotificationToggle, 300);
 
         return () => clearTimeout(timer); // 清除定時器
+
+
     }, []); // 空陣列表示只在組件載入時執行一次
 
 
@@ -34,7 +98,7 @@ function MemberCenter(){
         <h1>會員中心</h1>
         <div className="bg-primary-100">
             <div className="container py-40">
-                <div className="row">
+                <div className="row g-24">
                     {/* 左側選單*/}
                     <div className="col-md-4 bg-primary-50">
                         <div className="d-flex align-items-center justify-content-space py-32 px-24 gap-16 mb-16">
@@ -311,85 +375,80 @@ function MemberCenter(){
                             </div>
                             {/* 訂單資訊 */}
                             <div className="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab" tabIndex="0">
-                            <div className="bg-white" style={{ borderRadius: '16px' }}>
-                                <div className=" ">
-                                <div className="d-flex justify-content-between align-items-center p-24">
-                                    <div className="fs-24 fw-bold text-primary-600">訂單資訊</div>
-                                    <div className="d-flex align-items-center gap-8">
-                                    <div className="d-none">篩選</div>
+                                <div className="bg-white" style={{ borderRadius: '16px' }}>
+                                    <div className=" ">
+                                    <div className="d-flex justify-content-between align-items-center p-24">
+                                        <div className="fs-24 fw-bold text-primary-600">訂單資訊</div>
+                                        <div className="d-flex align-items-center gap-8">
+                                        <div className="d-none">篩選</div>
+                                        <div>
+                                            <select 
+                                            className="form-select form-select-lg fs-14" 
+                                            aria-label=".form-select-lg example"
+                                            style={{ borderRadius: '100px' }}
+                                            defaultValue="0"
+                                            >
+                                            <option value="0">3個月內</option>
+                                            <option value="1">6個月內</option>
+                                            <option value="2">1年內</option>
+                                            </select>
+                                        </div>
+                                        </div>
+                                    </div>
                                     <div>
-                                        <select 
-                                        className="form-select form-select-lg fs-14" 
-                                        aria-label=".form-select-lg example"
-                                        style={{ borderRadius: '100px' }}
-                                        defaultValue="0"
-                                        >
-                                        <option value="0">3個月內</option>
-                                        <option value="1">6個月內</option>
-                                        <option value="2">1年內</option>
-                                        </select>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <table className="table align-middle mb-0 table-borderless">
-                                    <thead>
-                                        <tr className="text-center">
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">合計</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="#" className="text-decoration-none fw-bold text-primary-600 order">4081864</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2024-08-18</div>
-                                            <div className="text-secondary-400 fw-medium">01:44:13</div>
-                                        </td>
-                                        <td>處理中</td>
-                                        <td>已付款</td>
-                                        <td className="text-danger fw-medium">$2100</td>
-                                        </tr>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="#" className="text-decoration-none fw-bold text-primary-600 order">3080511</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2025-08-05</div>
-                                            <div className="text-secondary-400 fw-medium">22:26:41</div>
-                                        </td>
-                                        <td>已取消</td>
-                                        <td>超過付款時間</td>
-                                        <td className="text-danger fw-medium">$900</td>
-                                        </tr>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="./shopping-cart4.html" className="text-decoration-none fw-bold text-primary-600 order">2068439</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2025-07-22</div>
-                                            <div className="text-secondary-400 fw-medium">21:13:08</div>
-                                        </td>
-                                        <td>已完成</td>
-                                        <td>已付款</td>
-                                        <td className="text-danger fw-medium">$1500</td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
+                                        <table className="table align-middle mb-0 table-borderless">
+                                        <thead>
+                                            <tr className="text-center">
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">合計</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            { orders.length > 0 ? (
+                                                orders.map((order)=>{
+                                                    const orderTime = formatTime(order.create_at);//轉換時間
+                                                    return (
+                                                        <tr className="text-center" key={order.id}>
+                                                            <td className="py-lg-16">
+                                                                <a href="#" className="text-decoration-none fw-bold text-primary-600 order">{order.id.slice(-7)}</a>
+                                                            </td>
+                                                            <td>
+                                                                <div className="text-secondary-400 fw-medium">{orderTime.date}</div>
+                                                                <div className="text-secondary-400 fw-medium">{orderTime.time}</div>
+                                                            </td>
+                                                            <td>{order.is_paid ? "處理中" : "待處理"}</td>
+                                                            <td>
+                                                                <span className={order.is_paid ? "text-success" : "text-danger"}>
+                                                                    {order.is_paid ? "已付款" : "未付款"}
+                                                                </span>
+                                                            </td>
+                                                            <td className="text-danger fw-medium">${order.total.toLocaleString()}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            ):(
+                                                <tr>
+                                                    <td colSpan="5" className="text-center py-5 text-secondary-400">
+                                                        目前沒有訂單資料
+                                                    </td>
+                                                </tr>
+                                            )
 
-                                    <div 
-                                    className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
-                                    style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
-                                    >
+                                            }
+                                        </tbody>
+                                        </table>
+
+                                        <div 
+                                        className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
+                                        style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
+                                        >
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
-                                </div>
-                            </div>
                             </div>
                             {/* 我的關注 */}
                             <div className="tab-pane fade" id="v-pills-follow" role="tabpanel" aria-labelledby="v-pills-follow-tab" tabIndex="0">
