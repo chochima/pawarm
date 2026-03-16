@@ -11,6 +11,7 @@ import BackstageCoupon from "../Backstage/BackstageCoupon";
 import BackstageOrder from "../Backstage/BackstageOrder";
 import Checkout from "../pages/Checkout";
 import CheckoutSuccess from "../pages/Success";
+import MemberCenter from "../pages/MemberCenter";
 
 
 
@@ -47,6 +48,10 @@ const routes =[
             {
                 path:"animaltracking",
                 element:<AnimalTracking/>
+            },
+            {
+                path:"membercenter",
+                element:<MemberCenter/>
             },
             {
                 path:"login",

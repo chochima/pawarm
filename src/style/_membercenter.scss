@@ -1,0 +1,46 @@
+.content-preview {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  cursor: pointer;
+  transition: max-height 0.3s ease; // 雖然 line-clamp 不支援 transition，但保留這行未來重構好用
+
+  &.collapsed {
+    -webkit-line-clamp: 1; // 限制只顯示 1 行
+    line-clamp: 1;
+  }
+
+  &.expanded {
+    -webkit-line-clamp: unset; // 取消限制
+    line-clamp: unset;
+  }
+}
+
+
+.card img.h-155 {
+  height: auto;       /* 讓圖片依比例縮放 */
+  max-height: 155px;  /* 限制最大高度 */
+  width: 100%;
+  object-fit: cover;
+}
+
+/* 1. 基礎按鈕樣式 (未選中時) */
+.nav-tabs .nav-link {
+  border: none !important;      /* 移除預設邊框 */
+  border-radius: 6px;           /* 圓角 */
+  padding: 0.5rem 1.2rem;       /* 內距 */
+  font-weight: 600;             /* 字體加粗 */
+  color: #6c757d;               /* 預設文字顏色：灰色 */
+  background-color: transparent; /* 背景透明 */
+}
+
+/* 2. Active 狀態樣式 (選中時) */
+.nav-tabs .nav-link.active {
+  background-color: #887258 !important; /* 深色背景 */
+  color: #E7DFD7 !important;           /* 白色/淺色文字 */
+}
+
+/* 3. 容器樣式 (移除底線) */
+.nav-tabs {
+  border-bottom: none !important;
+}
