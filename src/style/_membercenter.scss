@@ -8,6 +8,10 @@
   &.collapsed {
     -webkit-line-clamp: 1; // 限制只顯示 1 行
     line-clamp: 1;
+
+    max-width: 85%; 
+    
+    width: max-content;
   }
 
   &.expanded {
