@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import axios from "axios";
+import CheckoutStepper from "../components/Stepper";
 
 const { VITE_URL, VITE_PATH } = import.meta.env;
 
@@ -29,6 +30,9 @@ const CheckoutSuccess = () => {
   if (!order) return <div className="container py-60 text-center">找不到此訂單。</div>;
 
   return (
+    <>
+    <CheckoutStepper/>
+    
     <div className="container py-60">
       <div className="text-center mb-5">
         <div className="text-success fs-1 mb-2">
@@ -83,6 +87,9 @@ const CheckoutSuccess = () => {
         </div>
       </div>
     </div>
+
+    </>
+    
   );
 };
 
