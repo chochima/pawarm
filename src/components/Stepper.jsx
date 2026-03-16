@@ -25,7 +25,7 @@ const CheckoutStepper = () => {
       </p>
     </div>
 
-    {/* 步驟 2 ... 依此類推 */}
+    {/* 步驟 2  */}
     <div className="text-center" style={{ width: '120px' }}>
       <div className={`rounded-circle d-flex align-items-center justify-content-center mx-auto fs-18 
         ${isStep2 || isStep3 ? 'bg-brown text-white' : 'bg-light text-muted'}`} 
@@ -35,7 +35,7 @@ const CheckoutStepper = () => {
       </p>
     </div>
 
-    {/* 步驟 3 ... 依此類推 */}
+    {/* 步驟 3  */}
     <div className="text-center" style={{ width: '120px' }}>
       <div className={`rounded-circle d-flex align-items-center justify-content-center mx-auto fs-18 
         ${isStep3 ? 'bg-brown text-white' : 'bg-light text-muted'}`} 

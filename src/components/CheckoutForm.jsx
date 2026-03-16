@@ -2,6 +2,9 @@ import React from 'react';
 import { NavLink } from "react-router";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { useState } from "react"; 
+import toast from 'react-hot-toast'; 
 import { createAsyncGetCart } from "../slice/cartSlice";
 import axios from 'axios';
 
@@ -10,6 +13,8 @@ const { VITE_PATH, VITE_URL } = import.meta.env;
 
 const CheckoutForm = ({ cart, getCart}) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // 初始化 navigate
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
 
@@ -65,14 +70,20 @@ const CheckoutForm = ({ cart, getCart}) => {
       const res = await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/order`, orderData);
       
       if (res.data.success) {
-        alert("訂單已送出！感謝您的愛心守護。");
-        reset();   // 重置表單
-        getCart(); // 刷新購物車
+        const { orderId } = res.data;
+
+        toast.success("訂單已送出！感謝您的愛心。");
+        reset();   
+        getCart(); 
         dispatch(createAsyncGetCart());
+
+        navigate(`/checkout-success/${orderId}`);
       }
     } catch (err) {
       console.error(err);
-      alert("訂單送出失敗，請檢查欄位。");
+      toast.error("訂單送出失敗，請檢查欄位。");
+    } finally {
+      setIsSubmitting(false); 
     }
   };
 
@@ -255,11 +266,19 @@ const CheckoutForm = ({ cart, getCart}) => {
           <div className="d-flex justify-content-center gap-3">
             <NavLink to="/carts"   className="btn-outline btn btn-outline-primary text-primary fw-bold px-36 py-12 fs-14  fs-md-18 px-md-44 py-md-16">返回上一步</NavLink>
             <button 
-              type="submit" 
-              className="btn-filled bg-primary-500 text-white fw-bold px-36 py-12 fs-14  fs-md-18 px-md-44 py-md-16 border-0" 
-            >
-              送出愛心
-            </button>
+          type="submit" 
+          disabled={isSubmitting}
+          className="btn-filled bg-primary-500 text-white fw-bold px-36 py-12 fs-14 fs-md-18 px-md-44 py-md-16 border-0" 
+        >
+          {isSubmitting ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              處理中...
+            </>
+          ) : (
+            "送出愛心"
+          )}
+        </button>
           </div>
         </div>
       </form>

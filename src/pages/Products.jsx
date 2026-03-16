@@ -50,6 +50,7 @@ const Products = () => {
   // 🚀 1. 新增分類與搜尋狀態
   const [filterCategory, setFilterCategory] = useState("全部");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -88,6 +89,17 @@ const Products = () => {
       console.log("加入購物車失敗");
     }
   };
+  const handleAddToCart = async (id) => {
+  setIsLoading(true); // 開始執行時設為 true
+  try {
+    await addCart(id); // 假設這是你的非同步加入購物車函式
+    toast.success('已加入守護清單！');
+  } catch (error) {
+    toast.error('加入失敗，請稍後再試');
+  } finally {
+    setIsLoading(false); // 無論成功失敗，結束後設為 false
+  }
+};
 
   useEffect(() => {
     getProducts();
@@ -212,14 +224,22 @@ const Products = () => {
           </div>
 
           <button 
-            className="btn btn-outline-primary-500 w-100 fs-18 py-12 fw-bold" 
-            onClick={(e) => {
-              e.preventDefault();
-              addCart(product.id);
-            }}
-          >
-            加入購物車
-          </button>
+  className="btn btn-outline-primary-500 w-100 fs-18 py-12 fw-bold" 
+  disabled={isLoading} // 當 loading 時禁止點擊
+  onClick={(e) => {
+    e.preventDefault();
+    handleAddToCart(product.id);
+  }}
+>
+  {isLoading ? (
+    <>
+      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      加入中...
+    </>
+  ) : (
+    "加入購物車"
+  )}
+</button>
         </div>
       </div>
     </div>

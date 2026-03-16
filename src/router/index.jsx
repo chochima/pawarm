@@ -10,6 +10,7 @@ import BackstageProducts from "../Backstage/BackstageProducts";
 import BackstageCoupon from "../Backstage/BackstageCoupon";
 import BackstageOrder from "../Backstage/BackstageOrder";
 import Checkout from "../pages/Checkout";
+import CheckoutSuccess from "../pages/Success";
 
 
 
@@ -38,6 +39,10 @@ const routes =[
             {
                 path:"checkout",
                 element:<Checkout/>
+            },
+            {
+                path:"checkout-success/:orderId",
+                element:<CheckoutSuccess />
             },
             {
                 path:"animaltracking",
