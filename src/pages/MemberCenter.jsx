@@ -1,40 +1,106 @@
-import { useEffect } from 'react';
+
+import axios from "axios";
+import { useState ,useEffect } from "react";
+import { NavLink } from 'react-router-dom';
 import '../style/_fonts.scss';
 import "../style/all.scss";
+import notifications from '../data/notifications.json';
+const API_BASE = import.meta.env.VITE_URL;
+const API_PATH = import.meta.env.VITE_PATH;
+
 
 
 function MemberCenter(){
+    const [expandedId, setExpandedId] = useState(null);
+    const formatTime = (timestamp) => {
+        const date = new Date(timestamp * 1000); // Unix Timestamp 是秒，Date 需要毫秒
+        return {
+            date: date.toLocaleDateString(), 
+            time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+        };
+    };
+    const [orders, setOrders] = useState([]);
+    const [formData, setFormData] = useState({
+        username: import.meta.env.VITE_ADMIN_USER, 
+        password: import.meta.env.VITE_ADMIN_PWD
+    });
+    const autoLogin = async () =>{
+        try {
+            // e.preventDefault();
+            const response = await axios.post(`${API_BASE}/admin/signin`,formData)
+            console.log(response.data);
+            const { token, expired} = response.data;
+            document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+            axios.defaults.headers.common['Authorization'] = token;
+            getOrders();
+
+
+        } catch (error) {
+            // setIsAuth(false);
+            console.log(error.response)
+        }
+    }
+    const getOrders = async ()=>{
+        try {
+        const response = await axios.get(`${API_BASE}/api/${API_PATH}/admin/orders`)
+        
+        // console.log('訂單內容:',response.data)
+        if (response.data.success) {
+                setOrders(response.data.orders); 
+            }
+
+        } catch (error) {
+        console.log(error.response);
+        }
+        
+    };
+
 // 2. 加入這段 JS 邏輯
     useEffect(() => {
-        const initNotificationToggle = () => {
-            const previews = document.querySelectorAll('.content-preview');
-            
-            previews.forEach((item) => {
-                // 使用 onclick 確保邏輯簡單直接
-                item.onclick = function() {
-                    if (this.classList.contains('collapsed')) {
-                        this.classList.remove('collapsed');
-                        this.classList.add('expanded');
-                    } else {
-                        this.classList.remove('expanded');
-                        this.classList.add('collapsed');
-                    }
-                };
-            });
-        };
-        // 稍微延遲一下，確保 Tab 切換產生的內容也能被抓到
-        const timer = setTimeout(initNotificationToggle, 300);
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("hexToken="))
+            ?.split("=")[1];
+        if (token){
+            axios.defaults.headers.common['Authorization'] = token;
+            getOrders();
+        } else{
+            autoLogin();
+        }
 
-        return () => clearTimeout(timer); // 清除定時器
+
+
+        // const initNotificationToggle = () => {
+        //     const previews = document.querySelectorAll('.content-preview');
+            
+        //     previews.forEach((item) => {
+        //         // 使用 onclick 確保邏輯簡單直接
+        //         item.onclick = function() {
+        //             if (this.classList.contains('collapsed')) {
+        //                 this.classList.remove('collapsed');
+        //                 this.classList.add('expanded');
+        //             } else {
+        //                 this.classList.remove('expanded');
+        //                 this.classList.add('collapsed');
+        //             }
+        //         };
+        //     });
+        // };
+        // // 稍微延遲一下，確保 Tab 切換產生的內容也能被抓到
+        // const timer = setTimeout(initNotificationToggle, 300);
+
+        // return () => clearTimeout(timer); // 清除定時器
+
+
     }, []); // 空陣列表示只在組件載入時執行一次
 
 
     return(
         <>
-        <h1>會員中心</h1>
+        <h1 className="text-center">會員中心</h1>
         <div className="bg-primary-100">
             <div className="container py-40">
-                <div className="row">
+                <div className="row g-24">
                     {/* 左側選單*/}
                     <div className="col-md-4 bg-primary-50">
                         <div className="d-flex align-items-center justify-content-space py-32 px-24 gap-16 mb-16">
@@ -173,136 +239,39 @@ function MemberCenter(){
 
                                 {/* content */}
                                 <div className="p-24">
-                                    <div className="py-16">
+                                    {notifications.map((item) => (
+                                        <div className="py-16 border-bottom" key={item.id}>
                                         <div className="d-md-flex justify-content-between align-items-center">
-                                            <div className="fw-bold fs-16 text-primary-600 lh-sm">📣訂單更新</div>
-                                            <div className="fw-medium text-secondary-400 lh-base">2024-08-18</div>
+                                            <div className="fw-bold fs-16 text-primary-600 lh-sm">{item.title}</div>
+                                            <div className="fw-medium text-secondary-400 lh-base">{item.date}</div>
                                         </div>
+
                                         <div className="text-secondary-600">
-                                            <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                            您的訂單<a href="#" className="text-decoration-none">#4081846</a> 已成功付款，您的愛心已透過雲端送達牠的身邊。
-                                            <br /><br />
-                                            若有任何訂單問題或需求，歡迎隨時聯繫客服，我們將竭誠為您服務。謝謝您與My-Shelter一起守護每一位毛寶貝的幸福！
+                                            <div
+                                            className={`content-preview pt-4 pb-6 lh-base fw-medium fs-6 ${
+                                                expandedId === item.id ? 'expanded' : 'collapsed'
+                                            }`}
+                                            onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                                            >
+                                            <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                                            
+                                            {expandedId === item.id && item.action_text && (
+                                                <div className="mt-3 d-flex">
+                                                <a 
+                                                    href={item.link} 
+                                                    className="p-2 bg-primary-100 text-primary-700 text-decoration-none sm-btn rounded-3 " 
+                                                    onClick={(e) => e.stopPropagation()} // 阻止冒泡，避免點按鈕時又把內容縮回去
+                                                >
+                                                    {item.action_text}
+                                                </a>
+                                                </div>
+                                            )}
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">📣領養審核通過</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-08-16</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        恭喜！您申請領養的「蹲蹲」已通過初步審核，所屬機構將於7日內與您聯繫，請配合
-                                        <br /><br />
-                                        機構完成後續領養程序。
-                                        <br /><br />
-                                        接下來，所屬機構將安排後續的領養流程與訪視時間。請您保持電話暢通並留意相關訊息，以便順利完成領養手續。
-                                        <br /><br />
-                                        如有任何問題，歡迎隨時與我們聯繫。祝您與新夥伴生活愉快！
-                                        <br /><br />
-                                        謝謝您對動物的愛心與支持！
-                                        <br />
-                                        My-Shelter 敬上
                                         </div>
-                                    </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">🎁生日快樂！為你送上生日祝福</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-08-13</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        生日快樂！
-                                        <br /><br />
-                                        My-Shelter為您送上NT$100優惠券，讓我們一起透過雲端為寶貝傳遞愛心！🎉🎂
-                                        <br /><br />
-                                        感謝您一直以來對毛寶貝們的關懷與支持，這份小小的心意希望能為您的生日增添一點溫暖與喜悅。
-                                        <br /><br />
-                                        在結帳時使用優惠券即可享有$100折扣優惠。
-                                        <br /><br />
-                                        優惠券有效期限至2024-09-13，一起向毛寶貝們分享這份喜悅吧！
-                                        <div className="my-6">
-                                            <a href="index.html" className="p-2 bg-primary-400 text-primary-700 text-decoration-none sm-btn" style={{ borderRadius: '4px' }}>
-                                            【分享喜悅】
-                                            </a>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">🏆等級升級</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-08-09</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        恭喜您！您的會員等級已升級為「Lv.5銀牌守護者」，感謝您持續的支持與愛心，
-                                        <br /><br />
-                                        讓更多寶貝們感受到世界的溫暖與關懷。🐾💖
-                                        <br /><br />
-                                        身為銀牌守護者，您將享有更多專屬福利與驚喜禮遇，未來也請繼續與我們一同守護這些可愛的小生命！
-                                        <br /><br />
-                                        感謝您為寶貝的愛心與對我們的信任！
-                                        <br />
-                                        My-Shelter 敬上
-                                        </div>
-                                    </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">📣寶貝影片來囉！</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-07-29</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        訂單 <a href="#" className="text-decoration-none">#2068439 </a>感謝您支援「幼貓疫苗接種協助-幼貓疫苗(三合一)」
-                                        <br /><br />
-                                        所屬機構「喵了個咪中途之家」已經將您的回饋影片上傳囉🎥🐾
-                                        <br /><br />
-                                        點擊下方連結，感受這些毛孩子滿滿的活力與幸福瞬間吧！
-                                        <div className="my-6">
-                                            <a href="index.html" className="p-2 bg-primary-400 text-primary-700 text-decoration-none sm-btn" style={{ borderRadius: '4px' }}>
-                                            【觀看影片】
-                                            </a>
-                                        </div>
-                                        <br />
-                                        未來也讓我們一起陪伴寶貝們走過每一步，傳遞更多溫暖。
-                                        <br />
-                                        My-Shelter 敬上
-                                        </div>
-                                    </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">⚙️系統通知</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-07-25</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        為了提升服務品質，我們將於【2024-07-26】進行系統維護作業。
-                                        <br /><br />
-                                        屆時平台部分功能可能暫時無法使用，造成不便敬請見諒。
-                                        <br /><br />
-                                        <span className="text-secondary-900">
-                                            維護時間：
-                                            <br />
-                                            2024-07-26 12:00至2024-07-26 14:00
-                                        </span>
-                                        <br /><br />
-                                        期間如有緊急問題，請透過客服信箱或電話與我們聯繫，我們將盡快為您處理。感謝您的理解與支持，期待維護後為您帶來更流暢的使用體驗！
-                                        <br /><br />
-                                        My-Shelter 敬上
-                                        </div>
-                                    </div>
-                                    </div>
+                                    ))}
                                 </div>
+
 
                                 {/* footer */}
                                 <div className="d-flex justify-content-end fs-5 px-4 py-5 bg-white" style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}></div>
@@ -311,85 +280,80 @@ function MemberCenter(){
                             </div>
                             {/* 訂單資訊 */}
                             <div className="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab" tabIndex="0">
-                            <div className="bg-white" style={{ borderRadius: '16px' }}>
-                                <div className=" ">
-                                <div className="d-flex justify-content-between align-items-center p-24">
-                                    <div className="fs-24 fw-bold text-primary-600">訂單資訊</div>
-                                    <div className="d-flex align-items-center gap-8">
-                                    <div className="d-none">篩選</div>
+                                <div className="bg-white" style={{ borderRadius: '16px' }}>
+                                    <div className=" ">
+                                    <div className="d-flex justify-content-between align-items-center p-24">
+                                        <div className="fs-24 fw-bold text-primary-600">訂單資訊</div>
+                                        <div className="d-flex align-items-center gap-8">
+                                        <div className="d-none">篩選</div>
+                                        <div>
+                                            <select 
+                                            className="form-select form-select-lg fs-14" 
+                                            aria-label=".form-select-lg example"
+                                            style={{ borderRadius: '100px' }}
+                                            defaultValue="0"
+                                            >
+                                            <option value="0">3個月內</option>
+                                            <option value="1">6個月內</option>
+                                            <option value="2">1年內</option>
+                                            </select>
+                                        </div>
+                                        </div>
+                                    </div>
                                     <div>
-                                        <select 
-                                        className="form-select form-select-lg fs-14" 
-                                        aria-label=".form-select-lg example"
-                                        style={{ borderRadius: '100px' }}
-                                        defaultValue="0"
-                                        >
-                                        <option value="0">3個月內</option>
-                                        <option value="1">6個月內</option>
-                                        <option value="2">1年內</option>
-                                        </select>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <table className="table align-middle mb-0 table-borderless">
-                                    <thead>
-                                        <tr className="text-center">
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">合計</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="#" className="text-decoration-none fw-bold text-primary-600 order">4081864</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2024-08-18</div>
-                                            <div className="text-secondary-400 fw-medium">01:44:13</div>
-                                        </td>
-                                        <td>處理中</td>
-                                        <td>已付款</td>
-                                        <td className="text-danger fw-medium">$2100</td>
-                                        </tr>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="#" className="text-decoration-none fw-bold text-primary-600 order">3080511</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2025-08-05</div>
-                                            <div className="text-secondary-400 fw-medium">22:26:41</div>
-                                        </td>
-                                        <td>已取消</td>
-                                        <td>超過付款時間</td>
-                                        <td className="text-danger fw-medium">$900</td>
-                                        </tr>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="./shopping-cart4.html" className="text-decoration-none fw-bold text-primary-600 order">2068439</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2025-07-22</div>
-                                            <div className="text-secondary-400 fw-medium">21:13:08</div>
-                                        </td>
-                                        <td>已完成</td>
-                                        <td>已付款</td>
-                                        <td className="text-danger fw-medium">$1500</td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
+                                        <table className="table align-middle mb-0 table-borderless">
+                                        <thead>
+                                            <tr className="text-center">
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
+                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">合計</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            { orders.length > 0 ? (
+                                                orders.map((order)=>{
+                                                    const orderTime = formatTime(order.create_at);//轉換時間
+                                                    return (
+                                                        <tr className="text-center" key={order.id}>
+                                                            <td className="py-lg-16">
+                                                                <a href="#" className="text-decoration-none fw-bold text-primary-600 order">{order.id.slice(-7)}</a>
+                                                            </td>
+                                                            <td>
+                                                                <div className="text-secondary-400 fw-medium">{orderTime.date}</div>
+                                                                <div className="text-secondary-400 fw-medium">{orderTime.time}</div>
+                                                            </td>
+                                                            <td>{order.is_paid ? "處理中" : "待處理"}</td>
+                                                            <td>
+                                                                <span className={order.is_paid ? "text-success" : "text-danger"}>
+                                                                    {order.is_paid ? "已付款" : "未付款"}
+                                                                </span>
+                                                            </td>
+                                                            <td className="text-danger fw-medium">${order.total.toLocaleString()}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            ):(
+                                                <tr>
+                                                    <td colSpan="5" className="text-center py-5 text-secondary-400">
+                                                        目前沒有訂單資料
+                                                    </td>
+                                                </tr>
+                                            )
 
-                                    <div 
-                                    className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
-                                    style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
-                                    >
+                                            }
+                                        </tbody>
+                                        </table>
+
+                                        <div 
+                                        className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
+                                        style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
+                                        >
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
-                                </div>
-                            </div>
                             </div>
                             {/* 我的關注 */}
                             <div className="tab-pane fade" id="v-pills-follow" role="tabpanel" aria-labelledby="v-pills-follow-tab" tabIndex="0">
