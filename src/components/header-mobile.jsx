@@ -44,7 +44,7 @@ return (<div className= "{ className }">
     <div className="col-auto px-0 nav-content">
              <span className="header-login me-3">
                   {isAuth ? (
-                    <NavLink to="profile" className="d-flex align-items-center text-decoration-none text-dark">
+                    <NavLink to="membercenter" className="d-flex align-items-center text-decoration-none text-dark">
                       <img src={iconUser} alt="會員中心" />
                       <span className="ms-1">Tina Liu</span>
                     </NavLink>

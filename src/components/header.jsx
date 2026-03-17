@@ -41,7 +41,7 @@ return (
 <div className="row header-style">
 
 <div className="container">
-<div className="row">
+<div className="row justify-content-between align-items-center">
     {/*漢堡選單*/}
         <div className="d-block d-xl-none">
             <HeaderMobile/>
@@ -63,7 +63,6 @@ return (
             <li><NavLink to='products'>選擇​我​的​動物​​​</NavLink></li>
             <li><NavLink href="#">查看公益里程碑</NavLink></li>
             <li><NavLink to='animaltracking'>追蹤​動物​​​​</NavLink></li>
-            <li><NavLink to='membercenter'>會員中心</NavLink></li> {/*暫時*/}
             <li><NavLink href="#">活動資訊​​​</NavLink></li>
             <li><NavLink href="#">關於我們​​​​</NavLink></li>
             <li className="border-start border border-secondary-1 border-1 me-48"></li>
@@ -76,7 +75,7 @@ return (
         <div className="col-auto px-0 nav-content">
             <span className="header-login me-3">
       {isAuth ? (
-        <NavLink to="profile" className="d-flex align-items-center text-decoration-none text-dark">
+        <NavLink to="membercenter" className="d-flex align-items-center text-decoration-none text-dark">
           <img src={iconUser} alt="會員中心" />
           <span className="ms-1">Tina Liu</span>
         </NavLink>
