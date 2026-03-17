@@ -7,7 +7,7 @@ import { setToken } from "../slice/authSlice";
 
 import iconLogin from "../image/icon-login.png";
 import iconUser from "../image/icon-user.png";
-import iconCart from"../image/type=cart.png";
+
 {/*遮罩待補*/}
 
 function HeaderMobile({ className }) {
