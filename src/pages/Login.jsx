@@ -57,7 +57,7 @@ function Login() {
     axios.defaults.headers.common.Authorization = existingToken;
     navigate("/");
   }
-}, [dispatch, navigate]); // 依賴項只剩這兩個
+}, [dispatch, navigate]); 
 
 
   return (
