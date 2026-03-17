@@ -72,7 +72,7 @@ return (
         }
 
         {   //登入
-        <div className="col-auto px-0 nav-content">
+        <div className="col-auto  nav-content">
             <span className="header-login me-3">
       {isAuth ? (
         <NavLink to="membercenter" className="d-flex align-items-center text-decoration-none text-dark">
