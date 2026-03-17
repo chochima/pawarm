@@ -3,6 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import '../style/_fonts.scss';
 import "../style/all.scss";
+import guardAnimalImg from '../image/track-img/guradAnimal.png';
+import waveUp from '../image/track-img/wave-up.png';
+import waveDown from '../image/track-img/wave-down.png';
+
 import { NavLink } from 'react-router-dom';
 const API_BASE = import.meta.env.VITE_URL;
 const API_PATH = import.meta.env.VITE_PATH;
@@ -15,27 +19,24 @@ function AnimalTracking() {
   const [articles, setArticles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentAssoIndex, setCurrentAssoIndex] = useState(1);
-  const [formData, setFormData] = useState({
-      username:"pawarm@gmail.com",
-      password:"pawarm"
-  });
-
-  const autoLogin = async () =>{
-    try {
-        // e.preventDefault();
-        const response = await axios.post(`${API_BASE}/admin/signin`,formData)
-        console.log(response.data);
-        const { token, expired} = response.data;
-        document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-        axios.defaults.headers.common['Authorization'] = token;
-        getArticles();
 
 
-    } catch (error) {
-        // setIsAuth(false);
-        console.log(error.response)
-    }
-  }
+  // const autoLogin = async () =>{
+  //   try {
+  //       // e.preventDefault();
+  //       const response = await axios.post(`${API_BASE}/admin/signin`,formData)
+  //       console.log(response.data);
+  //       const { token, expired} = response.data;
+  //       document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+  //       axios.defaults.headers.common['Authorization'] = token;
+  //       getArticles();
+
+
+  //   } catch (error) {
+  //       // setIsAuth(false);
+  //       console.log(error.response)
+  //   }
+  // }
 
   const getArticles = async ()=>{
     try {
@@ -61,9 +62,11 @@ function AnimalTracking() {
       axios.defaults.headers.common['Authorization'] = token;
       getArticles();
     } else{
-      autoLogin();
+      navigate("/Login");
+
+
     }
-  },[])
+  },[navigate])
   return (
     <div className="animal-tracking-page overflow-hidden">
       <div>
@@ -105,7 +108,7 @@ function AnimalTracking() {
               className='img-fluid'
             />
             <img 
-              src="src/image/track-img/guradAnimal.png" 
+              src={guardAnimalImg} 
               className='position-absolute photo-position' 
               alt="guradAnimal.png" 
             />
@@ -121,30 +124,30 @@ function AnimalTracking() {
         <img src={articles[currentIndex]?.map} alt="map" className='flex-shrink-0'/>
       </div>
       <div className="overflow-hidden">
-        <img src="src\image\track-img\wave-up.png" alt="wave-up" className='w-100 d-block'/>
+        <img src={waveUp} alt="wave-up" className='w-100 d-block'/>
         <div className='bg-secondary-50 py-120 '>
           <div className='container  px-12 px-xl-0 '>
             <p className='text-serif fs-48 title-underline' >{articles[currentIndex]?.title}介紹</p>
             <div className='row g-48 px-xxl-0 px-12 d-flex '>
               <div className="col-xl-4 d-flex flex-column">
                 <img src={articles[currentIndex]?.image_1} alt="description-1" className='w-100 description-img-max mx-auto mx-xl-0'/>
-                <h4 className='fw-700 fs-24 text-secondary-900'>{articles[currentIndex]?.subject_1}​</h4>
+                <h4 className='fw-700 fs-24 text-secondary-900 pt-8'>{articles[currentIndex]?.subject_1}​</h4>
                 <p className='fw-500 fs-20 text-secondary-500'>{articles[currentIndex]?.content_1}​</p>   
               </div>
               <div className="col-xl-4  d-flex flex-column">
                 <img src={articles[currentIndex]?.image_2} alt="description-2" className='w-100 description-img-max mx-auto mx-xl-0'/>
-                <h4 className='fw-700 fs-24 text-secondary-900'>{articles[currentIndex]?.subject_2}​​</h4>
+                <h4 className='fw-700 fs-24 text-secondary-900 pt-8'>{articles[currentIndex]?.subject_2}​​</h4>
                 <p className='fw-500 fs-20 text-secondary-500'>{articles[currentIndex]?.content_2}​</p>
               </div>
               <div className="col-xl-4 d-flex flex-column">
                 <img src={articles[currentIndex]?.image_3} alt="description-3" className='w-100 description-img-max mx-auto mx-xl-0'/>
-                <h4 className='fw-700 fs-24 text-secondary-900'>{articles[currentIndex]?.subject_3}</h4>
+                <h4 className='fw-700 fs-24 text-secondary-900 pt-8'>{articles[currentIndex]?.subject_3}</h4>
                 <p className='fw-500 fs-20 text-secondary-500'>{articles[currentIndex]?.content_3}​​</p>
               </div>
             </div>
         </div>
         </div>
-        <img src="src\image\track-img\wave-down.png" alt="wave-down" className='w-100 d-block' />
+        <img src={waveDown} alt="wave-down" className='w-100 d-block' />
       </div>
       <div className="pt-120 container px-12 px-xl-0">
         <p className='text-serif fs-48 title-underline' >{articles[currentIndex]?.title}保育機構</p>
