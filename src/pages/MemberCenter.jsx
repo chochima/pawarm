@@ -1,16 +1,18 @@
 
 import axios from "axios";
 import { useState ,useEffect } from "react";
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../style/_fonts.scss';
 import "../style/all.scss";
 import notifications from '../data/notifications.json';
+import { toast, Toaster } from 'react-hot-toast';
 const API_BASE = import.meta.env.VITE_URL;
 const API_PATH = import.meta.env.VITE_PATH;
 
 
 
 function MemberCenter(){
+    const navigate = useNavigate(); 
     const [expandedId, setExpandedId] = useState(null);
     const formatTime = (timestamp) => {
         const date = new Date(timestamp * 1000); // Unix Timestamp 是秒，Date 需要毫秒
@@ -95,31 +97,9 @@ function MemberCenter(){
             axios.defaults.headers.common['Authorization'] = token;
             getOrders();
         } else{
-            autoLogin();
+            navigate('/Login');
         }
 
-
-
-        // const initNotificationToggle = () => {
-        //     const previews = document.querySelectorAll('.content-preview');
-            
-        //     previews.forEach((item) => {
-        //         // 使用 onclick 確保邏輯簡單直接
-        //         item.onclick = function() {
-        //             if (this.classList.contains('collapsed')) {
-        //                 this.classList.remove('collapsed');
-        //                 this.classList.add('expanded');
-        //             } else {
-        //                 this.classList.remove('expanded');
-        //                 this.classList.add('collapsed');
-        //             }
-        //         };
-        //     });
-        // };
-        // // 稍微延遲一下，確保 Tab 切換產生的內容也能被抓到
-        // const timer = setTimeout(initNotificationToggle, 300);
-
-        // return () => clearTimeout(timer); // 清除定時器
 
 
     }, []); // 空陣列表示只在組件載入時執行一次
@@ -127,6 +107,7 @@ function MemberCenter(){
 
     return(
         <>
+        <Toaster />
         <h1 className="text-center">會員中心</h1>
         <div className="bg-primary-100">
             <div className="container py-40">
@@ -156,10 +137,9 @@ function MemberCenter(){
                                 aria-controls="v-pills-orders" aria-selected="false">訂單資訊</button>
                             <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-0 p-16 user-left-list  " id="v-pills-follow-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-follow" type="button" role="tab"
-                                aria-controls="v-pills-follow" aria-selected="false">我的關注</button>
-                            <a href="#" className="text-decoration-none">
-                                <button className="col-3 col-md-12 nav-link fs-mb-5 rounded-0 p-4 user-left-list mb-md-4 w-100"
-                                type="button">登出</button></a>
+                                aria-controls="v-pills-follow" aria-selected="false">我的關注</button>                            
+                            <button className="col-3 col-md-12 nav-link fs-mb-5 rounded-0 p-4 user-left-list mb-md-4 w-100"
+                                type="button" onClick={handleLogout}>登出</button>
                         </div>
                     </div>
                     {/* 右側選單*/}
