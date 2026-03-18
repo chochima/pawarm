@@ -20,26 +20,56 @@ function MemberCenter(){
         };
     };
     const [orders, setOrders] = useState([]);
-    const [formData, setFormData] = useState({
-        username: import.meta.env.VITE_ADMIN_USER, 
-        password: import.meta.env.VITE_ADMIN_PWD
-    });
-    const autoLogin = async () =>{
-        try {
-            // e.preventDefault();
-            const response = await axios.post(`${API_BASE}/admin/signin`,formData)
-            console.log(response.data);
-            const { token, expired} = response.data;
-            document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-            axios.defaults.headers.common['Authorization'] = token;
-            getOrders();
+    const handleLogout = () => {
+        toast((t) => (
+            <span>
+                <b className="fs-24">您確定要登出了嗎？</b>
+                <div className="mt-2 d-flex justify-content-center gap-8" >
+                    <button
+                        className="btn btn-sm btn-danger me-2 fs-20 px-16 text-white"
+                        onClick={() => {
+                            // 執行登出邏輯
+                            toast.dismiss('logout-confirm');
+
+                            document.cookie = "hexToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                            toast.success("已成功登出", { duration: 2000 });
+                            setTimeout(() => {
+                                toast.dismiss();
+                                navigate('/');
+                            }, 1000);
+                        }}
+                    >確定</button>
+                    <button
+                        className="btn btn-sm btn-secondary fs-20 px-16"
+                        onClick={() => toast.dismiss(t.id)} // 點擊取消就關閉
+                    >
+                        取消
+                    </button>
+                </div>
+            </span>
+        ), {
+            id: 'logout-confirm',
+            duration: Infinity, // 顯示 10 秒
+            position: 'top-center',
+        });
+    };
+    // const autoLogin = async () =>{
+    //     try {
+    //         // e.preventDefault();
+    //         const response = await axios.post(`${API_BASE}/admin/signin`,formData)
+    //         console.log(response.data);
+    //         const { token, expired} = response.data;
+    //         document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+    //         axios.defaults.headers.common['Authorization'] = token;
+    //         getOrders();
 
 
-        } catch (error) {
-            // setIsAuth(false);
-            console.log(error.response)
-        }
-    }
+    //     } catch (error) {
+    //         // setIsAuth(false);
+    //         console.log(error.response)
+    //     }
+    // }
     const getOrders = async ()=>{
         try {
         const response = await axios.get(`${API_BASE}/api/${API_PATH}/admin/orders`)
