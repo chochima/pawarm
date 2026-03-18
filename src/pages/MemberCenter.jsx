@@ -108,43 +108,43 @@ function MemberCenter(){
     return(
         <>
         <Toaster />
-        <h1 className="text-center">會員中心</h1>
-        <div className="bg-primary-100">
+        <div className="bg-primary-50">
             <div className="container py-40">
+                <h1 className="text-center pb-12 text-primary-600">會員中心</h1>
                 <div className="row g-24">
                     {/* 左側選單*/}
-                    <div className="col-md-4 bg-primary-50">
+                    <div className="col-md-4 bg-white rounded-4 shadow-sm">
                         <div className="d-flex align-items-center justify-content-space py-32 px-24 gap-16 mb-16">
                         <div className="ratio ratio-1x1 shadow me-12" style={{ width: '150px' }}>
                             <img src="src\image\track-img\leopard-cat-description-1.png" alt="user avatar" className="img-fluid w-100 h-100 object-fit-cover"/>
                         </div>
                         <div className="text-center">
-                            <h4 className="fs-24 mb-32">Lynn</h4>
+                            <h4 className="fs-24 mb-32">Tina Liu</h4>
                             <p className="mb-0 text-muted fs-14">LV.5 銀牌守護者</p>
                         </div>
                         </div>
 
-                        <div className="nav flex-row flex-md-column justify-content-center nav-pills" id="v-pills-tab" role="tablist"
+                        <div className="nav flex-row flex-md-column justify-content-center nav-pills gap-4" id="v-pills-tab" role="tablist"
                         aria-orientation="vertical">
-                            <button className="col-3 col-md-12 nav-link active fs-mb-20 rounded-0 p-16 user-left-list" id="v-pills-user-tab"
+                            <button className="col-3 col-md-12 nav-link active fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-user-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-user" type="button" role="tab"
                                 aria-controls="v-pills-user" aria-selected="true">個人資訊</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-0 p-16 user-left-list" id="v-pills-messages-tab"
+                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-messages-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab"
                                 aria-controls="v-pills-messages" aria-selected="false">通知訊息</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-0 p-16 user-left-list" id="v-pills-orders-tab"
+                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-orders-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-orders" type="button" role="tab"
                                 aria-controls="v-pills-orders" aria-selected="false">訂單資訊</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-0 p-16 user-left-list  " id="v-pills-follow-tab"
+                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list  " id="v-pills-follow-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-follow" type="button" role="tab"
                                 aria-controls="v-pills-follow" aria-selected="false">我的關注</button>                            
-                            <button className="col-3 col-md-12 nav-link fs-mb-5 rounded-0 p-4 user-left-list mb-md-4 w-100"
+                            <button className="col-3 col-md-12 nav-link fs-mb-5 rounded-3 p-16 user-left-list mb-md-4 w-100"
                                 type="button" onClick={handleLogout}>登出</button>
                         </div>
                     </div>
                     {/* 右側選單*/}
                     <div className="col-md-8">
-                        <div className="tab-content user-right-content pt-md-0" id="v-pills-tabContent">
+                        <div className="tab-content bg-white pt-md-0 shadow-sm rounded-4" id="v-pills-tabContent">
                             {/* 個人資訊*/}
                             <div className="tab-pane fade show active" id="v-pills-user" role="tabpanel"
                                 aria-labelledby="v-pills-user-tab" tabIndex="0">
@@ -156,7 +156,7 @@ function MemberCenter(){
                                     {/* 使用者名稱*/}
                                     <div className="mb-16">
                                         <label htmlFor="userName" className="form-label fs-16 mb-8 fw-700 text-black">使用者名稱</label>
-                                        <input type="text" className="form-control w-auto rounded-4" id="userName" placeholder="使用者名稱" defaultValue="Lynn"/>
+                                        <input type="text" className="form-control w-auto rounded-4" id="userName" placeholder="使用者名稱" defaultValue="Tina Liu"/>
                                     </div>
                                     {/* 密碼*/}
                                     <div className="mb-16">
@@ -311,14 +311,14 @@ function MemberCenter(){
                                         </div>
                                     </div>
                                     <div>
-                                        <table className="table align-middle mb-0 table-borderless">
-                                        <thead>
+                                        <table className="table align-middle mb-0 table-borderless table-hover">
+                                        <thead >
                                             <tr className="text-center">
-                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
-                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
-                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
-                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
-                                            <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">合計</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">合計</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -327,8 +327,8 @@ function MemberCenter(){
                                                     const orderTime = formatTime(order.create_at);//轉換時間
                                                     return (
                                                         <tr className="text-center" key={order.id}>
-                                                            <td className="py-lg-16">
-                                                                <a href="#" className="text-decoration-none fw-bold text-primary-600 order">{order.id.slice(-7)}</a>
+                                                            <td className="py-lg-16" style={{cursor: 'pointer'}}>
+                                                                <a href="#" className="text-decoration-none fw-bold text-primary-600 order" >{order.id.slice(-7)}</a>
                                                             </td>
                                                             <td>
                                                                 <div className="text-secondary-400 fw-medium">{orderTime.date}</div>
@@ -394,120 +394,59 @@ function MemberCenter(){
                                 {/* content */}
                                 <div className="p-24">
                                     <ul className="nav nav-tabs mb-12" id="favTabs" role="tablist">
-                                    <li className="nav-item" role="presentation">
-                                        <button className="nav-link active" id="pets-tab" data-bs-toggle="tab" data-bs-target="#pets" type="button" role="tab">
-                                        寶貝
-                                        </button>
-                                    </li>
-                                    <li className="nav-item" role="presentation">
-                                        <button className="nav-link" id="org-tab" data-bs-toggle="tab" data-bs-target="#org" type="button" role="tab">
-                                        機構
-                                        </button>
-                                    </li>
+                                        <li className="nav-item" role="presentation">
+                                            <button className="nav-link active" id="pets-tab" data-bs-toggle="tab" data-bs-target="#pets" type="button" role="tab">
+                                            已關注的動物
+                                            </button>
+                                        </li>
                                     </ul>
-
                                     {/* Tab 內容 */}
                                     <div className="tab-content">
-                                    {/* 寶貝 */}
-                                    <div className="tab-pane fade show active" id="pets" role="tabpanel">
-                                        <div className="container scroll-area">
-                                            <div className="row g-16">
-                                                {/* 卡片：阿橘橘 */}
-                                                <div className="col-md-4 col-12">
-                                                    <div className="card border-primary rounded-4" >
-                                                        <img src="src\image\pet_4_阿橘橘.jpg" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
-                                                        <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
-                                                        <div className="card-body">
-                                                        <div className="text-center py-12">
-                                                            <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿橘橘</div>
-                                                            <div className="fw-medium fs-16 text-secondary-800 lh-sm">喵了個咪中途之家</div>
-                                                        </div>
-                                                        <div className="d-flex justify-content-between text-center gap-8">
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">新北市</div>
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">已結紮</div>
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">可領養</div>
-                                                        </div>
+                                        {/* 寶貝 */}
+                                        <div className="tab-pane fade show active" id="pets" role="tabpanel">
+                                            <div className="container scroll-area">
+                                                <div className="row g-16">
+                                                    {/* 卡片：阿橘橘 */}
+                                                    <div className="col-md-4 col-12">
+                                                        <div className="card border-primary rounded-4" >
+                                                            <img src="src\image\pet_4_阿橘橘.jpg" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
+                                                            <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
+                                                            <div className="card-body">
+                                                            <div className="text-center py-12">
+                                                                <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿橘橘</div>
+                                                                <div className="fw-medium fs-16 text-secondary-800 lh-sm">喵了個咪中途之家</div>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between text-center gap-8">
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">新北市</div>
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">已結紮</div>
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">可領養</div>
+                                                            </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                {/* 卡片：阿財 */}
-                                                <div className="col-md-4 col-12">
-                                                    <div className="card border-primary rounded-4">
-                                                        <img src="src\image\pet_3_阿財.png" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
-                                                        <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
-                                                        <div className="card-body">
-                                                        <div className="text-center py-12">
-                                                            <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿財</div>
-                                                            <div className="fw-medium fs-16 text-secondary-800 lh-sm">毛茸茸中途咖啡</div>
-                                                        </div>
-                                                        <div className="d-flex justify-content-between text-center gap-8">
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >新北市</div>
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >已結紮</div>
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >可領養</div>
-                                                        </div>
+                                                    {/* 卡片：阿財 */}
+                                                    <div className="col-md-4 col-12">
+                                                        <div className="card border-primary rounded-4">
+                                                            <img src="src\image\pet_3_阿財.png" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
+                                                            <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
+                                                            <div className="card-body">
+                                                            <div className="text-center py-12">
+                                                                <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿財</div>
+                                                                <div className="fw-medium fs-16 text-secondary-800 lh-sm">毛茸茸中途咖啡</div>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between text-center gap-8">
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >新北市</div>
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >已結紮</div>
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >可領養</div>
+                                                            </div>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    
                                                 </div>
-                                                
                                             </div>
                                         </div>
-                                    </div>
-
-                                    {/* 機構 */}
-                                    <div className="tab-pane fade" id="org" role="tabpanel">
-                                        <div className="container scroll-area">
-                                        <div className="row g-16">
-                                            {/* 機構卡片範例 */}
-                                            <div className="col-lg-4 col-6">
-                                                <div className="card border-primary rounded-4">
-                                                <img src="src\image\dog and doctor 1.jpg" alt="#" className="w-100 rounded-4"
-                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
-                                                <img src="src\image\love-fill.svg" alt="heat"
-                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
-                                                <div className="card-body">
-                                                    <div className="text-center ">
-
-                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">毛寶寶基金會</div>
-                                                    </div>
-
-                                                </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-lg-4 col-6">
-                                                <div className="card border-primary rounded-4">
-                                                <img src="src\image\pet with people.jpg" alt="#" className="w-100 rounded-4"
-                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
-                                                <img src="src\image\love-fill.svg" alt="heat"
-                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
-                                                <div className="card-body">
-                                                    <div className="text-center ">
-
-                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">喵了個咪中途之家</div>
-                                                    </div>
-
-                                                </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-lg-4 col-6">
-                                                <div className="card border-primary rounded-4">
-                                                <img src="src\image\vet.jpg" alt="#" className="w-100 rounded-4"
-                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
-                                                <img src="src\image\love-fill.svg" alt="heat"
-                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
-                                                <div className="card-body">
-                                                    <div className="text-center ">
-
-                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">小腳印之家</div>
-                                                    </div>
-
-                                                </div>
-                                                </div>
-                                            </div>
-                                            {/* 其他機構卡片以此類推... */}
-                                        </div>
-                                        </div>
-                                    </div>
                                     </div>
                                 </div>
                                 </div>

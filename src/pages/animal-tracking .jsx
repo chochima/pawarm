@@ -177,8 +177,22 @@ function AnimalTracking() {
         <div className=' height-360 mt-32 px-48 '>
           <div className='row h-100 d-flex justify-content-center align-items-center'>
             <div className="col-lg-6 d-flex justify-content-center ">
-              <img src={articles[currentIndex]?.[`assoImg_${currentAssoIndex}`]} className="" alt="logo" />
+              {/* <img src={articles[currentIndex]?.[`assoImg_${currentAssoIndex}`]} className="" alt="logo" /> */}
+              <a 
+              href={articles[currentIndex]?.[`assohref_${currentAssoIndex}`]} // 動態取得 assohref_X
+              target="_blank" // 讓連結在「新分頁」打開
+              rel="noopener noreferrer" // 加上 target="_blank" 時，為了安全性和性能，建議補上這個
+              className="d-block" // 確保 a 標籤跟 div 一樣寬，方便點擊
+              >
+                {/* 2. 把原本的 img 放進去 */}
+                <img 
+                  src={articles[currentIndex]?.[`assoImg_${currentAssoIndex}`]} // 保持原本的圖片路徑
+                  className="img-fluid" // [選填] Bootstrap class，確保圖片在小螢幕時會自動縮放
+                  alt={articles[currentIndex]?.[`assoName_${currentAssoIndex}`] || "logo"} // [選填] 建議把 alt 改為對應的機構名稱，SEO 更好
+                />
+              </a>
             </div>
+
             <div className="col-lg-6 ">
               <h4 className='text-gray-900 fw-700 fs-24 mb-16'>{articles[currentIndex]?.[`assoName_${currentAssoIndex}`]}</h4>
               <p className='fw-500 fs-20 text-secondary-500 mb-0'>
@@ -256,31 +270,42 @@ function AnimalTracking() {
             const newsSubject = articles[currentIndex]?.[`newsSubject_${currentAssoIndex}_${num}`];
             const newsContent = articles[currentIndex]?.[`newsContent_${currentAssoIndex}_${num}`];
             const newsImg = articles[currentIndex]?.[`newsImg_${currentAssoIndex}_${num}`];
+            const newsHref = articles[currentIndex]?.[`newshref_${currentAssoIndex}_${num}`];
 
                         // 2. 只有當標題存在時，才渲染這則新聞卡片
                         return newsSubject ? (
                           <div className="col-lg-6" key={num}>
                             <div className="d-flex align-items-center justify-content-start shadow rounded bg-secondary-50 h-100">
                               {/* 新聞圖片：套用你剛設定的縮放裁切 CSS */}
-                              <img
-                                src={newsImg}
-                                alt={`news-${num}`}
-                                className="Asso-size object-fit-cover"
-                                style={{ width: '240px', height: '240px', flexShrink: 0 }}
-                              />
+                              <a 
+                                href={articles[currentIndex]?.[`newshref_${currentAssoIndex}_${num}`]} // 關鍵：三重動態綁定網址
+                                target="_blank" // 新分頁打開
+                                rel="noopener noreferrer" // [安全性配置
+                                className="d-flex align-items-center justify-content-start shadow rounded bg-secondary-50 h-100 text-decoration-none" // 保持原本的 Flex 佈局，並移除超連結下底線
+                                style={{ cursor: 'pointer' }} //手型游標
+                              >
+                                {/* 新聞圖片：套用你剛設定的縮放裁切 CSS */}
+                                <img
+                                  src={newsImg} // 動態取得 newsImg_X_X 
+                                  alt={articles[currentIndex]?.[`newsSubject_${currentAssoIndex}_${num}`] || `news-${num}`} 
+                                  className="Asso-size object-fit-cover"
+                                  style={{ width: '240px', height: '240px', flexShrink: 0 }}
+                                />
+                                <div className='px-12 py-12 px-lg-36'>
+                                  <p className="mb-12 text-secondary-300 fw-400 fs-16">
+                                    {newsDate}
+                                  </p>
+                                  <p className="fw-bold mb-12 text-secondary-900 fs-20">
+                                    {newsSubject}
+                                  </p>
+                                  <p className="fs-18 fw-400 text-secondary-500">
+                                    {/* 加上 slice 控制字數*/}
+                                    {newsContent?.length > 50 ? `${newsContent.slice(0, 50)}...` : newsContent}
+                                  </p>
+                                </div>
+                                
+                              </a>
 
-                              <div className='px-12 py-12 px-lg-36'>
-                                <p className="mb-12 text-secondary-300 fw-400 fs-16">
-                                  {newsDate}
-                                </p>
-                                <p className="fw-bold mb-12 text-secondary-900 fs-20">
-                                  {newsSubject}
-                                </p>
-                                <p className="fs-18 fw-400 text-secondary-500">
-                                  {/* 這裡可以加上 slice 控制字數，避免內文太長撐破版面 */}
-                                  {newsContent?.length > 50 ? `${newsContent.slice(0, 50)}...` : newsContent}
-                                </p>
-                              </div>
                             </div>
                           </div>
                         ) : null;
