@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="col align-self-center ps-0 pe-0 pb-48 footer-style">
         <ul className="footer-content ps-0 gap-16 d-flex flex-column flex-md-row">
           <li><NavLink to='products'>選擇​我​的​動物​​​</NavLink></li>
-          <li><NavLink to="#">查看公益里程碑</NavLink></li>
+          <li><NavLink to="milestone">查看公益里程碑</NavLink></li>
           <li><NavLink to='animaltracking'>追蹤​動物​</NavLink></li>
           <li><NavLink to="#">活動資訊​​​</NavLink></li>
           <li><NavLink to="#">關於我們​​​​</NavLink></li>

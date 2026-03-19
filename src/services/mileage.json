@@ -1,0 +1,53 @@
+{
+"mileage" : [
+    {
+        "date": "2023 Q4",
+        "id":"mile01",
+        "title":"贊助​「台灣野灣野生​動物​保育​協會」​保育​資金，​舉辦野生​動物​救傷職業體驗營隊",
+        "content":"透過支持野生動物保育資金，讓更多孩子與民眾有機會接觸野生動物救傷工作的真實樣貌。由專業救援人員帶領體驗營隊，認識受傷野生動物的照護流程、救援知識與野外保育觀念。藉由實際觀察、互動課程與案例分享，讓參與者了解每一次救援背後的重要意義，培養對自然生命的尊重與保育責任感。",
+        "image": "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773591376859.png",
+        "className":"mile-01",
+        "stepUrl":"https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773677862365.png"
+    },
+
+    {
+        "date": "2024 Q2",
+        "id":"mile02",
+        "title":"贊助​「台北​市立​動物園」​宣傳​資金，​讓偏遠​地​區​小​學生免​費參觀",
+        "content":"透過宣傳資金支持，讓更多偏遠地區的小學生有機會走進動物園，近距離觀察不同物種的生活樣貌。藉由專業導覽與互動學習，認識動物習性、生態環境與保育的重要性。透過親身體驗與實地參觀，讓孩子從小建立尊重生命與愛護自然的觀念，也拓展對環境教育的理解與關注。",
+        "image": "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773591472679.png",
+        "className":"mile-02",
+        "stepUrl":"https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773677956831.png"
+    },
+
+    {
+        "date": "2024 Q3",
+        "id":"mile03",
+        "title":"贊助​「台灣​石虎​保育​協會」​保育​資金，​進行​石虎生態​相關​救援",
+        "content":"台灣石虎數量稀少，長期面臨棲地破碎與路殺風險。透過保育資金支持，可協助專業團隊進行石虎救援、傷後照護與野外追蹤工作。藉由生態調查與在地宣導，讓更多民眾了解石虎在台灣生態中的重要角色，降低人為威脅，持續守護珍貴原生物種的生存環境。",
+        "image": "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773591522724.png",
+        "className":"mile-03",
+        "stepUrl":"https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773677982087.png"
+    },
+
+    {
+        "date": "2025 Q1",
+        "id":"mile04",
+        "title":"贊助​「中華​民國野鳥學會」​攝影設備，​進行​候鳥生態​相關​研究​",
+        "content":"候鳥每年跨越長距離遷徙，是觀察氣候與生態變化的重要指標。透過提供攝影設備，可協助研究人員記錄候鳥棲息、覓食與遷徙行為，累積珍貴的生態資料。藉由影像紀錄與研究成果分享，提升大眾對濕地與候鳥保育的認識，讓更多人理解維護棲地環境的重要性。",
+        "image": "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773591580703.jpg",
+        "className":"mile-04",
+        "stepUrl":"https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773678015169.png"
+    },
+
+    {
+        "date": "2025 Q4",
+        "id":"mile05",
+        "title":"贊助​「台灣​黑熊​保育​協會」​相關​宣傳​費用，​進行​宣導​黑熊禁獵​觀念​",
+        "content":"台灣​黑熊​是​珍貴​的​原生​保育​類​動物，​卻​仍​因誤解與​非法​獵捕​而​面臨生​存威脅。​藉由​專業​團隊​的​宣導​計畫，​將正確​的​保育​知識​帶​入​校園、​社區​與山林​周邊。​​透過​故事、​影像​與實​地​分享，​減少​恐懼與偏​見讓​更​多​人​理解黑熊​在​生態​系​中​的​關鍵​角色，​提升​大眾對禁獵​議題​的​認同​感。​",
+        "image": "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773591627388.jpg",
+        "className":"mile-05",
+        "stepUrl":"https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1773678034397.png"
+    }
+    ]
+}

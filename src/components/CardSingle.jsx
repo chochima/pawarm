@@ -9,29 +9,12 @@ import { currency} from"../utils/filter";
 const{VITE_PATH,VITE_URL}=import.meta.env;
 
 
-const CardSingle=()=>{
+const CardSingle=({product})=>{
   const [isAdding, setIsAdding] = useState(false);
   const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [isUpdating, setIsUpdating] = useState("");
-  const [randomProducts, setRandomProducts] = useState([]);
-
-
-  const getSixRandomProducts = async () => {
-  try {
-    const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/products/all`);
-    const allData = res.data.products;
-
-    // 隨機打亂並取出前 6 個
-    const shuffled = [...allData]
-      .sort(() => 0.5 - Math.random()) // 利用 0.5 產生正負機率來打亂
-      .slice(0, 1); // 切取前 1 筆
-
-    setRandomProducts(shuffled);
-  } catch (err) {
-    console.error("抓取隨機資料失敗", err);
-  }
-};
+  
 
 const toggleFavorite = (id) => {
   if (favorites.includes(id)) {
@@ -92,13 +75,13 @@ const handleAdd = async (id) => {
 
     useEffect(() => {
     getCart();
-    getSixRandomProducts();
+    
   }, []);
 
   return (
     <>
     <div className="">
-        {randomProducts.map(product => (
+        
              <div className="card border-0 shadow-sm" key={product.id}>
                 <div className="custom-card">
                         <div className="card product-card custom-card-bg" >
@@ -152,7 +135,7 @@ const handleAdd = async (id) => {
                          </div>
                       </div>
              </div>
-        ))}
+        
     </div>
     </>
   )

@@ -15,6 +15,30 @@ const{VITE_PATH,VITE_URL}=import.meta.env;
 
 export default function ProductSwiper() {
     
+    const [randomProducts, setRandomProducts] = useState([]);
+
+
+  const getSixRandomProducts = async () => {
+  try {
+    const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/products/all`);
+    const allData = res.data.products;
+
+    // 隨機打亂並取出前 6 個
+    const shuffled = [...allData]
+      .sort(() => 0.5 - Math.random()) // 利用 0.5 產生正負機率來打亂
+      .slice(0, 6); // 切取前 6 筆
+
+    setRandomProducts(shuffled);
+  } catch (err) {
+    console.error("抓取隨機資料失敗", err);
+  }
+};
+
+useEffect(() => {
+    getSixRandomProducts();
+    
+  }, []);
+
 
 
     return (
@@ -36,14 +60,10 @@ export default function ProductSwiper() {
         }}
 
         className="my-swiper">
-        
 
-        <SwiperSlide><CardSingle /></SwiperSlide>
-        <SwiperSlide><CardSingle /></SwiperSlide>
-        <SwiperSlide><CardSingle /></SwiperSlide>
-        <SwiperSlide><CardSingle /></SwiperSlide>
-        <SwiperSlide><CardSingle /></SwiperSlide>
-        <SwiperSlide><CardSingle /></SwiperSlide>
+        {randomProducts.map((item,index) => (
+            <SwiperSlide><CardSingle product={item}/></SwiperSlide>
+        ))}
 
     </Swiper>
     </>

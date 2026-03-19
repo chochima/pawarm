@@ -9,6 +9,17 @@
     }
 }
 
+.brandLogo {
+    display: flex;
+    
+
+    img {
+        width: auto;
+        height: 118px;
+        justify-content: center;
+    }
+}
+
 .logo-swiper {
     img {
         height: 118px;
@@ -24,6 +35,12 @@
 
 //手機板
 @media (max-width: 768px) {
+.brandLogo {
+    img {
+        height: 92px;
+    }
+}
+
 .logo-swiper {
     img {
         padding: 0px;

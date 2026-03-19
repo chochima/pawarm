@@ -45,10 +45,10 @@ return (
         <div className="col-auto px-0 align-self-center">
         <ul className="nav-content">
             <li><NavLink to='products'>選擇​我​的​動物​​​</NavLink></li>
-            <li><NavLink href="#">查看公益里程碑</NavLink></li>
+            <li><NavLink to="milestone">查看公益里程碑</NavLink></li>
             <li><NavLink to='animaltracking'>追蹤​動物​​​​</NavLink></li>
-            <li><NavLink href="#">活動資訊​​​</NavLink></li>
-            <li><NavLink href="#">關於我們​​​​</NavLink></li>
+            <li><NavLink to="#">活動資訊​​​</NavLink></li>
+            <li><NavLink to="#">關於我們​​​​</NavLink></li>
             <li className="border-start border border-secondary-1 border-1 me-48"></li>
             
         </ul>

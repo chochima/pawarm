@@ -1,5 +1,6 @@
 import App from "../App";
 import Home from "../pages/index";
+import Milestone from "../pages/Milestone";
 import Products from "../pages/Products";
 import ProductDetail from "../pages/ProductDetail";
 import Carts from "../pages/Cart";
@@ -21,6 +22,10 @@ const routes =[
             {
                 path:'',
                 element:<Home/>
+            },
+            {
+                path:'milestone',
+                element:<Milestone/>
             },
             {
                 path:'products',

@@ -1,0 +1,154 @@
+.milestone-hero-bg {
+    width: 100%;
+    padding: 120px 0px; 
+
+    img {
+        width: 100%;
+    }
+}
+
+.milestone-hero-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.mileDash-bg-img {
+    background-image: url("../image/bg-mileDash.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    height: 100%;
+    padding: 120px 0;
+}
+.mileDash-text-style {
+    text-align: center;
+    padding: 48px;
+    margin-top: 32px;
+
+    background-color: rgb(255, 255, 255,0.6);
+
+    p {
+        font-family: "Noto Serif TC";
+        font-size: 88px;
+        color: $gray-900;
+        margin-bottom: 0px;
+    }
+}
+
+.mileage {
+    background-color: #F9F6ED;
+    padding: 120px 0;
+}
+
+.mileage-bg-img {
+    position: relative;
+    padding: 32px 0;
+}
+
+.mile-item {
+    max-width: 240px;
+}
+
+.mileage-content-step-mob {
+    img {
+    padding: 0 18px;
+    display: inline-block;
+    }
+
+}
+.mileage-content-step-text {
+    h3 {
+        font-size: 16px;
+    }
+}
+.mileage-content-step-mob-textLine {
+    padding: 0 13.5px;
+    border-right: 5px solid $primary-500;
+}
+
+
+.mileage-content-body {
+    h3 {
+        font-size: $font-size-base * 1.75;
+        font-weight: 700;
+        color: $gray-900;
+        padding-bottom: 12px;
+    }
+
+    h4 {
+        font-size: $font-size-base * 1.25;
+        line-height: 1.5;
+    }
+}
+
+.mileage-img {
+    img {
+        max-width: 320px;
+        box-shadow: 0 6.4px 20px rgba(#CDAE6A66,0.4);
+    }
+}
+
+
+
+//手機板
+@media (max-width: 768px) {
+
+.milestone-hero-bg {
+    padding: 48px 0px; 
+
+    img {
+    width: 100%;
+    } 
+}
+
+.mileDash-bg-img {
+    background-image: url("../image/bg-mileDash.png");
+    padding: 48px 0;
+}
+.mileDash-text-style {
+    margin-top: 20px;
+
+    p {
+        font-size: 48px;
+    }
+}
+
+
+
+.mileage-bg-img {
+    background-image: none;
+}
+
+
+.mileage-content-step-text {
+    h3 {
+        font-size: 16px;
+    }
+}
+
+.mileage-content-body {
+    padding-right: 0px;
+
+    h3 {
+        font-size: $font-size-base * 1.125;
+        font-weight: 700;
+        padding-bottom: 8px;
+    }
+
+    h4 {
+        font-size: $font-size-base;
+    }
+}
+
+.mileage-img {
+    img {
+    max-width: 280px;
+    }
+}
+
+
+
+}

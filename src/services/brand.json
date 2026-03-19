@@ -1,9 +1,5 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay} from 'swiper/modules';
-
-
-export default function LogoSwiper() {
-    const logos = [
+{
+"logos" : [
     {
         "agency": "臺北市立動物園",
         "logo": "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770311598297.png",
@@ -50,58 +46,7 @@ export default function LogoSwiper() {
         "agency": "海龜保護協會",
         "logo": "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770312287055.png",
         "agencyUrl":"https://conserveturtles.org/"
-    },
-
-    {/*
-        "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770311598297.png",
-    "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770311719290.png",
-    "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770311801210.png",
-    "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770312089491.png",
-    "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770312147794.png",
-    "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770312252052.png",
-    "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770312270797.png",
-    "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770312287055.png", 
-    */}
+    }
     
-    ];
-
-    const allLogos = [...logos, ...logos];
-
-    return (
-    <>
-    <Swiper
-        loop={true}
-        freeMode={true}
-        speed={3500}
-        autoplay={{
-            delay: 0,
-            disableOnInteraction: false,
-        }}
-        
-        modules={[Autoplay]}
-        breakpoints={{
-            0: { 
-                slidesPerView: 3.5,
-                spaceBetween: 4
-             },    // 手機
-            768: { 
-                slidesPerView: 6,
-                spaceBetween: 24
-             }  // 平板以上
-        }}
-        className="logos">
-        
-        {allLogos.map((logo, index) => (
-        <SwiperSlide key={index}>
-        <div className="logo-swiper">
-            <a href={logo.agencyUrl}>
-            <img src={logo.logo} alt={logo.agency} />
-            </a>
-        </div>
-    </SwiperSlide>
-    ))}
-
-    </Swiper>
-    </>
-    );
+    ]
 }

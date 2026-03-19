@@ -71,6 +71,13 @@
     font-size: 20px;
 }
 
+.body-text-4{
+    font-size: 16px;
+    color: $gray-300;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
 //手機板
 @media (max-width: 768px) {
 
@@ -93,7 +100,9 @@
     font-size: 16px;
 }
 
-
+.body-text-4{
+    font-size: 14px;
+}
 
 
 .orange-vertical-line {
