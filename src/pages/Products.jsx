@@ -5,7 +5,7 @@ import love from '../image/love.svg';
 import loveFill from '../image/love-fill.svg';
 import { createAsyncGetCart } from "../slice/cartSlice";
 import { NavLink,Link } from "react-router";
-
+import toast from 'react-hot-toast';
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
 const mechanismImages = [
@@ -44,22 +44,36 @@ const mechanismImages = [
 
 ];
 const Products = () => {
-  const [favorites, setFavorites] = useState([]);
+ const [favorites, setFavorites] = useState(() => {
+  const saved = localStorage.getItem('fav');
+  return saved ? JSON.parse(saved) : [];
+});
   const [products, setProducts] = useState([]);
   
   // 🚀 1. 新增分類與搜尋狀態
   const [filterCategory, setFilterCategory] = useState("全部");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
-  const toggleFavorite = (id) => {
-    if (favorites.includes(id)) {
-      setFavorites(favorites.filter((favId) => favId !== id));
-    } else {
-      setFavorites([...favorites, id]);
-    }
-  };
+ const toggleFavorite = (id) => {
+  let updatedFavs;
+  
+  if (favorites.includes(id)) {
+    // 取消收藏
+    updatedFavs = favorites.filter((favId) => favId !== id);
+    toast('已從收藏清單移除', { icon: '🗑️' });
+  } else {
+    // 新增收藏
+    updatedFavs = [...favorites, id];
+    toast.success('已加入關注清單！', { icon: '❤️' });
+  }
+
+  // 同步更新 State 與 LocalStorage
+  setFavorites(updatedFavs);
+  localStorage.setItem('fav', JSON.stringify(updatedFavs));
+};
 
   const getProducts = async () => {
     try {
@@ -75,18 +89,46 @@ const Products = () => {
       const data = { product_id: id, qty };
       await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
       dispatch(createAsyncGetCart());
-      alert("已加入守護清單");
+      
     } catch (err) {
       console.log("加入購物車失敗");
     }
   };
+  const handleAddToCart = async (id) => {
+  setIsLoading(true); // 開始執行時設為 true
+  try {
+    await addCart(id); // 假設這是你的非同步加入購物車函式
+    toast.success('已加入守護清單！', {
+    duration: 3000, // 持續 3 秒
+    position: 'top-center', // 顯示在右上角
+    style: {
+      background: '#333',
+      color: '#fff',
+    },
+  });
+  } catch (error) {
+    toast.error('加入失敗，請稍後再試');
+  } finally {
+    setIsLoading(false); // 無論成功失敗，結束後設為 false
+  }
+};
 
   useEffect(() => {
     getProducts();
     dispatch(createAsyncGetCart()); 
   }, [dispatch]);
 
-  // 🚀 2. 核心邏輯：計算過濾後的產品清單
+  useEffect(() => {
+  const handleStorageChange = () => {
+    const updatedFavs = JSON.parse(localStorage.getItem('fav')) || [];
+    setFavorites(updatedFavs);
+  };
+
+  // 當其他分頁/組件修改 localStorage 時，這裡也會跟著變
+  window.addEventListener('storage', handleStorageChange);
+  return () => window.removeEventListener('storage', handleStorageChange);
+}, []);
+
   const filteredProducts = products.filter((product) => {
     
     const isCategoryMatch = filterCategory === "全部" || product.area === filterCategory;
@@ -99,7 +141,6 @@ const Products = () => {
     return isCategoryMatch && isSearchMatch;
   });
 
-  // 🚀 3. 動態取得分類選單內容
   const categories = ["全部", ...new Set(products.map(p => p.area).filter(Boolean))];
 
   return (
@@ -192,33 +233,42 @@ const Products = () => {
         {/* 🚀 標題區：同樣包裹 Link */}
         <Link to={`/product/${product.id}`} className="text-decoration-none">
           <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
-        </Link>
         
-        <p className="fw-bold mb-16 fs-14 text-gray-500">{product.agency}</p>
-
-        {/* mt-auto 確保價格與按鈕永遠在底部對齊 */}
-        <div className="mt-auto">
+         <p className="fw-bold mb-16 fs-14 text-gray-500">{product.agency}</p>
+         <div className="mt-auto">
           <div className="mb-3">
             <span className="fw-bold fs-24 text-primary-500">${product.price.toLocaleString()}</span>
             <del className="text-muted fw-normal ms-2 fs-20">${product.origin_price.toLocaleString()}</del>
           </div>
 
           <button 
-            className="btn btn-outline-primary-500 w-100 fs-18 py-12 fw-bold" 
-            onClick={(e) => {
-              e.preventDefault();
-              addCart(product.id);
-            }}
-          >
-            加入購物車
-          </button>
+  className="btn btn-outline-primary-500 w-100 fs-18 py-12 fw-bold" 
+  disabled={isLoading} // 當 loading 時禁止點擊
+  onClick={(e) => {
+    e.preventDefault();
+    handleAddToCart(product.id);
+  }}
+>
+  {isLoading ? (
+    <>
+      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      加入中...
+    </>
+  ) : (
+    "加入購物車"
+  )}
+</button>
         </div>
+        </Link>
+        
+
+        
       </div>
     </div>
   </div>
             ))
           ) : (
-            <div className="col-12 text-center py-5">
+            <div className="col-12 text-center py-5 ">
               <h3 className="text-gray-400">找不到符合「{searchQuery}」的計畫 🐾</h3>
               <button className="btn btn-link" onClick={() => {setSearchQuery(""); setFilterCategory("全部");}}>
                 清除搜尋條件
@@ -229,7 +279,7 @@ const Products = () => {
       </div>
 
       {/* 保育機構區塊 */}
-      <div className="bg-primary-50">
+      <div className="bg-primary-50 overflow-x-hidden">
         <div className="container py-120">
           <div className="fs-36 fw-700 title-text-cart text-black mb-32">瀏覽更多保育機構</div>
           <div className="row g-20 g-md-32 align-items-center">

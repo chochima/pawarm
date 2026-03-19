@@ -9,7 +9,12 @@ import Login from "../pages/Login";
 import Backstage from "../Backstage/Backstage";
 import BackstageProducts from "../Backstage/BackstageProducts";
 import BackstageCoupon from "../Backstage/BackstageCoupon";
+import BackstageOrder from "../Backstage/BackstageOrder";
 import Checkout from "../pages/Checkout";
+import CheckoutSuccess from "../pages/Success";
+import MemberCenter from "../pages/MemberCenter";
+import About from "../pages/About";
+import Events from "../pages/Events";
 
 
 
@@ -44,8 +49,24 @@ const routes =[
                 element:<Checkout/>
             },
             {
+                path:"checkout-success/:orderId",
+                element:<CheckoutSuccess />
+            },
+            {
                 path:"animaltracking",
                 element:<AnimalTracking/>
+            },
+            {
+                path:"membercenter",
+                element:<MemberCenter/>
+            },
+            {
+                path:"about",
+                element:<About/>
+            },
+            {
+                path:"events",
+                element:<Events/>
             },
             {
                 path:"login",
@@ -64,6 +85,10 @@ const routes =[
             {
                 path:'coupon',
                 element:<BackstageCoupon/>
+            },
+            {
+                path:'order',
+                element:<BackstageOrder/>
             }
         ]
 

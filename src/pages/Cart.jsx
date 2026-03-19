@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { createAsyncGetCart } from "../slice/cartSlice";
+import toast from 'react-hot-toast';
 import  axios from 'axios'
 import love from '../image/love.svg'
 import loveFill from '../image/love-fill.svg'
-
+import { useSelector } from "react-redux";
 
 import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
+import ProductRecommendation from "../components/ProductRecommendation";
 import { NavLink } from "react-router";
 
 
@@ -67,10 +69,15 @@ const mechanismImages = [
 const Carts=()=>{
   const [isAdding, setIsAdding] = useState(false);
   const [cart, setCart] = useState([]);
-  const [favorites, setFavorites] = useState([]);
   const [isUpdating, setIsUpdating] = useState("");
   const [randomProducts, setRandomProducts] = useState([]);
   const [couponCode, setCouponCode] = useState("");
+  const [favorites, setFavorites] = useState(() => {
+  return JSON.parse(localStorage.getItem('fav')) || [];
+});
+
+  const { token } = useSelector((state) => state.auth);
+  const isLogin = !!token;
 
 
   const dispatch = useDispatch();
@@ -97,13 +104,21 @@ const Carts=()=>{
 };
 
 const toggleFavorite = (id) => {
+  let updatedFavs;
+  
   if (favorites.includes(id)) {
-    // 如果已經在清單裡，就濾掉它 (取消收藏)
-    setFavorites(favorites.filter((favId) => favId !== id));
+    // 取消收藏
+    updatedFavs = favorites.filter((favId) => favId !== id);
+    toast('已從收藏清單移除', { icon: '🗑️' });
   } else {
-    // 如果不在清單裡，就加進去 (新增收藏)
-    setFavorites([...favorites, id]);
+    // 新增收藏
+    updatedFavs = [...favorites, id];
+    toast.success('已加入關注清單！', { icon: '❤️' });
   }
+
+  // 同步更新 State 與 LocalStorage
+  setFavorites(updatedFavs);
+  localStorage.setItem('fav', JSON.stringify(updatedFavs));
 };
 
 
@@ -111,64 +126,95 @@ const toggleFavorite = (id) => {
   const getCart = async () => {
     try {
       const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/cart`);
-      console.log(res)
       setCart(res.data.data);
     } catch (err) {
       console.log(err.response.data);
     }
   };
-  const addCart= async(id, qty = 1)=>{
-    try{
-        const data={
-            product_id: id,
-            qty,
-        }
-        await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`,{data});
+  const addCart = async (id, qty = 1) => {
+  const data = {
+    product_id: id,
+    qty,
+  };
+
+  toast.promise(
+    axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data }),
+    {
+      loading: '正在加入守護清單...',
+      success: (res) => {
         dispatch(createAsyncGetCart());
-        getCart();
-        alert("已成功加入守護清單！");
-
-
-    }catch(err){
-        console.log("加入購物車失敗")
+        if (typeof getCart === 'function') getCart(); 
+        return "已成功加入守護清單！";
+      },
+      error: (err) => {
+        console.error("加入購物車失敗", err);
+        return "加入失敗，請稍後再試";
+      },
+    },
+    {
+      
+      style: {
+        minWidth: '250px',
+        fontWeight: 'bold',
+      },
+      success: {
+        duration: 3000,
+        icon: '🐾', // 配合寵物主題的圖示
+      },
     }
-   }
-   const handleAdd = async (id) => {
+  );
+};
+  const handleAdd = async (id) => {
   setIsAdding(true);
-  await addCart(id); // 呼叫你原本的 addCart
+  await addCart(id); 
   setIsAdding(false);
+  };
+ const deleteCart = async (id) => {
+  const toastId = toast.loading('處理中...'); 
+  try {
+    await axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${id}`);
+    
+    // 更新資料
+    dispatch(createAsyncGetCart());
+    getCart();
+
+    // 將原本的 loading toast 改為成功
+    toast.success('已將商品移除', { id: toastId });
+  } catch (err) {
+    console.log(err.response?.data);
+    
+    // 將原本的 loading toast 改為錯誤
+    toast.error('移除失敗', { id: toastId });
+  }
+};
+const updateCart = async (cartId, productId, qty = 1) => {
+  const data = {
+    product_id: productId,
+    qty,
+  };
+
+  // 使用 toast.promise 並自定義樣式
+  toast.promise(
+    axios.put(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${cartId}`, { data }),
+    {
+      loading: '正在更新數量...',
+      success: () => {
+        dispatch(createAsyncGetCart());
+        if (getCart) getCart();
+        return '數量已更新！';
+      },
+      error: (err) => {
+        console.error(err.response?.data);
+        return '更新失敗，請稍後再試';
+      },
+    },
+    {
+      id: `update-${cartId}`, // 使用固定的 ID，防止使用者連點時彈出多個 toast
+      style: { minWidth: '200px' },
+    }
+  );
 };
 
- 
-  const deleteCart = async (id) => {
-    try {
-      await axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${id}`);
-      dispatch(createAsyncGetCart());
-      getCart();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
-
- 
-  const updateCart = async (cartId, productId, qty = 1) => {
-    try {
-
-      const data = {
-        product_id: productId,
-        qty,
-      };
-      await axios.put(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${cartId}`, { data });
-      dispatch(createAsyncGetCart());
-      getCart();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
-
-  
-
-  // 套用優惠券
 const applyCoupon = async (code) => {
   try {
     const res = await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/coupon`, {
@@ -180,8 +226,6 @@ const applyCoupon = async (code) => {
     alert(err.response?.data?.message || "套用失敗");
   }
 };
-
-
 const removeCoupon = () => {
   // 1. 強制讓前端顯示回原價（但不改動 API 資料庫）
   setCart(prev => ({
@@ -194,6 +238,38 @@ const removeCoupon = () => {
   
   alert("已暫時移除優惠（注意：重新整理後可能會恢復）");
 };
+const handleMoveToWishlist = (item) => {
+  const moveAction = async () => {
+    // 1. 取得舊資料
+    const currentFavs = JSON.parse(localStorage.getItem('fav')) || [];
+    
+    // 2. 判斷並存入 LocalStorage
+    // 注意：確認 item.product_id 是否正確（部分 API 結構是 item.product.id）
+    const productId = item.product_id; 
+
+    if (!currentFavs.includes(productId)) {
+      const updated = [...currentFavs, productId];
+      localStorage.setItem('fav', JSON.stringify(updated));
+
+      // ⭐ 核心關鍵：手動發送事件通知其他元件更新 State
+      window.dispatchEvent(new Event("storage")); 
+    }
+    
+    // 3. 呼叫刪除購物車 API
+    return axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/cart/${item.id}`);
+  };
+
+  toast.promise(moveAction(), {
+    loading: '正在搬移商品...',
+    success: () => {
+      // 成功後重新整理購物車列表
+      dispatch(createAsyncGetCart());
+      if (typeof getCart === 'function') getCart();
+      return '已移至收藏清單！';
+    },
+    error: '搬移失敗',
+  });
+};
 
 
   
@@ -204,7 +280,7 @@ const removeCoupon = () => {
 
   return (
     <>
-    <div className="container my-5">
+    <div className="container my-5 overflow-hidden">
         <CheckoutStepper />
 
    
@@ -359,7 +435,7 @@ const removeCoupon = () => {
     </div>
 
     </div>
-    <div className="col-md-3">
+    <div className="col-lg-3">
       <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護計畫</div>
       <div className="bg-gray-50 p-20 d-flex flex-column gap-20">
         <div className="d-flex  justify-content-between">
@@ -427,7 +503,27 @@ const removeCoupon = () => {
     <div className="fw-bold mb-0 fs-28" style={{ color: '#b68d4c' }}>${currency(cart?.final_total)}</div>
   </div>
          
-        <NavLink to="/checkout"  className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none">下一步</NavLink>
+        {isLogin ? (
+    // 已登入：正常的 NavLink
+    <NavLink 
+      to="/checkout"  
+      className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none shadow-sm transition-all"
+    >
+      下一步
+    </NavLink>
+  ) : (
+    // 未登入：外觀為灰色按鈕，點擊提示並導向登入
+    <button 
+      onClick={() => {
+        toast.error('守護生命前，請先登入會員', { icon: '👤' });
+        // 選配：兩秒後導向登入頁
+        // setTimeout(() => navigate('/login'), 2000);
+      }}
+      className="btn-filled bg-gray-400 text-white fw-bold fs-18 px-44 py-16 text-center border-0 cursor-not-allowed"
+    >
+      請先登入會員
+    </button>
+  )}
   <div className="fs-14 lh-base text-gray-500">✨ 本次消費將贊助 ${currency(cart?.final_total*0.15)} 給保育機構，感謝您的購買</div>
       </div>
     </div>
@@ -435,7 +531,7 @@ const removeCoupon = () => {
   
 </div>
 <div className="bg-gray-50">
-  <div className="container ">
+  <div className="container  overflow-hidden">
   <div className=" py-120">
      <div className="fs-36 fw-700 title-text-cart text-black mb-32">與牠們相遇：「下一位等著您守護的夥伴」</div>
      <div className="row">
@@ -567,13 +663,13 @@ const removeCoupon = () => {
 </div>
 <div >
   <div className="container ">
-  <div className=" py-120">
+  <div className=" py-120 overflow-x-hidden">
      <div className="fs-36 fw-700 title-text-cart text-black mb-32">瀏覽更多保育機構</div>
      <div className="row">
       <div className="col-lg-9 col-12">
         <div className="row g-20 g-md-32 align-items-center">
           {(mechanismImages || []).map((item, index) => (
-  <div className="col-6 col-md-3" key={index}>
+  <div className="col-6 col-lg-3" key={index}>
     <NavLink className="logo-wrapper d-flex justify-content-center align-items-center">
       <img 
         src={item.imageUrl} 
@@ -586,7 +682,7 @@ const removeCoupon = () => {
 ))}
       </div>
       </div>
-      <div className="col-3 d-none d-lg-block">
+      <div className="d-none d-lg-block">
         </div>
      </div>
   </div>

@@ -1,55 +1,63 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux"; 
+import { setToken } from "../slice/authSlice"; 
 
 import axios from "axios";
+import toast from 'react-hot-toast';
 
 const{VITE_PATH,VITE_URL}=import.meta.env;
 
 function Login() {
+  const dispatch = useDispatch();
+
+
   const {
     register,
     handleSubmit,
     formState: {errors},
   } = useForm();
 
-  const [authData, setAuthData] = useState(null);
 
   const navigate = useNavigate();
 
   const handleLogin = async (data) => {
-    try {
-      const response = await axios.post(`${VITE_URL}/admin/signin`, data);
-      const { token, expired } = response.data;
+  try {
+    const response = await axios.post(`${VITE_URL}/admin/signin`, data);
+    const { token, expired } = response.data;
 
-      setAuthData({ token, expired });
-    } catch (err) {
-      alert(`登入失敗：${err.response.data.message}`);
-    }
-  };
+    // 1. 更新 Redux (觸發 Header 切換)
+    dispatch(setToken(token));
+
+    // 2. 設定 Cookie
+    document.cookie = `hexToken=${token};expires=${new Date(expired)};path=/`;
+    
+    // 3. 設定 axios header
+    axios.defaults.headers.common.Authorization = token;
+
+    // 4. 執行 UI 通知與跳轉
+    toast.success("登入成功！歡迎回來。");
+    navigate("/");
+
+  } catch (err) {
+    toast.error(`登入失敗：${err.response?.data?.message || '伺服器錯誤'}`);
+  }
+};
 
   useEffect(() => {
-    const existingToken = document.cookie.replace(
-      /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    );
+  const existingToken = document.cookie.replace(
+    /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
+    "$1"
+  );
 
-    if (existingToken) {
-      axios.defaults.headers.common.Authorization = existingToken;
-      navigate("/backstage/products");
-      return;
-    }
-
-    if (authData) {
-      const { token, expired } = authData;
-      
-      document.cookie = `hexToken=${token};expires=${new Date(expired)};path=/`;
-      axios.defaults.headers.common.Authorization = token;
-
-      alert("登入成功！");
-      navigate("/backstage/products");
-    }
-  }, [authData, navigate]);
+  if (existingToken) {
+    // 如果已經登入過，將 Token 寫回 Redux 確保 Header 圖示狀態正確
+    dispatch(setToken(existingToken));
+    axios.defaults.headers.common.Authorization = existingToken;
+    navigate("/");
+  }
+}, [dispatch, navigate]); 
 
 
   return (
