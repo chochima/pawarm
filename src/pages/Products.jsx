@@ -76,6 +76,7 @@ const Products = () => {
       const data = { product_id: id, qty };
       await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
       dispatch(createAsyncGetCart());
+      
     } catch (err) {
       console.log("加入購物車失敗");
     }

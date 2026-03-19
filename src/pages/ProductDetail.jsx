@@ -58,14 +58,22 @@ const ProductDetail = () => {
       dispatch(createAsyncGetCart()); // 更新 Navbar 數量
       toast.success('已加入守護清單！', {
     duration: 3000, // 持續 3 秒
-    position: 'top-right', // 顯示在右上角
+    position: 'top-center', // 顯示在右上角
     style: {
       background: '#333',
       color: '#fff',
     },
   });
     } catch (err) {
-      alert("加入失敗");
+      toast.error('加入失敗，請稍後再試', {
+        duration: 3000,
+        position: 'top-center',
+        style: {
+          background: '#333',
+          color: '#fff',
+        },
+      });
+      console.error("加入購物車出錯:", err);
     }
   };
   const handleBuyNow = async()=>{
