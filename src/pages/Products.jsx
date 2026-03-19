@@ -76,15 +76,6 @@ const Products = () => {
       const data = { product_id: id, qty };
       await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
       dispatch(createAsyncGetCart());
-
-      toast.success('已加入守護清單！', {
-    duration: 3000, // 持續 3 秒
-    position: 'top-right', // 顯示在右上角
-    style: {
-      background: '#333',
-      color: '#fff',
-    },
-  });
     } catch (err) {
       console.log("加入購物車失敗");
     }
@@ -93,7 +84,14 @@ const Products = () => {
   setIsLoading(true); // 開始執行時設為 true
   try {
     await addCart(id); // 假設這是你的非同步加入購物車函式
-    toast.success('已加入守護清單！');
+    toast.success('已加入守護清單！', {
+    duration: 3000, // 持續 3 秒
+    position: 'top-center', // 顯示在右上角
+    style: {
+      background: '#333',
+      color: '#fff',
+    },
+  });
   } catch (error) {
     toast.error('加入失敗，請稍後再試');
   } finally {
@@ -212,12 +210,9 @@ const Products = () => {
         {/* 🚀 標題區：同樣包裹 Link */}
         <Link to={`/product/${product.id}`} className="text-decoration-none">
           <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
-        </Link>
         
-        <p className="fw-bold mb-16 fs-14 text-gray-500">{product.agency}</p>
-
-        {/* mt-auto 確保價格與按鈕永遠在底部對齊 */}
-        <div className="mt-auto">
+         <p className="fw-bold mb-16 fs-14 text-gray-500">{product.agency}</p>
+         <div className="mt-auto">
           <div className="mb-3">
             <span className="fw-bold fs-24 text-primary-500">${product.price.toLocaleString()}</span>
             <del className="text-muted fw-normal ms-2 fs-20">${product.origin_price.toLocaleString()}</del>
@@ -241,6 +236,10 @@ const Products = () => {
   )}
 </button>
         </div>
+        </Link>
+        
+
+        
       </div>
     </div>
   </div>

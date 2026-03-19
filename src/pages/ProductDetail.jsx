@@ -23,6 +23,7 @@ const ProductDetail = () => {
   const [qty, setQty] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [mainImage, setMainImage] = useState(""); 
+  const [showAllReviews, setShowAllReviews] = useState(false); // 控制評論顯示數量
   const [data, setData] = useState({ summary: { averageRating: 0, totalReviews: 0 }, reviews: [] });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ const ProductDetail = () => {
     toast.success('已加入守護清單，準備前往結帳！')
     navigate("/checkout")
   }
-
+  const visibleReviews = showAllReviews ? data.reviews : data.reviews.slice(0, 3);
   return (
     <>
     <div className="container py-5">
@@ -276,31 +277,38 @@ const ProductDetail = () => {
 
       {/* 評論列表區塊 */}
       <div className="review-list">
-        {data.reviews.map((review) => (
-          <div key={review.id} className="border-bottom py-4">
-            <div className="d-flex justify-content-between mb-2">
-              <h6 className="fw-bold ">{review.userName}</h6>
-              <small className="text-muted">{review.date}</small>
+          {visibleReviews.map((review) => (
+            <div key={review.id} className="border-bottom py-4">
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <h6 className="fw-bold mb-0">{review.userName}</h6>
+                <small className="text-muted">{review.date}</small>
+              </div>
+              <div className="text-warning mb-2">
+                {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+              </div>
+              <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
+                <p className="text-gray-700">{review.comment}</p>
+                <div className="d-flex gap-2">
+                  {review.images?.map((img, idx) => (
+                    <img key={idx} src={img} className="rounded object-fit-cover" style={{ width: '80px', height: '80px' }} alt="review" />
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="text-warning mb-2">
-              {[...Array(5)].map((_, i) => (
-                <span key={i}>{i < review.rating ? '★' : '☆'}</span>
-              ))}
+          ))}
+
+          {/* 更多按鈕 */}
+          {data.reviews.length > 3 && (
+            <div className="text-center mt-5">
+              <button 
+                className="btn btn-outline-primary-500 px-5 py-2 fw-bold"
+                onClick={() => setShowAllReviews(!showAllReviews)}
+              >
+                {showAllReviews ? "收起評論" : `查看更多評價 (${data.reviews.length})`}
+              </button>
             </div>
-            <div className="d-flex justify-content-between">
-              <p className="mb-3">{review.comment}</p>
-            
-            {/* 圖片展示 */}
-            <div className="d-flex gap-3">
-              {review.images.map((img, idx) => (
-                <img key={idx} src={img} alt="review-img"  style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
-              ))}
-            </div>
-            </div>
-            
-          </div>
-        ))}
-      </div>
+          )}
+        </div>
     </div>
     
     </>

@@ -8,6 +8,7 @@ import loveFill from '../image/love-fill.svg'
 
 import { currency} from"../utils/filter";
 import CheckoutStepper from "../components/Stepper";
+import ProductRecommendation from "../components/ProductRecommendation";
 import { NavLink } from "react-router";
 
 
@@ -111,7 +112,6 @@ const toggleFavorite = (id) => {
   const getCart = async () => {
     try {
       const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/cart`);
-      console.log(res)
       setCart(res.data.data);
     } catch (err) {
       console.log(err.response.data);
