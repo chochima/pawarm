@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-//import { useDispatch } from "react-redux";
-//import { createAsyncMessage } from "../slice/messageReducer";
 import axios from "axios";
 import * as bootstrap from "bootstrap";
 import Pagination from "../components/Pagination";
@@ -13,7 +11,6 @@ const{VITE_PATH,VITE_URL}=import.meta.env;
 
 
 const  BackstageProducts=()=>{
-    //const dispatch = useDispatch();
     const [products, setProducts] = useState([]);
     const [pagination, setPagination] = useState({});
 
@@ -232,18 +229,7 @@ const handleRemoveContentImage = (index) => {
     };
   });
 };
-  const logout=async()=>{
-     try {
-      await axios.post(`${VITE_URL}/v2/logout`);
-      document.cookie = `hexToken=;expires=;`;
-      axios.defaults.headers.common.Authorization = '';
-
-      alert("已登出！");
-      navigate("/login");
-    } catch (error) {
-      alert("登出失敗: ",error.response.data.message);
-    }
-  }
+ 
 
 
   useEffect(() => {
@@ -293,12 +279,7 @@ const handleRemoveContentImage = (index) => {
                 建立新的產品
               </button>
               
-              <button
-                className="btn btn-primary"
-                onClick={() => logout()}
-              >
-                登出
-              </button>
+             
             </div>
             <table className="table table-hover align-middle mt-4">
   <thead className="table-light">

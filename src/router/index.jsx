@@ -12,6 +12,8 @@ import BackstageOrder from "../Backstage/BackstageOrder";
 import Checkout from "../pages/Checkout";
 import CheckoutSuccess from "../pages/Success";
 import MemberCenter from "../pages/MemberCenter";
+import About from "../pages/About";
+import Events from "../pages/Events";
 
 
 
@@ -52,6 +54,14 @@ const routes =[
             {
                 path:"membercenter",
                 element:<MemberCenter/>
+            },
+            {
+                path:"about",
+                element:<About/>
+            },
+            {
+                path:"events",
+                element:<Events/>
             },
             {
                 path:"login",

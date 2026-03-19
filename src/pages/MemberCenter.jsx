@@ -1,472 +1,345 @@
-
 import axios from "axios";
-import { useState ,useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, Link } from 'react-router-dom';
 import '../style/_fonts.scss';
 import "../style/all.scss";
-import notifications from '../data/notifications.json';
+import notificationsData from '../data/notifications.json'; 
 import { toast, Toaster } from 'react-hot-toast';
+import { useDispatch } from "react-redux";
+import { setToken } from "../slice/authSlice";
+import { logout } from "../slice/authSlice";
+
 const API_BASE = import.meta.env.VITE_URL;
 const API_PATH = import.meta.env.VITE_PATH;
 
-
-
-function MemberCenter(){
-    const navigate = useNavigate(); 
+function MemberCenter() {
+    const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState('user'); 
     const [expandedId, setExpandedId] = useState(null);
+    const [orders, setOrders] = useState([]);
+    const [allProducts, setAllProducts] = useState([]); // 存放所有產品以供收藏比對
+    const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
+
+    // 1. 收藏 ID 列表 (初始從 LocalStorage 讀取)
+    const [favorites, setFavorites] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('fav')) || [];
+        } catch {
+            return [];
+        }
+    });
+
+    // 2. 計算目前要顯示的收藏產品詳細資料
+    const displayFavorites = useMemo(() => {
+        return allProducts.filter(item => favorites.map(String).includes(String(item.id)));
+    }, [allProducts, favorites]);
+
+    // 時間格式化
     const formatTime = (timestamp) => {
-        const date = new Date(timestamp * 1000); // Unix Timestamp 是秒，Date 需要毫秒
+        const date = new Date(timestamp * 1000);
         return {
-            date: date.toLocaleDateString(), 
+            date: date.toLocaleDateString(),
             time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
         };
     };
-    const [orders, setOrders] = useState([]);
+
+    // 登出邏輯
     const handleLogout = () => {
-        toast((t) => (
-            <span>
-                <b className="fs-24">您確定要登出了嗎？</b>
-                <div className="mt-2 d-flex justify-content-center gap-8" >
-                    <button
-                        className="btn btn-sm btn-danger me-2 fs-20 px-16 text-white"
-                        onClick={() => {
-                            // 執行登出邏輯
-                            toast.dismiss('logout-confirm');
+    toast((t) => (
+        <span>
+            <b className="fs-20">您確定要登出了嗎？</b>
+            <div className="mt-2 d-flex justify-content-center gap-2">
+                <button
+                    className="btn btn-sm btn-danger px-3 text-white"
+                    onClick={() => {
+                        // 1. 關閉確認視窗
+                        toast.dismiss(t.id);
+                        
+                        // 2. 執行 Redux 的 logout (裡面已包含刪除 Cookie)
+                        dispatch(logout());
+                        
+                        // 3. 清除 Axios
+                        delete axios.defaults.headers.common.Authorization;
 
-                            document.cookie = "hexToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        // 4. 顯示成功訊息 (由 App.jsx 的 Toaster 渲染)
+                        toast.success("已成功登出", {
+                            duration: 2000,
+                            position: 'top-center',
+                        });
 
-                            toast.success("已成功登出", { duration: 2000 });
-                            setTimeout(() => {
-                                toast.dismiss();
-                                navigate('/');
-                            }, 1000);
-                        }}
-                    >確定</button>
-                    <button
-                        className="btn btn-sm btn-secondary fs-20 px-16"
-                        onClick={() => toast.dismiss(t.id)} // 點擊取消就關閉
-                    >
-                        取消
-                    </button>
-                </div>
-            </span>
-        ), {
-            id: 'logout-confirm',
-            duration: Infinity, // 顯示 10 秒
-            position: 'top-center',
-        });
-    };
-    // const autoLogin = async () =>{
-    //     try {
-    //         // e.preventDefault();
-    //         const response = await axios.post(`${API_BASE}/admin/signin`,formData)
-    //         console.log(response.data);
-    //         const { token, expired} = response.data;
-    //         document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-    //         axios.defaults.headers.common['Authorization'] = token;
-    //         getOrders();
+                        // 5. 延遲跳轉
+                        setTimeout(() => navigate('/Login'), 1000);
+                    }}
+                >確定</button>
+                <button className="btn btn-sm btn-secondary px-3" onClick={() => toast.dismiss(t.id)}>取消</button>
+            </div>
+        </span>
+    ), { id: 'logout-confirm', duration: Infinity, position: 'top-center' });
+};
 
-
-    //     } catch (error) {
-    //         // setIsAuth(false);
-    //         console.log(error.response)
-    //     }
-    // }
-    const getOrders = async ()=>{
+    // 取得訂單與產品資料
+    const fetchData = async () => {
+        setIsLoading(true);
         try {
-        const response = await axios.get(`${API_BASE}/api/${API_PATH}/admin/orders`)
-        
-        // console.log('訂單內容:',response.data)
-        if (response.data.success) {
-                setOrders(response.data.orders); 
-            }
+            // 同時取得訂單與所有產品
+            const [orderRes, productRes] = await Promise.all([
+                axios.get(`${API_BASE}/api/${API_PATH}/admin/orders`),
+                axios.get(`${API_BASE}/api/${API_PATH}/products/all`)
+            ]);
 
+            if (orderRes.data.success) setOrders(orderRes.data.orders);
+            if (productRes.data.success) setAllProducts(productRes.data.products);
         } catch (error) {
-        console.log(error.response);
+            console.error("資料讀取失敗", error);
+        } finally {
+            setIsLoading(false);
         }
-        
     };
 
-// 2. 加入這段 JS 邏輯
+    // 切換收藏狀態
+    const toggleFavorite = (id) => {
+        let updated;
+        if (favorites.includes(id)) {
+            updated = favorites.filter(favId => favId !== id);
+            toast('已從收藏移除', { icon: '🗑️' });
+        } else {
+            updated = [...favorites, id];
+            toast.success('已加入我的關注');
+        }
+        setFavorites(updated);
+        localStorage.setItem('fav', JSON.stringify(updated));
+    };
+
+    // 初始驗證
     useEffect(() => {
         const token = document.cookie
             .split("; ")
             .find((row) => row.startsWith("hexToken="))
             ?.split("=")[1];
-        if (token){
+        if (token) {
             axios.defaults.headers.common['Authorization'] = token;
-            getOrders();
-        } else{
+            fetchData();
+        } else {
             navigate('/Login');
         }
+    }, [navigate]);
+    
+    useEffect(() => {
+    const handleStorageChange = () => {
+        const newFavs = JSON.parse(localStorage.getItem('fav')) || [];
+        setFavorites(newFavs);
+    };
 
+    // 監聽 storage 事件（包含同分頁手動發送的事件）
+    window.addEventListener('storage', handleStorageChange);
 
+    return () => {
+        window.removeEventListener('storage', handleStorageChange);
+    };
+}, []);
 
-    }, []); // 空陣列表示只在組件載入時執行一次
-
-
-    return(
+    return (
         <>
-        <Toaster />
-        <div className="bg-primary-50">
-            <div className="container py-40">
-                <h1 className="text-center pb-12 text-primary-600">會員中心</h1>
-                <div className="row g-24">
-                    {/* 左側選單*/}
-                    <div className="col-md-4 bg-white rounded-4 shadow-sm">
-                        <div className="d-flex align-items-center justify-content-space py-32 px-24 gap-16 mb-16">
-                        <div className="ratio ratio-1x1 shadow me-12" style={{ width: '150px' }}>
-                            <img src="src\image\track-img\leopard-cat-description-1.png" alt="user avatar" className="img-fluid w-100 h-100 object-fit-cover"/>
-                        </div>
-                        <div className="text-center">
-                            <h4 className="fs-24 mb-32">Tina Liu</h4>
-                            <p className="mb-0 text-muted fs-14">LV.5 銀牌守護者</p>
-                        </div>
-                        </div>
-
-                        <div className="nav flex-row flex-md-column justify-content-center nav-pills gap-4" id="v-pills-tab" role="tablist"
-                        aria-orientation="vertical">
-                            <button className="col-3 col-md-12 nav-link active fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-user-tab"
-                                data-bs-toggle="pill" data-bs-target="#v-pills-user" type="button" role="tab"
-                                aria-controls="v-pills-user" aria-selected="true">個人資訊</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-messages-tab"
-                                data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab"
-                                aria-controls="v-pills-messages" aria-selected="false">通知訊息</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-orders-tab"
-                                data-bs-toggle="pill" data-bs-target="#v-pills-orders" type="button" role="tab"
-                                aria-controls="v-pills-orders" aria-selected="false">訂單資訊</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list  " id="v-pills-follow-tab"
-                                data-bs-toggle="pill" data-bs-target="#v-pills-follow" type="button" role="tab"
-                                aria-controls="v-pills-follow" aria-selected="false">我的關注</button>                            
-                            <button className="col-3 col-md-12 nav-link fs-mb-5 rounded-3 p-16 user-left-list mb-md-4 w-100"
-                                type="button" onClick={handleLogout}>登出</button>
-                        </div>
-                    </div>
-                    {/* 右側選單*/}
-                    <div className="col-md-8">
-                        <div className="tab-content bg-white pt-md-0 shadow-sm rounded-4" id="v-pills-tabContent">
-                            {/* 個人資訊*/}
-                            <div className="tab-pane fade show active" id="v-pills-user" role="tabpanel"
-                                aria-labelledby="v-pills-user-tab" tabIndex="0">
-                                <div className="bg-white p-20" style={{ borderRadius: '16px' }}>
-
-                                <h4 className="mb-32 fs-24 fw-700 text-primary-600">個人資訊</h4>
-                                <div>
-                                    <form action="">
-                                    {/* 使用者名稱*/}
-                                    <div className="mb-16">
-                                        <label htmlFor="userName" className="form-label fs-16 mb-8 fw-700 text-black">使用者名稱</label>
-                                        <input type="text" className="form-control w-auto rounded-4" id="userName" placeholder="使用者名稱" defaultValue="Tina Liu"/>
+            <Toaster position="top-right" />
+            <div className="bg-primary-50 min-vh-100">
+                <div className="container py-40">
+                    <h1 className="text-center pb-12 text-primary-600 fw-bold">會員中心</h1>
+                    <div className="row g-24">
+                        
+                        {/* 左側選單 */}
+                        <div className="col-md-4">
+                            <div className="bg-white rounded-4 shadow-sm p-24">
+                                <div className="d-flex align-items-center gap-16 mb-32">
+                                    <div className="ratio ratio-1x1 shadow-sm rounded-circle overflow-hidden" style={{ width: '80px' }}>
+                                        <img src="src/image/track-img/leopard-cat-description-1.png" alt="avatar" className="object-fit-cover" />
                                     </div>
-                                    {/* 密碼*/}
-                                    <div className="mb-16">
-                                        <label htmlFor="userPassword" className="form-label fs-16 mb-8 fw-700 text-black">密碼</label>
-                                        <div className="d-flex align-items-center">
-                                        <input type="password" className="form-control w-auto me-24 rounded-4" id="userPassword" placeholder="密碼"
-                                            defaultValue="********"/>
-                                        <a href="#" className="text-danger fs-14 underline-link">修改密碼</a>
-                                        </div>
-                                    </div>
-                                    {/* email(唯獨)*/}
-
-                                    <div className="mb-16">
-                                        <label htmlFor="userEmail" className="form-label fs-16 mb-8 fw-700 text-black">email 信箱</label>
-                                        <input type="email" className="form-control-plaintext w-auto text-secondary-400" id="userEmail"
-                                        placeholder="用戶信箱" value="dooogie234@gmail.com" readOnly/>
-                                    </div>
-                                    {/* 手機*/}
-                                    <div className="mb-16">
-                                        <label htmlFor="userPhone" className="form-label fs-16 mb-8 fw-700 text-black">手機</label>
-                                        <input type="tel" className="form-control w-auto rounded-4" id="userPhone" placeholder="手機號碼"
-                                        defaultValue="0912-345678"/>
-                                    </div>
-                                    {/* 生日*/}
-                                    <div className="mb-md-16 mb-24">
-                                        <label htmlFor="userBirth" className="form-label fs-16 mb-8 fw-700 text-black">生日</label>
-                                        <input type="date" className="form-control w-auto rounded-4" id="userBirth"/>
-                                    </div>
-                                    {/* 儲存按鈕*/}
-                                    <div className="text-end">
-                                        <button type="submit" className="btn btn-danger px-24 text-white rounded-3 me-md-80 ">確認儲存</button>
-                                    </div>
-                                    </form>
-                                </div>
-
-                                </div>
-
-                            </div>
-                            {/* 通知訊息 */}
-                            <div className="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabIndex="0">
-                            <div className="bg-white" style={{ borderRadius: '16px' }}>
-                                <div>
-                                {/* header (隱藏)*/}
-                                <div className="d-flex justify-content-between align-items-center p-24 d-none">
-                                    <div className="d-flex align-items-center gap-8">
-                                    <div className="fs-16 fw-bold text-primary-600">通知訊息</div>
                                     <div>
-                                        <a href="#" className="p-12 text-primary-700 bg-primary-400 text-decoration-none sm-btn fs-14 fw-medium" style={{ borderRadius: '16px' }}>
-                                        一鍵已讀
-                                        </a>
-                                    </div>
-                                    </div>
-
-                                    <div className="d-flex align-items-center gap-8">
-                                    <div>通知類別</div>
-                                    <div>
-                                        <select className="form-select form-select-lg fs-14" aria-label=".form-select-lg example" style={{ borderRadius: '100px' }} defaultValue="全部內容">
-                                        <option>全部內容</option>
-                                        <option value="訂單與領養">訂單與領養</option>
-                                        <option value="會員活動與優惠">會員活動與優惠</option>
-                                        <option value="系統與帳號">系統與帳號</option>
-                                        </select>
-                                    </div>
+                                        <h4 className="fs-20 fw-bold mb-1">Tina Liu</h4>
+                                        <p className="mb-0 text-muted fs-14">LV.5 銀牌守護者</p>
                                     </div>
                                 </div>
 
-                                {/* NEW header */}
-                                <div className="container p-24">
-                                    <div className="row d-lg-flex justify-content-between gy-3">
-                                    <div className="col-12 col-lg-6 d-flex align-items-center gap-8">
-                                        <span className="fs-16 fw-bold text-primary-600">通知訊息</span>
-                                        <a href="#" className="px-12 py-4 text-primary-700 bg-primary-100 text-decoration-none sm-btn fs-14 fw-medium" style={{ borderRadius: '10px' }}>
-                                        一鍵已讀
-                                        </a>
-                                    </div>
-
-                                    <div className="col-12 col-lg-6 d-lg-flex align-items-center justify-content-end ps-2">
-                                        <div className="col-auto">
-                                        <select className="form-select form-select-lg fs-14" aria-label=".form-select-lg example" style={{ borderRadius: '100px' }} defaultValue="全部內容">
-                                            <option>全部內容</option>
-                                            <option value="訂單與領養">訂單與領養</option>
-                                            <option value="會員活動與優惠">會員活動與優惠</option>
-                                            <option value="系統與帳號">系統與帳號</option>
-                                        </select>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                                {/* END NEW header */}
-
-                                {/* content */}
-                                <div className="p-24">
-                                    {notifications.map((item) => (
-                                        <div className="py-16 border-bottom" key={item.id}>
-                                        <div className="d-md-flex justify-content-between align-items-center">
-                                            <div className="fw-bold fs-16 text-primary-600 lh-sm">{item.title}</div>
-                                            <div className="fw-medium text-secondary-400 lh-base">{item.date}</div>
-                                        </div>
-
-                                        <div className="text-secondary-600">
-                                            <div
-                                            className={`content-preview pt-4 pb-6 lh-base fw-medium fs-6 ${
-                                                expandedId === item.id ? 'expanded' : 'collapsed'
-                                            }`}
-                                            onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-                                            >
-                                            <div dangerouslySetInnerHTML={{ __html: item.content }} />
-                                            
-                                            {expandedId === item.id && item.action_text && (
-                                                <div className="mt-3 d-flex">
-                                                <a 
-                                                    href={item.link} 
-                                                    className="p-2 bg-primary-100 text-primary-700 text-decoration-none sm-btn rounded-3 " 
-                                                    onClick={(e) => e.stopPropagation()} // 阻止冒泡，避免點按鈕時又把內容縮回去
-                                                >
-                                                    {item.action_text}
-                                                </a>
-                                                </div>
-                                            )}
-                                            </div>
-                                        </div>
-                                        </div>
+                                <div className="nav flex-column nav-pills gap-2">
+                                    {['user', 'messages', 'orders', 'follow'].map((tab) => (
+                                        <button 
+                                            key={tab}
+                                            className={`nav-link text-start p-16 rounded-3 ${activeTab === tab ? 'active' : 'text-secondary'}`}
+                                            onClick={() => setActiveTab(tab)}
+                                        >
+                                            {tab === 'user' && '個人資訊'}
+                                            {tab === 'messages' && '通知訊息'}
+                                            {tab === 'orders' && '訂單資訊'}
+                                            {tab === 'follow' && '我的關注'}
+                                        </button>
                                     ))}
-                                </div>
-
-
-                                {/* footer */}
-                                <div className="d-flex justify-content-end fs-5 px-4 py-5 bg-white" style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}></div>
+                                    <hr />
+                                    <button className="nav-link text-start p-16 text-danger" onClick={handleLogout}>登出</button>
                                 </div>
                             </div>
-                            </div>
-                            {/* 訂單資訊 */}
-                            <div className="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab" tabIndex="0">
-                                <div className="bg-white" style={{ borderRadius: '16px' }}>
-                                    <div className=" ">
-                                    <div className="d-flex justify-content-between align-items-center p-24">
-                                        <div className="fs-24 fw-bold text-primary-600">訂單資訊</div>
-                                        <div className="d-flex align-items-center gap-8">
-                                        <div className="d-none">篩選</div>
-                                        <div>
-                                            <select 
-                                            className="form-select form-select-lg fs-14" 
-                                            aria-label=".form-select-lg example"
-                                            style={{ borderRadius: '100px' }}
-                                            defaultValue="0"
-                                            >
-                                            <option value="0">3個月內</option>
-                                            <option value="1">6個月內</option>
-                                            <option value="2">1年內</option>
-                                            </select>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <table className="table align-middle mb-0 table-borderless table-hover">
-                                        <thead >
-                                            <tr className="text-center">
-                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
-                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
-                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
-                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
-                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">合計</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            { orders.length > 0 ? (
-                                                orders.map((order)=>{
-                                                    const orderTime = formatTime(order.create_at);//轉換時間
-                                                    return (
-                                                        <tr className="text-center" key={order.id}>
-                                                            <td className="py-lg-16" style={{cursor: 'pointer'}}>
-                                                                <a href="#" className="text-decoration-none fw-bold text-primary-600 order" >{order.id.slice(-7)}</a>
-                                                            </td>
-                                                            <td>
-                                                                <div className="text-secondary-400 fw-medium">{orderTime.date}</div>
-                                                                <div className="text-secondary-400 fw-medium">{orderTime.time}</div>
-                                                            </td>
-                                                            <td>{order.is_paid ? "處理中" : "待處理"}</td>
-                                                            <td>
-                                                                <span className={order.is_paid ? "text-success" : "text-danger"}>
-                                                                    {order.is_paid ? "已付款" : "未付款"}
-                                                                </span>
-                                                            </td>
-                                                            <td className="text-danger fw-medium">${order.total.toLocaleString()}</td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            ):(
-                                                <tr>
-                                                    <td colSpan="5" className="text-center py-5 text-secondary-400">
-                                                        目前沒有訂單資料
-                                                    </td>
-                                                </tr>
-                                            )
+                        </div>
 
-                                            }
-                                        </tbody>
-                                        </table>
-
-                                        <div 
-                                        className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
-                                        style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
-                                        >
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* 我的關注 */}
-                            <div className="tab-pane fade" id="v-pills-follow" role="tabpanel" aria-labelledby="v-pills-follow-tab" tabIndex="0">
-                            <div className="bg-white" style={{ borderRadius: '16px' }}>
-                                <div>
-                                {/* header */}
-                                <div className="d-flex justify-content-between align-items-center p-24">
-                                    <div>
-                                    <div className="fs-24 fw-bold text-primary-600">我的收藏</div>
-                                    </div>
-
-                                    <div className="d-flex align-items-center gap-8">
-                                    <div className="">順序</div>
-                                    <div>
-                                        <select 
-                                        className="form-select form-select-lg fs-8" 
-                                        aria-label=".form-select-lg example"
-                                        style={{ borderRadius: '100px' }}
-                                        defaultValue="由新至舊"
-                                        >
-                                        <option value="由新至舊">新至舊</option>
-                                        <option value="舊至新">舊至新</option>
-                                        </select>
-                                    </div>
-                                    </div>
-                                </div>
-
-                                {/* content */}
-                                <div className="p-24">
-                                    <ul className="nav nav-tabs mb-12" id="favTabs" role="tablist">
-                                        <li className="nav-item" role="presentation">
-                                            <button className="nav-link active" id="pets-tab" data-bs-toggle="tab" data-bs-target="#pets" type="button" role="tab">
-                                            已關注的動物
-                                            </button>
-                                        </li>
-                                    </ul>
-                                    {/* Tab 內容 */}
-                                    <div className="tab-content">
-                                        {/* 寶貝 */}
-                                        <div className="tab-pane fade show active" id="pets" role="tabpanel">
-                                            <div className="container scroll-area">
-                                                <div className="row g-16">
-                                                    {/* 卡片：阿橘橘 */}
-                                                    <div className="col-md-4 col-12">
-                                                        <div className="card border-primary rounded-4" >
-                                                            <img src="src\image\pet_4_阿橘橘.jpg" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
-                                                            <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
-                                                            <div className="card-body">
-                                                            <div className="text-center py-12">
-                                                                <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿橘橘</div>
-                                                                <div className="fw-medium fs-16 text-secondary-800 lh-sm">喵了個咪中途之家</div>
-                                                            </div>
-                                                            <div className="d-flex justify-content-between text-center gap-8">
-                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">新北市</div>
-                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">已結紮</div>
-                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">可領養</div>
-                                                            </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* 卡片：阿財 */}
-                                                    <div className="col-md-4 col-12">
-                                                        <div className="card border-primary rounded-4">
-                                                            <img src="src\image\pet_3_阿財.png" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
-                                                            <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
-                                                            <div className="card-body">
-                                                            <div className="text-center py-12">
-                                                                <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿財</div>
-                                                                <div className="fw-medium fs-16 text-secondary-800 lh-sm">毛茸茸中途咖啡</div>
-                                                            </div>
-                                                            <div className="d-flex justify-content-between text-center gap-8">
-                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >新北市</div>
-                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >已結紮</div>
-                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >可領養</div>
-                                                            </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
+                        {/* 右側內容區 */}
+                        <div className="col-md-8">
+                            <div className="bg-white shadow-sm rounded-4 p-24 p-md-40 min-vh-50">
+                                
+                                {/* 1. 個人資訊 */}
+                                {activeTab === 'user' && (
+                                    <div className="animate__animated animate__fadeIn">
+                                        <h4 className="mb-32 fs-24 fw-700 text-primary-600 border-start border-4 border-primary ps-3">個人資訊</h4>
+                                        <form>
+                                            <div className="mb-16">
+                                                <label className="form-label fw-bold">使用者名稱</label>
+                                                <input type="text" className="form-control w-md-50" defaultValue="Tina Liu" />
+                                            </div>
+                                            <div className="mb-16">
+                                                <label className="form-label fw-bold">密碼</label>
+                                                <div className="d-flex align-items-center gap-3">
+                                                    <input type="password" className="form-control w-md-50" defaultValue="********" />
+                                                    <a href="#" className="text-danger fs-14">修改密碼</a>
                                                 </div>
                                             </div>
+                                            <div className="mb-16">
+                                                <label className="form-label fw-bold">Email 信箱</label>
+                                                <input type="email" className="form-control-plaintext text-muted" value="dooogie234@gmail.com" readOnly />
+                                            </div>
+                                            <div className="mb-16">
+                                                <label className="form-label fw-bold">手機號碼</label>
+                                                <input type="tel" className="form-control w-md-50" defaultValue="0912345678" />
+                                            </div>
+                                            <div className="mb-16">
+                                                <label className="form-label fw-bold d-block">性別</label>
+                                                {['女性', '男性', '其他'].map((g, idx) => (
+                                                    <div className="form-check form-check-inline" key={g}>
+                                                        <input className="form-check-input" type="radio" name="gender" id={`g${idx}`} defaultChecked={idx===0} />
+                                                        <label className="form-check-label" htmlFor={`g${idx}`}>{g}</label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="mb-16">
+                                                <label className="form-label fw-bold">常用收貨地址</label>
+                                                <div className="d-flex gap-2 mb-2 w-md-75">
+                                                    <select className="form-select w-50"><option>台北市</option></select>
+                                                    <select className="form-select w-50"><option>大安區</option></select>
+                                                </div>
+                                                <input type="text" className="form-control" placeholder="詳細地址" defaultValue="忠孝東路四段..." />
+                                            </div>
+                                            <div className="text-end mt-4">
+                                                <button type="button" className="btn btn-primary px-40 rounded-pill" onClick={() => toast.success('資訊已更新')}>確認儲存</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                )}
+
+                                {/* 2. 通知訊息 */}
+                                {activeTab === 'messages' && (
+                                    <div className="animate__animated animate__fadeIn">
+                                        <div className="d-flex justify-content-between align-items-center mb-4">
+                                            <h4 className="fw-bold text-primary-600 mb-0 border-start border-4 border-primary ps-3">通知訊息</h4>
+                                            <button className="btn btn-outline-primary btn-sm rounded-pill" onClick={() => toast.success('已全部標記為已讀')}>一鍵已讀</button>
+                                        </div>
+                                        {notificationsData.map((item) => (
+                                            <div 
+                                                key={item.id} 
+                                                className={`p-3 mb-2 border-bottom cursor-pointer rounded-2 transition-all ${expandedId === item.id ? 'bg-primary-50' : 'bg-hover-light'}`}
+                                                onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                                            >
+                                                <div className="d-flex justify-content-between">
+                                                    <span className={`fw-bold ${expandedId === item.id ? 'text-primary' : ''}`}>{item.title}</span>
+                                                    <small className="text-muted">{item.date}</small>
+                                                </div>
+                                                <div className={`mt-2 fs-14 text-secondary ${expandedId === item.id ? '' : 'text-truncate'}`}>
+                                                    <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                                                    {expandedId === item.id && item.link && (
+                                                        <button className="btn btn-sm btn-primary mt-2">查看詳情</button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* 3. 訂單資訊 */}
+                                {activeTab === 'orders' && (
+                                    <div className="animate__animated animate__fadeIn">
+                                        <h4 className="fw-bold text-primary-600 mb-4 border-start border-4 border-primary ps-3">訂單資訊</h4>
+                                        <div className="table-responsive">
+                                            <table className="table align-middle">
+                                                <thead className="table-light">
+                                                    <tr>
+                                                        <th>訂單編號</th>
+                                                        <th>時間</th>
+                                                        <th>狀態</th>
+                                                        <th>合計</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {orders.length > 0 ? orders.map(order => (
+                                                        <tr key={order.id}>
+                                                            <td className="text-primary fw-bold">#{order.id.slice(-7)}</td>
+                                                            <td>{formatTime(order.create_at).date}</td>
+                                                            <td><span className={`badge ${order.is_paid ? 'bg-success' : 'bg-warning'}`}>{order.is_paid ? '已付款' : '未付款'}</span></td>
+                                                            <td className="fw-bold">${order.total.toLocaleString()}</td>
+                                                        </tr>
+                                                    )) : <tr><td colSpan="4" className="text-center py-4 text-muted">目前沒有訂單</td></tr>}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                </div>
-                                </div>
+                                )}
 
-                                {/* footer */}
-                                <div 
-                                className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
-                                style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
-                                >
-                                </div>
-                            </div>
+                                {/* 4. 我的關注 */}
+                                {activeTab === 'follow' && (
+                                    <div className="animate__animated animate__fadeIn">
+                                        <h4 className="fw-bold text-primary-600 mb-4 border-start border-4 border-primary ps-3">我的關注</h4>
+                                        {displayFavorites.length > 0 ? (
+                                            <div className="row g-3">
+                                                {displayFavorites.map(product => (
+                                                    <div className="col-6 col-lg-4" key={product.id}>
+                                                        <div className="card h-100 rounded-4 overflow-hidden border-0 shadow-sm position-relative shadow-hover">
+                                                            <button 
+                                                                className="position-absolute top-0 end-0 m-2 btn btn-light btn-sm rounded-circle shadow-sm z-3"
+                                                                onClick={() => toggleFavorite(product.id)}
+                                                            >
+                                                                <i className="bi bi-heart-fill text-danger"></i>
+                                                            </button>
+                                                            <Link to={`/product/${product.id}`} className="text-decoration-none text-dark">
+                                                                <img src={product.imageUrl} className="card-img-top object-fit-cover" style={{height: '150px'}} alt={product.title} />
+                                                                <div className="card-body p-3">
+                                                                    <h6 className="fw-bold mb-1 text-truncate">{product.title}</h6>
+                                                                    <p className="small text-muted mb-0">{product.agency || '守護中途'}</p>
+                                                                    <div className="text-primary fw-bold mt-2">${product.price?.toLocaleString()}</div>
+                                                                </div>
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="text-center py-5">
+                                                <p className="text-muted mb-3">還沒有關注任何產品喔！</p>
+                                                <Link to="/products" className="btn btn-outline-primary rounded-pill px-4">去逛逛</Link>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        </>
 
-        
-    )
+            <style>{`
+                .nav-pills .nav-link.active { background-color: #primary-color; color: white; }
+                .cursor-pointer { cursor: pointer; }
+                .min-vh-50 { min-height: 50vh; }
+                .shadow-hover { transition: transform 0.3s; }
+                .shadow-hover:hover { transform: translateY(-5px); }
+                .bg-hover-light:hover { background-color: #f8f9fa; }
+                .transition-all { transition: all 0.2s ease; }
+            `}</style>
+        </>
+    );
 }
+
 export default MemberCenter;
