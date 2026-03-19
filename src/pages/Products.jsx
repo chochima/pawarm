@@ -44,7 +44,10 @@ const mechanismImages = [
 
 ];
 const Products = () => {
-  const [favorites, setFavorites] = useState([]);
+ const [favorites, setFavorites] = useState(() => {
+  const saved = localStorage.getItem('fav');
+  return saved ? JSON.parse(saved) : [];
+});
   const [products, setProducts] = useState([]);
   
   // 🚀 1. 新增分類與搜尋狀態
@@ -54,13 +57,23 @@ const Products = () => {
 
   const dispatch = useDispatch();
 
-  const toggleFavorite = (id) => {
-    if (favorites.includes(id)) {
-      setFavorites(favorites.filter((favId) => favId !== id));
-    } else {
-      setFavorites([...favorites, id]);
-    }
-  };
+ const toggleFavorite = (id) => {
+  let updatedFavs;
+  
+  if (favorites.includes(id)) {
+    // 取消收藏
+    updatedFavs = favorites.filter((favId) => favId !== id);
+    toast('已從收藏清單移除', { icon: '🗑️' });
+  } else {
+    // 新增收藏
+    updatedFavs = [...favorites, id];
+    toast.success('已加入關注清單！', { icon: '❤️' });
+  }
+
+  // 同步更新 State 與 LocalStorage
+  setFavorites(updatedFavs);
+  localStorage.setItem('fav', JSON.stringify(updatedFavs));
+};
 
   const getProducts = async () => {
     try {
@@ -105,7 +118,17 @@ const Products = () => {
     dispatch(createAsyncGetCart()); 
   }, [dispatch]);
 
-  // 🚀 2. 核心邏輯：計算過濾後的產品清單
+  useEffect(() => {
+  const handleStorageChange = () => {
+    const updatedFavs = JSON.parse(localStorage.getItem('fav')) || [];
+    setFavorites(updatedFavs);
+  };
+
+  // 當其他分頁/組件修改 localStorage 時，這裡也會跟著變
+  window.addEventListener('storage', handleStorageChange);
+  return () => window.removeEventListener('storage', handleStorageChange);
+}, []);
+
   const filteredProducts = products.filter((product) => {
     
     const isCategoryMatch = filterCategory === "全部" || product.area === filterCategory;
@@ -118,7 +141,6 @@ const Products = () => {
     return isCategoryMatch && isSearchMatch;
   });
 
-  // 🚀 3. 動態取得分類選單內容
   const categories = ["全部", ...new Set(products.map(p => p.area).filter(Boolean))];
 
   return (
