@@ -66,8 +66,7 @@ return (
             <li><NavLink to='events'>活動資訊​​​</NavLink></li>
             <li><NavLink to='about'>關於我們​​​​</NavLink></li>
             <li className="border-start border border-secondary-1 border-1 me-48"></li>
-            
-        </ul>ㄋ
+        </ul>
         </div>
         }
 

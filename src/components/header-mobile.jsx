@@ -86,8 +86,8 @@ return (<div className= "{ className }">
             <li><NavLink to='products'>選擇​我​的​動物​​​</NavLink></li>
             <li><NavLink to="milestone">查看公益里程碑</NavLink></li>
             <li><NavLink to='animaltracking'>追蹤​動物​​​​</NavLink></li>
-            <li><NavLink to="#">活動資訊​​​</NavLink></li>
-            <li><NavLink to="#">關於我們​​​​</NavLink></li>
+            <li><NavLink to='events'>活動資訊​​​</NavLink></li>
+            <li><NavLink to='about'>關於我們​​​​</NavLink></li>
         </ul>
         }
 
