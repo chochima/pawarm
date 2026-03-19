@@ -63,16 +63,11 @@ return (
             <li><NavLink to='products'>選擇​我​的​動物​​​</NavLink></li>
             <li><NavLink to="milestone">查看公益里程碑</NavLink></li>
             <li><NavLink to='animaltracking'>追蹤​動物​​​​</NavLink></li>
-<<<<<<< HEAD
-            <li><NavLink to="#">活動資訊​​​</NavLink></li>
-            <li><NavLink to="#">關於我們​​​​</NavLink></li>
-=======
             <li><NavLink to='events'>活動資訊​​​</NavLink></li>
             <li><NavLink to='about'>關於我們​​​​</NavLink></li>
->>>>>>> 85f8db0427b30f1ceb2181babf2966f439948f31
             <li className="border-start border border-secondary-1 border-1 me-48"></li>
             
-        </ul>
+        </ul>ㄋ
         </div>
         }
 
