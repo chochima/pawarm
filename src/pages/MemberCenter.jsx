@@ -1,74 +1,150 @@
-import { useEffect } from 'react';
+
+import axios from "axios";
+import { useState ,useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import '../style/_fonts.scss';
 import "../style/all.scss";
+import notifications from '../data/notifications.json';
+import { toast, Toaster } from 'react-hot-toast';
+const API_BASE = import.meta.env.VITE_URL;
+const API_PATH = import.meta.env.VITE_PATH;
+
 
 
 function MemberCenter(){
+    const navigate = useNavigate(); 
+    const [expandedId, setExpandedId] = useState(null);
+    const formatTime = (timestamp) => {
+        const date = new Date(timestamp * 1000); // Unix Timestamp 是秒，Date 需要毫秒
+        return {
+            date: date.toLocaleDateString(), 
+            time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+        };
+    };
+    const [orders, setOrders] = useState([]);
+    const handleLogout = () => {
+        toast((t) => (
+            <span>
+                <b className="fs-24">您確定要登出了嗎？</b>
+                <div className="mt-2 d-flex justify-content-center gap-8" >
+                    <button
+                        className="btn btn-sm btn-danger me-2 fs-20 px-16 text-white"
+                        onClick={() => {
+                            // 執行登出邏輯
+                            toast.dismiss('logout-confirm');
+
+                            document.cookie = "hexToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                            toast.success("已成功登出", { duration: 2000 });
+                            setTimeout(() => {
+                                toast.dismiss();
+                                navigate('/');
+                            }, 1000);
+                        }}
+                    >確定</button>
+                    <button
+                        className="btn btn-sm btn-secondary fs-20 px-16"
+                        onClick={() => toast.dismiss(t.id)} // 點擊取消就關閉
+                    >
+                        取消
+                    </button>
+                </div>
+            </span>
+        ), {
+            id: 'logout-confirm',
+            duration: Infinity, // 顯示 10 秒
+            position: 'top-center',
+        });
+    };
+    // const autoLogin = async () =>{
+    //     try {
+    //         // e.preventDefault();
+    //         const response = await axios.post(`${API_BASE}/admin/signin`,formData)
+    //         console.log(response.data);
+    //         const { token, expired} = response.data;
+    //         document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+    //         axios.defaults.headers.common['Authorization'] = token;
+    //         getOrders();
+
+
+    //     } catch (error) {
+    //         // setIsAuth(false);
+    //         console.log(error.response)
+    //     }
+    // }
+    const getOrders = async ()=>{
+        try {
+        const response = await axios.get(`${API_BASE}/api/${API_PATH}/admin/orders`)
+        
+        // console.log('訂單內容:',response.data)
+        if (response.data.success) {
+                setOrders(response.data.orders); 
+            }
+
+        } catch (error) {
+        console.log(error.response);
+        }
+        
+    };
+
 // 2. 加入這段 JS 邏輯
     useEffect(() => {
-        const initNotificationToggle = () => {
-            const previews = document.querySelectorAll('.content-preview');
-            
-            previews.forEach((item) => {
-                // 使用 onclick 確保邏輯簡單直接
-                item.onclick = function() {
-                    if (this.classList.contains('collapsed')) {
-                        this.classList.remove('collapsed');
-                        this.classList.add('expanded');
-                    } else {
-                        this.classList.remove('expanded');
-                        this.classList.add('collapsed');
-                    }
-                };
-            });
-        };
-        // 稍微延遲一下，確保 Tab 切換產生的內容也能被抓到
-        const timer = setTimeout(initNotificationToggle, 300);
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("hexToken="))
+            ?.split("=")[1];
+        if (token){
+            axios.defaults.headers.common['Authorization'] = token;
+            getOrders();
+        } else{
+            navigate('/Login');
+        }
 
-        return () => clearTimeout(timer); // 清除定時器
+
+
     }, []); // 空陣列表示只在組件載入時執行一次
 
 
     return(
         <>
-        <h1>會員中心</h1>
-        <div className="bg-primary-100">
+        <Toaster />
+        <div className="bg-primary-50">
             <div className="container py-40">
-                <div className="row">
+                <h1 className="text-center pb-12 text-primary-600">會員中心</h1>
+                <div className="row g-24">
                     {/* 左側選單*/}
-                    <div className="col-md-4 bg-primary-50">
+                    <div className="col-md-4 bg-white rounded-4 shadow-sm">
                         <div className="d-flex align-items-center justify-content-space py-32 px-24 gap-16 mb-16">
                         <div className="ratio ratio-1x1 shadow me-12" style={{ width: '150px' }}>
                             <img src="src\image\track-img\leopard-cat-description-1.png" alt="user avatar" className="img-fluid w-100 h-100 object-fit-cover"/>
                         </div>
                         <div className="text-center">
-                            <h4 className="fs-24 mb-32">Lynn</h4>
+                            <h4 className="fs-24 mb-32">Tina Liu</h4>
                             <p className="mb-0 text-muted fs-14">LV.5 銀牌守護者</p>
                         </div>
                         </div>
 
-                        <div className="nav flex-row flex-md-column justify-content-center nav-pills" id="v-pills-tab" role="tablist"
+                        <div className="nav flex-row flex-md-column justify-content-center nav-pills gap-4" id="v-pills-tab" role="tablist"
                         aria-orientation="vertical">
-                            <button className="col-3 col-md-12 nav-link active fs-mb-20 rounded-0 p-16 user-left-list" id="v-pills-user-tab"
+                            <button className="col-3 col-md-12 nav-link active fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-user-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-user" type="button" role="tab"
                                 aria-controls="v-pills-user" aria-selected="true">個人資訊</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-0 p-16 user-left-list" id="v-pills-messages-tab"
+                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-messages-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab"
                                 aria-controls="v-pills-messages" aria-selected="false">通知訊息</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-0 p-16 user-left-list" id="v-pills-orders-tab"
+                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list" id="v-pills-orders-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-orders" type="button" role="tab"
                                 aria-controls="v-pills-orders" aria-selected="false">訂單資訊</button>
-                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-0 p-16 user-left-list  " id="v-pills-follow-tab"
+                            <button className="col-3 col-md-12 nav-link fs-mb-20 rounded-3 p-16 user-left-list  " id="v-pills-follow-tab"
                                 data-bs-toggle="pill" data-bs-target="#v-pills-follow" type="button" role="tab"
-                                aria-controls="v-pills-follow" aria-selected="false">我的關注</button>
-                            <a href="#" className="text-decoration-none">
-                                <button className="col-3 col-md-12 nav-link fs-mb-5 rounded-0 p-4 user-left-list mb-md-4 w-100"
-                                type="button">登出</button></a>
+                                aria-controls="v-pills-follow" aria-selected="false">我的關注</button>                            
+                            <button className="col-3 col-md-12 nav-link fs-mb-5 rounded-3 p-16 user-left-list mb-md-4 w-100"
+                                type="button" onClick={handleLogout}>登出</button>
                         </div>
                     </div>
                     {/* 右側選單*/}
                     <div className="col-md-8">
-                        <div className="tab-content user-right-content pt-md-0" id="v-pills-tabContent">
+                        <div className="tab-content bg-white pt-md-0 shadow-sm rounded-4" id="v-pills-tabContent">
                             {/* 個人資訊*/}
                             <div className="tab-pane fade show active" id="v-pills-user" role="tabpanel"
                                 aria-labelledby="v-pills-user-tab" tabIndex="0">
@@ -80,7 +156,7 @@ function MemberCenter(){
                                     {/* 使用者名稱*/}
                                     <div className="mb-16">
                                         <label htmlFor="userName" className="form-label fs-16 mb-8 fw-700 text-black">使用者名稱</label>
-                                        <input type="text" className="form-control w-auto rounded-4" id="userName" placeholder="使用者名稱" defaultValue="Lynn"/>
+                                        <input type="text" className="form-control w-auto rounded-4" id="userName" placeholder="使用者名稱" defaultValue="Tina Liu"/>
                                     </div>
                                     {/* 密碼*/}
                                     <div className="mb-16">
@@ -173,136 +249,39 @@ function MemberCenter(){
 
                                 {/* content */}
                                 <div className="p-24">
-                                    <div className="py-16">
+                                    {notifications.map((item) => (
+                                        <div className="py-16 border-bottom" key={item.id}>
                                         <div className="d-md-flex justify-content-between align-items-center">
-                                            <div className="fw-bold fs-16 text-primary-600 lh-sm">📣訂單更新</div>
-                                            <div className="fw-medium text-secondary-400 lh-base">2024-08-18</div>
+                                            <div className="fw-bold fs-16 text-primary-600 lh-sm">{item.title}</div>
+                                            <div className="fw-medium text-secondary-400 lh-base">{item.date}</div>
                                         </div>
+
                                         <div className="text-secondary-600">
-                                            <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                            您的訂單<a href="#" className="text-decoration-none">#4081846</a> 已成功付款，您的愛心已透過雲端送達牠的身邊。
-                                            <br /><br />
-                                            若有任何訂單問題或需求，歡迎隨時聯繫客服，我們將竭誠為您服務。謝謝您與My-Shelter一起守護每一位毛寶貝的幸福！
+                                            <div
+                                            className={`content-preview pt-4 pb-6 lh-base fw-medium fs-6 ${
+                                                expandedId === item.id ? 'expanded' : 'collapsed'
+                                            }`}
+                                            onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                                            >
+                                            <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                                            
+                                            {expandedId === item.id && item.action_text && (
+                                                <div className="mt-3 d-flex">
+                                                <a 
+                                                    href={item.link} 
+                                                    className="p-2 bg-primary-100 text-primary-700 text-decoration-none sm-btn rounded-3 " 
+                                                    onClick={(e) => e.stopPropagation()} // 阻止冒泡，避免點按鈕時又把內容縮回去
+                                                >
+                                                    {item.action_text}
+                                                </a>
+                                                </div>
+                                            )}
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">📣領養審核通過</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-08-16</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        恭喜！您申請領養的「蹲蹲」已通過初步審核，所屬機構將於7日內與您聯繫，請配合
-                                        <br /><br />
-                                        機構完成後續領養程序。
-                                        <br /><br />
-                                        接下來，所屬機構將安排後續的領養流程與訪視時間。請您保持電話暢通並留意相關訊息，以便順利完成領養手續。
-                                        <br /><br />
-                                        如有任何問題，歡迎隨時與我們聯繫。祝您與新夥伴生活愉快！
-                                        <br /><br />
-                                        謝謝您對動物的愛心與支持！
-                                        <br />
-                                        My-Shelter 敬上
                                         </div>
-                                    </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">🎁生日快樂！為你送上生日祝福</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-08-13</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        生日快樂！
-                                        <br /><br />
-                                        My-Shelter為您送上NT$100優惠券，讓我們一起透過雲端為寶貝傳遞愛心！🎉🎂
-                                        <br /><br />
-                                        感謝您一直以來對毛寶貝們的關懷與支持，這份小小的心意希望能為您的生日增添一點溫暖與喜悅。
-                                        <br /><br />
-                                        在結帳時使用優惠券即可享有$100折扣優惠。
-                                        <br /><br />
-                                        優惠券有效期限至2024-09-13，一起向毛寶貝們分享這份喜悅吧！
-                                        <div className="my-6">
-                                            <a href="index.html" className="p-2 bg-primary-400 text-primary-700 text-decoration-none sm-btn" style={{ borderRadius: '4px' }}>
-                                            【分享喜悅】
-                                            </a>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">🏆等級升級</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-08-09</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        恭喜您！您的會員等級已升級為「Lv.5銀牌守護者」，感謝您持續的支持與愛心，
-                                        <br /><br />
-                                        讓更多寶貝們感受到世界的溫暖與關懷。🐾💖
-                                        <br /><br />
-                                        身為銀牌守護者，您將享有更多專屬福利與驚喜禮遇，未來也請繼續與我們一同守護這些可愛的小生命！
-                                        <br /><br />
-                                        感謝您為寶貝的愛心與對我們的信任！
-                                        <br />
-                                        My-Shelter 敬上
-                                        </div>
-                                    </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">📣寶貝影片來囉！</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-07-29</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        訂單 <a href="#" className="text-decoration-none">#2068439 </a>感謝您支援「幼貓疫苗接種協助-幼貓疫苗(三合一)」
-                                        <br /><br />
-                                        所屬機構「喵了個咪中途之家」已經將您的回饋影片上傳囉🎥🐾
-                                        <br /><br />
-                                        點擊下方連結，感受這些毛孩子滿滿的活力與幸福瞬間吧！
-                                        <div className="my-6">
-                                            <a href="index.html" className="p-2 bg-primary-400 text-primary-700 text-decoration-none sm-btn" style={{ borderRadius: '4px' }}>
-                                            【觀看影片】
-                                            </a>
-                                        </div>
-                                        <br />
-                                        未來也讓我們一起陪伴寶貝們走過每一步，傳遞更多溫暖。
-                                        <br />
-                                        My-Shelter 敬上
-                                        </div>
-                                    </div>
-                                    </div>
-
-                                    <div className="py-16">
-                                    <div className="d-md-flex justify-content-between align-items-center">
-                                        <div className="fw-bold fs-16 text-primary-600 lh-sm">⚙️系統通知</div>
-                                        <div className="fw-medium text-secondary-400 lh-base">2024-07-25</div>
-                                    </div>
-                                    <div className="text-secondary-600">
-                                        <div className="content-preview collapsed pt-4 pb-6 lh-base fw-medium fs-6">
-                                        為了提升服務品質，我們將於【2024-07-26】進行系統維護作業。
-                                        <br /><br />
-                                        屆時平台部分功能可能暫時無法使用，造成不便敬請見諒。
-                                        <br /><br />
-                                        <span className="text-secondary-900">
-                                            維護時間：
-                                            <br />
-                                            2024-07-26 12:00至2024-07-26 14:00
-                                        </span>
-                                        <br /><br />
-                                        期間如有緊急問題，請透過客服信箱或電話與我們聯繫，我們將盡快為您處理。感謝您的理解與支持，期待維護後為您帶來更流暢的使用體驗！
-                                        <br /><br />
-                                        My-Shelter 敬上
-                                        </div>
-                                    </div>
-                                    </div>
+                                    ))}
                                 </div>
+
 
                                 {/* footer */}
                                 <div className="d-flex justify-content-end fs-5 px-4 py-5 bg-white" style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}></div>
@@ -311,85 +290,80 @@ function MemberCenter(){
                             </div>
                             {/* 訂單資訊 */}
                             <div className="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab" tabIndex="0">
-                            <div className="bg-white" style={{ borderRadius: '16px' }}>
-                                <div className=" ">
-                                <div className="d-flex justify-content-between align-items-center p-24">
-                                    <div className="fs-24 fw-bold text-primary-600">訂單資訊</div>
-                                    <div className="d-flex align-items-center gap-8">
-                                    <div className="d-none">篩選</div>
+                                <div className="bg-white" style={{ borderRadius: '16px' }}>
+                                    <div className=" ">
+                                    <div className="d-flex justify-content-between align-items-center p-24">
+                                        <div className="fs-24 fw-bold text-primary-600">訂單資訊</div>
+                                        <div className="d-flex align-items-center gap-8">
+                                        <div className="d-none">篩選</div>
+                                        <div>
+                                            <select 
+                                            className="form-select form-select-lg fs-14" 
+                                            aria-label=".form-select-lg example"
+                                            style={{ borderRadius: '100px' }}
+                                            defaultValue="0"
+                                            >
+                                            <option value="0">3個月內</option>
+                                            <option value="1">6個月內</option>
+                                            <option value="2">1年內</option>
+                                            </select>
+                                        </div>
+                                        </div>
+                                    </div>
                                     <div>
-                                        <select 
-                                        className="form-select form-select-lg fs-14" 
-                                        aria-label=".form-select-lg example"
-                                        style={{ borderRadius: '100px' }}
-                                        defaultValue="0"
-                                        >
-                                        <option value="0">3個月內</option>
-                                        <option value="1">6個月內</option>
-                                        <option value="2">1年內</option>
-                                        </select>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <table className="table align-middle mb-0 table-borderless">
-                                    <thead>
-                                        <tr className="text-center">
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
-                                        <th className="bg-primary-50 py-16 text-secondary-800 fs-16 fw-500">合計</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="#" className="text-decoration-none fw-bold text-primary-600 order">4081864</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2024-08-18</div>
-                                            <div className="text-secondary-400 fw-medium">01:44:13</div>
-                                        </td>
-                                        <td>處理中</td>
-                                        <td>已付款</td>
-                                        <td className="text-danger fw-medium">$2100</td>
-                                        </tr>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="#" className="text-decoration-none fw-bold text-primary-600 order">3080511</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2025-08-05</div>
-                                            <div className="text-secondary-400 fw-medium">22:26:41</div>
-                                        </td>
-                                        <td>已取消</td>
-                                        <td>超過付款時間</td>
-                                        <td className="text-danger fw-medium">$900</td>
-                                        </tr>
-                                        <tr className="text-center">
-                                        <td className="py-lg-16">
-                                            <a href="./shopping-cart4.html" className="text-decoration-none fw-bold text-primary-600 order">2068439</a>
-                                        </td>
-                                        <td>
-                                            <div className="text-secondary-400 fw-medium">2025-07-22</div>
-                                            <div className="text-secondary-400 fw-medium">21:13:08</div>
-                                        </td>
-                                        <td>已完成</td>
-                                        <td>已付款</td>
-                                        <td className="text-danger fw-medium">$1500</td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
+                                        <table className="table align-middle mb-0 table-borderless table-hover">
+                                        <thead >
+                                            <tr className="text-center">
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單編號</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單時間</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">訂單狀態</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">付款狀態</th>
+                                            <th className="bg-primary-100 py-16 text-secondary-800 fs-16 fw-500">合計</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            { orders.length > 0 ? (
+                                                orders.map((order)=>{
+                                                    const orderTime = formatTime(order.create_at);//轉換時間
+                                                    return (
+                                                        <tr className="text-center" key={order.id}>
+                                                            <td className="py-lg-16" style={{cursor: 'pointer'}}>
+                                                                <a href="#" className="text-decoration-none fw-bold text-primary-600 order" >{order.id.slice(-7)}</a>
+                                                            </td>
+                                                            <td>
+                                                                <div className="text-secondary-400 fw-medium">{orderTime.date}</div>
+                                                                <div className="text-secondary-400 fw-medium">{orderTime.time}</div>
+                                                            </td>
+                                                            <td>{order.is_paid ? "處理中" : "待處理"}</td>
+                                                            <td>
+                                                                <span className={order.is_paid ? "text-success" : "text-danger"}>
+                                                                    {order.is_paid ? "已付款" : "未付款"}
+                                                                </span>
+                                                            </td>
+                                                            <td className="text-danger fw-medium">${order.total.toLocaleString()}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            ):(
+                                                <tr>
+                                                    <td colSpan="5" className="text-center py-5 text-secondary-400">
+                                                        目前沒有訂單資料
+                                                    </td>
+                                                </tr>
+                                            )
 
-                                    <div 
-                                    className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
-                                    style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
-                                    >
+                                            }
+                                        </tbody>
+                                        </table>
+
+                                        <div 
+                                        className="d-flex justify-content-end fs-5 px-4 py-5 bg-white"
+                                        style={{ borderBottomRightRadius: '16px', borderBottomLeftRadius: '16px' }}
+                                        >
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
-                                </div>
-                            </div>
                             </div>
                             {/* 我的關注 */}
                             <div className="tab-pane fade" id="v-pills-follow" role="tabpanel" aria-labelledby="v-pills-follow-tab" tabIndex="0">
@@ -420,120 +394,59 @@ function MemberCenter(){
                                 {/* content */}
                                 <div className="p-24">
                                     <ul className="nav nav-tabs mb-12" id="favTabs" role="tablist">
-                                    <li className="nav-item" role="presentation">
-                                        <button className="nav-link active" id="pets-tab" data-bs-toggle="tab" data-bs-target="#pets" type="button" role="tab">
-                                        寶貝
-                                        </button>
-                                    </li>
-                                    <li className="nav-item" role="presentation">
-                                        <button className="nav-link" id="org-tab" data-bs-toggle="tab" data-bs-target="#org" type="button" role="tab">
-                                        機構
-                                        </button>
-                                    </li>
+                                        <li className="nav-item" role="presentation">
+                                            <button className="nav-link active" id="pets-tab" data-bs-toggle="tab" data-bs-target="#pets" type="button" role="tab">
+                                            已關注的動物
+                                            </button>
+                                        </li>
                                     </ul>
-
                                     {/* Tab 內容 */}
                                     <div className="tab-content">
-                                    {/* 寶貝 */}
-                                    <div className="tab-pane fade show active" id="pets" role="tabpanel">
-                                        <div className="container scroll-area">
-                                            <div className="row g-16">
-                                                {/* 卡片：阿橘橘 */}
-                                                <div className="col-md-4 col-12">
-                                                    <div className="card border-primary rounded-4" >
-                                                        <img src="src\image\pet_4_阿橘橘.jpg" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
-                                                        <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
-                                                        <div className="card-body">
-                                                        <div className="text-center py-12">
-                                                            <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿橘橘</div>
-                                                            <div className="fw-medium fs-16 text-secondary-800 lh-sm">喵了個咪中途之家</div>
-                                                        </div>
-                                                        <div className="d-flex justify-content-between text-center gap-8">
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">新北市</div>
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">已結紮</div>
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">可領養</div>
-                                                        </div>
+                                        {/* 寶貝 */}
+                                        <div className="tab-pane fade show active" id="pets" role="tabpanel">
+                                            <div className="container scroll-area">
+                                                <div className="row g-16">
+                                                    {/* 卡片：阿橘橘 */}
+                                                    <div className="col-md-4 col-12">
+                                                        <div className="card border-primary rounded-4" >
+                                                            <img src="src\image\pet_4_阿橘橘.jpg" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
+                                                            <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
+                                                            <div className="card-body">
+                                                            <div className="text-center py-12">
+                                                                <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿橘橘</div>
+                                                                <div className="fw-medium fs-16 text-secondary-800 lh-sm">喵了個咪中途之家</div>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between text-center gap-8">
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">新北市</div>
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">已結紮</div>
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4">可領養</div>
+                                                            </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                {/* 卡片：阿財 */}
-                                                <div className="col-md-4 col-12">
-                                                    <div className="card border-primary rounded-4">
-                                                        <img src="src\image\pet_3_阿財.png" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
-                                                        <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
-                                                        <div className="card-body">
-                                                        <div className="text-center py-12">
-                                                            <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿財</div>
-                                                            <div className="fw-medium fs-16 text-secondary-800 lh-sm">毛茸茸中途咖啡</div>
-                                                        </div>
-                                                        <div className="d-flex justify-content-between text-center gap-8">
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >新北市</div>
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >已結紮</div>
-                                                            <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >可領養</div>
-                                                        </div>
+                                                    {/* 卡片：阿財 */}
+                                                    <div className="col-md-4 col-12">
+                                                        <div className="card border-primary rounded-4">
+                                                            <img src="src\image\pet_3_阿財.png" alt="#" className="w-100 h-155 rounded-4" style={{ position: 'relative' }} />
+                                                            <img src="src\image\love-fill.svg" alt="heat" style={{ position: 'absolute', top: '10px', right: '10px' }} />
+                                                            <div className="card-body">
+                                                            <div className="text-center py-12">
+                                                                <div className="fw-bold fs-28 text-primary-600 lh-sm pb-2">阿財</div>
+                                                                <div className="fw-medium fs-16 text-secondary-800 lh-sm">毛茸茸中途咖啡</div>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between text-center gap-8">
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >新北市</div>
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >已結紮</div>
+                                                                <div className="fw-medium fs-md-12 fs-14 px-md-8 py-8 px-16 bg-primary-200 text-primary-700 rounded-4" >可領養</div>
+                                                            </div>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    
                                                 </div>
-                                                
                                             </div>
                                         </div>
-                                    </div>
-
-                                    {/* 機構 */}
-                                    <div className="tab-pane fade" id="org" role="tabpanel">
-                                        <div className="container scroll-area">
-                                        <div className="row g-16">
-                                            {/* 機構卡片範例 */}
-                                            <div className="col-lg-4 col-6">
-                                                <div className="card border-primary rounded-4">
-                                                <img src="src\image\dog and doctor 1.jpg" alt="#" className="w-100 rounded-4"
-                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
-                                                <img src="src\image\love-fill.svg" alt="heat"
-                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
-                                                <div className="card-body">
-                                                    <div className="text-center ">
-
-                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">毛寶寶基金會</div>
-                                                    </div>
-
-                                                </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-lg-4 col-6">
-                                                <div className="card border-primary rounded-4">
-                                                <img src="src\image\pet with people.jpg" alt="#" className="w-100 rounded-4"
-                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
-                                                <img src="src\image\love-fill.svg" alt="heat"
-                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
-                                                <div className="card-body">
-                                                    <div className="text-center ">
-
-                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">喵了個咪中途之家</div>
-                                                    </div>
-
-                                                </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-lg-4 col-6">
-                                                <div className="card border-primary rounded-4">
-                                                <img src="src\image\vet.jpg" alt="#" className="w-100 rounded-4"
-                                                    style={{ position: 'relative', height: 200, objectFit: 'cover', overflow: 'hidden' }}/>
-                                                <img src="src\image\love-fill.svg" alt="heat"
-                                                    style={{ position: 'absolute', top: '10px', right: '10px' }}/>
-                                                <div className="card-body">
-                                                    <div className="text-center ">
-
-                                                    <div className="fw-bold fs-lg-24 fs-18 text-primary-600 lh-base">小腳印之家</div>
-                                                    </div>
-
-                                                </div>
-                                                </div>
-                                            </div>
-                                            {/* 其他機構卡片以此類推... */}
-                                        </div>
-                                        </div>
-                                    </div>
                                     </div>
                                 </div>
                                 </div>

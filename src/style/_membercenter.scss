@@ -8,6 +8,10 @@
   &.collapsed {
     -webkit-line-clamp: 1; // 限制只顯示 1 行
     line-clamp: 1;
+
+    max-width: 85%; 
+    
+    width: max-content;
   }
 
   &.expanded {
@@ -36,11 +40,34 @@
 
 /* 2. Active 狀態樣式 (選中時) */
 .nav-tabs .nav-link.active {
-  background-color: #887258 !important; /* 深色背景 */
+  background-color: $primary-500 !important; /* 深色背景 */
   color: #E7DFD7 !important;           /* 白色/淺色文字 */
 }
 
 /* 3. 容器樣式 (移除底線) */
 .nav-tabs {
   border-bottom: none !important;
+}
+
+/* 3. Hover 狀態 (滑鼠移上去但還沒點擊時) */
+.nav-pills .nav-link:hover:not(.active) {
+  background-color: rgba(139, 114, 88, 0.1); /* 淡淡的背景色回饋 */
+  color: #887258;
+}
+
+
+/* 針對表格列的 Hover 效果 */
+.table-hover tbody tr {
+    transition: background-color 0.3s ease; /* 增加平滑感 */
+
+}
+
+/* 自定義懸停時的背景色 */
+.table-hover tbody tr:hover {
+    background-color: rgba(136, 114, 88, 0.08) !important; /* 淡淡的棕色，!important 確保蓋過底色 */
+}
+
+/* 如果希望滑鼠移入時訂單編號變色，也可以這樣加 */
+.table-hover tbody tr:hover .order {
+    color: #b13e33 !important; /* 舉例：懸停時編號變更深的紅色/棕色 */
 }
