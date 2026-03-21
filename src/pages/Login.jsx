@@ -62,10 +62,10 @@ function Login() {
   return (<>
 
     <div className="login-bg-img">
-    <div className="container login-bg login mt-5">
+    <div className="container login mt-5">
       <div className="row justify-content-center justify-content-md-end">
 
-        <div className="col-12 col-md-6">
+        <div className="col-12 col-md-6 login-bg">
           <h2 className="h3 mb-3 font-weight-normal text-center title-text-H3 text-secondary-900">會員登入</h2>
 
             <div className=" px-0">
