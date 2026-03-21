@@ -95,8 +95,7 @@ const BackstageOrder = () => {
   }, [navigate]);
 
   return (
-    // 🚩 最外層加上 w-100 並確保不溢出
-    <div className="w-100 overflow-hidden">
+   <div className="w-100 overflow-hidden">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="fw-bold mb-0 fs-24">訂單管理</h3>
         <button className="btn btn-outline-secondary btn-sm rounded-pill px-3" onClick={() => getOrders()}>
@@ -104,17 +103,16 @@ const BackstageOrder = () => {
         </button>
       </div>
 
-      {/* 🚩 關鍵修正：加上 border 和 table-responsive，並確保寬度為 100% */}
       <div className="table-responsive bg-white rounded-4 shadow-sm border">
-        {/* 🚩 加上 text-nowrap 確保內容不會亂擠，而是出現內部捲軸 */}
         <table className="table table-hover align-middle mb-0 text-nowrap">
           <thead className="table-light">
             <tr>
-              <th className="ps-4 py-3 border-0">下單日期</th>
-              <th className="border-0">顧客資訊</th>
+              {/* 🚩 在桌機版才顯示下單日期欄位 */}
+              <th className="ps-4 py-3 border-0 d-none d-md-table-cell">下單日期</th>
+              <th className="border-0 ps-4 ps-md-2">顧客資訊 / 日期</th>
               <th className="border-0">購買品項</th>
               <th className="text-end border-0">應付金額</th>
-              <th className="text-center border-0">付款狀態</th>
+              <th className="text-center border-0 d-none d-sm-table-cell">付款狀態</th>
               <th className="text-center pe-4 border-0">操作</th>
             </tr>
           </thead>
@@ -124,29 +122,47 @@ const BackstageOrder = () => {
             ) : (orders.length > 0) ? (
               orders.map((order) => (
                 <tr key={order.id}>
-                  <td className="ps-4">
+                  {/* 🚩 獨立日期欄位：手機版隱藏 */}
+                  <td className="ps-4 d-none d-md-table-cell">
                     <span className="text-secondary fs-14">
                       {new Date(order.create_at * 1000).toLocaleDateString()}
                     </span>
                   </td>
-                  <td>
+
+                  {/* 🚩 顧客資訊欄位：手機版插入日期 */}
+                  <td className="ps-4 ps-md-2">
+                    {/* 手機版才出現的小日期標籤 */}
+                    <div className="d-md-none text-primary fw-600 fs-12 mb-1">
+                      <i className="bi bi-calendar3 me-1"></i>
+                      {new Date(order.create_at * 1000).toLocaleDateString()}
+                    </div>
                     <div className="fw-bold text-dark">{order.user?.name || '未知用戶'}</div>
                     <div className="text-muted fs-12">{order.user?.email}</div>
                   </td>
+
                   <td>
-                    <div className="fs-13" style={{ maxWidth: '250px', whiteSpace: 'normal' }}>
+                    <div className="fs-13" style={{ maxWidth: '200px', whiteSpace: 'normal' }}>
                       {order.products && Object.values(order.products).map((p) => (
-                        <div key={p.id} className="mb-1">
+                        <div key={p.id} className="mb-1 text-truncate">
                           <span className="badge bg-light text-dark fw-normal border me-1">{p.product?.title}</span>
                           <span className="text-primary-600 fw-bold">x{p.qty}</span>
                         </div>
                       ))}
                     </div>
                   </td>
+
                   <td className="text-end fw-bold text-dark fs-15">
                     ${Math.round(order.total || 0).toLocaleString()}
+                    {/* 手機版把付款狀態縮小放在金額下面，節省空間 */}
+                    <div className="d-sm-none mt-1">
+                       <span className={`badge rounded-pill ${order.is_paid ? 'text-success p-0' : 'text-danger p-0'}`} style={{fontSize: '10px'}}>
+                         {order.is_paid ? '● 已付' : '○ 未付'}
+                       </span>
+                    </div>
                   </td>
-                  <td className="text-center">
+
+                  {/* 🚩 付款狀態：手機版隱藏 (已整合進金額欄) */}
+                  <td className="text-center d-none d-sm-table-cell">
                     <span 
                       className={`badge rounded-pill px-3 py-2 cursor-pointer transition-all ${order.is_paid ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger'}`}
                       onClick={() => updatePaid(order)}
@@ -154,6 +170,7 @@ const BackstageOrder = () => {
                       {order.is_paid ? '已付款' : '未付款'}
                     </span>
                   </td>
+
                   <td className="text-center pe-4">
                     <div className="btn-group shadow-sm rounded-2 overflow-hidden">
                       <button className="btn btn-sm btn-white border" onClick={() => openOrderModal(order)}>
