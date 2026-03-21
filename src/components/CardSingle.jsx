@@ -1,144 +1,129 @@
-import { useState, useEffect, useRef } from "react";
-import  axios from 'axios'
-import love from '../image/love.svg'
-import loveFill from '../image/love-fill.svg'
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import { useDispatch } from "react-redux";
+import { Link } from 'react-router-dom';
+import { createAsyncGetCart } from "../slice/cartSlice"; 
+import toast from 'react-hot-toast';
 
-import { currency} from"../utils/filter";
+import love from '../image/love.svg';
+import loveFill from '../image/love-fill.svg';
 
+const { VITE_PATH, VITE_URL } = import.meta.env;
 
-const{VITE_PATH,VITE_URL}=import.meta.env;
-
-
-const CardSingle=({product})=>{
+const CardSingle = ({ product }) => {
   const [isAdding, setIsAdding] = useState(false);
-  const [cart, setCart] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [isUpdating, setIsUpdating] = useState("");
+  const dispatch = useDispatch();
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const favs = JSON.parse(localStorage.getItem('fav')) || [];
+    setIsFavorite(favs.includes(product.id));
+  }, [product.id]);
+
+ 
+  const toggleFavorite = (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const favs = JSON.parse(localStorage.getItem('fav')) || [];
+    let updatedFavs;
+    
+    if (favs.includes(id)) {
+      updatedFavs = favs.filter(favId => favId !== id);
+      toast('已從收藏移除', { icon: '🗑️' });
+    } else {
+      updatedFavs = [...favs, id];
+      toast.success('已加入我的關注');
+    }
+    
+    localStorage.setItem('fav', JSON.stringify(updatedFavs));
+    setIsFavorite(!isFavorite);
+    window.dispatchEvent(new Event('storage'));
+  };
+
   
+  const handleAddCart = async (e, product_id, qty = 1) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-const toggleFavorite = (id) => {
-  if (favorites.includes(id)) {
-    // 如果已經在清單裡，就濾掉它 (取消收藏)
-    setFavorites(favorites.filter((favId) => favId !== id));
-  } else {
-    // 如果不在清單裡，就加進去 (新增收藏)
-    setFavorites([...favorites, id]);
-  }
-};
+    if (isAdding) return;
+    setIsAdding(true);
 
-
-  //購物車
-  const getCart = async () => {
     try {
-      const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/cart`);
-      console.log(res)
-      setCart(res.data.data);
+      const res = await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, {
+        data: { product_id, qty }
+      });
+
+      if (res.data.success) {
+        toast.success("已加入守護清單");
+        dispatch(createAsyncGetCart());
+      }
     } catch (err) {
-      console.log(err.response.data);
+      toast.error("加入失敗，請稍後再試");
+      console.error(err);
+    } finally {
+      setIsAdding(false);
     }
   };
-  // handleAdd + addCart 改寫
-const addCart = async (id, qty = 1) => {
-  try {
-    const data = { product_id: id, qty };
-    await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
-
-    // 直接更新本地 cart，不再呼叫 getCart()
-    setCart(prevCart => {
-      // 檢查是否已經有這個商品
-      const existIndex = prevCart.findIndex(item => item.product_id === id);
-      if (existIndex !== -1) {
-        // 已有商品，更新數量
-        const newCart = [...prevCart];
-        newCart[existIndex].qty += qty;
-        return newCart;
-      } else {
-        // 新商品，加入陣列
-        return [...prevCart, { product_id: id, qty }];
-      }
-    });
-
-    alert("已成功加入守護清單！");
-  } catch (err) {
-    console.log("加入購物車失敗", err);
-  }
-};
-
-const handleAdd = async (id) => {
-  if (isAdding) return; // 防止快速重複點擊
-  setIsAdding(true);
-  await addCart(id);
-  setIsAdding(false);
-};
-
-
-
-    useEffect(() => {
-    getCart();
-    
-  }, []);
 
   return (
-    <>
-    <div className="">
-        
-             <div className="card border-0 shadow-sm" key={product.id}>
-                <div className="custom-card">
-                        <div className="card product-card custom-card-bg" >
-              {/* 圖片區 */}
-              <div className="position-relative ">
-                {/* 標籤 */}
-                <div className="position-absolute top-0 start-0 m-2 d-flex gap-2">
-                  <span className="bg-primary-200 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3 ms-3 " >新品</span>
-                  <span className="bg-primary-100 border border-primary-300 fs-14 px-12 py-4 newItem  badge rounded-pill fw-bold mt-3" >台灣專屬</span>
-                </div>
-        
-                {/* 愛心 */}
-                <button
-                  type="button"
-                  className="position-absolute top-0 end-0 m-3 bg-transparent border-0"
-                  onClick={() => toggleFavorite(product.id)}
-                >
-                  {favorites.includes(product.id) ? <img src={loveFill} alt="lovefill" />:<img src={love} alt="love" /> }
-                </button>
-               
-        
-                <img
-                  src={product.imageUrl}
-                  className="img-fluid shadow-sm"
-                  alt={product.imageUrl}
-                />
+    <div className="card border-0 shadow-sm h-100">
+      <div className="custom-card">
+        <Link to={`/product/${product.id}`} className="text-decoration-none">
+          <div className="card product-card custom-card-bg border-0">
+            {/* 圖片區 */}
+            <div className="position-relative">
+              <div className="position-absolute top-0 start-0 m-2 d-flex gap-2">
+                <span className="bg-primary-200 border border-primary-300 fs-14 px-12 py-4 badge newItem rounded-pill fw-bold">新品</span>
+                <span className="bg-primary-100 border border-primary-300 fs-14 px-12 py-4 badge newItem rounded-pill fw-bold">台灣專屬</span>
               </div>
-        
-              {/* 內容 */}
-              <div className="card-body">
-                <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
-                <p className="fw-bold mb-16 fs-14 text-gray-500 ">{product.agency}</p>
-        
-                <div className="mb-3">
-                  <span className="fw-bold fs-24">${product.origin_price}</span>
-                  <del className="text-muted fw-normal ms-2 fs-20">${product.price}</del>
-                </div>
-        
-                <button
-  className="btn btn-outline-primary-500 w-100 fs-18 py-16 fw-bold"
-  onClick={() => handleAdd(product.id)}
-  disabled={isAdding}
->
-  {isAdding ? (
-    <span className="spinner-border spinner-border-sm" role="status"></span>
-  ) : (
-    "加入購物車"
-  )}
-</button>
+
+              {/* 愛心按鈕 */}
+              <button
+                type="button"
+                className="position-absolute top-0 end-0 m-3 bg-transparent border-0 z-3"
+                onClick={(e) => toggleFavorite(e, product.id)}
+              >
+                <img src={isFavorite ? loveFill : love} alt="favorite-icon" />
+              </button>
+
+              <img
+                src={product.imageUrl}
+                className="card-img-top object-fit-cover shadow-sm"
+                style={{ height: '240px' }}
+                alt={product.title}
+              />
+            </div>
+
+            {/* 內容區 */}
+            <div className="card-body d-flex flex-column">
+              <h6 className="fw-bold mb-1 fs-24 text-gray-900">{product.title}</h6>
+              <p className="fw-bold mb-16 fs-14 text-gray-500">{product.agency}</p>
+
+              <div className="mb-3 mt-auto">
+                <span className="fw-bold fs-24 text-primary">${product.price}</span>
+                {product.origin_price !== product.price && (
+                  <del className="text-muted fw-normal ms-2 fs-20">${product.origin_price}</del>
+                )}
               </div>
-                         </div>
-                      </div>
-             </div>
-        
+
+              {/* 購物車按鈕 */}
+              <button
+                className="btn btn-outline-primary-500 w-100 fs-18 py-12 fw-bold d-flex align-items-center justify-content-center"
+                onClick={(e) => handleAddCart(e, product.id)}
+                disabled={isAdding}
+              >
+                {isAdding ? (
+                  <span className="spinner-border spinner-border-sm me-2"></span>
+                ) : null}
+                {isAdding ? "處理中..." : "加入購物車"}
+              </button>
+            </div>
+          </div>
+        </Link>
+      </div>
     </div>
-    </>
-  )
-}
+  );
+};
 
 export default CardSingle;
