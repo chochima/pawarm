@@ -72,6 +72,7 @@ return (
 {/*右邊活動圖片*/}
     <div className="col col-md-4 px-0 mt-0 order-1 order-md-2 d-none d-md-block">
         <img
+            className="w-100"
             src={hoverActivity.imageUrl}
             alt={hoverActivity.title}
         />

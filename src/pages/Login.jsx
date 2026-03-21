@@ -60,11 +60,16 @@ function Login() {
 }, [dispatch, navigate]); 
 
 
-  return (
-    <div className="container login mt-5">
-      <div className="row justify-content-center">
-        <h1 className="h3 mb-3 font-weight-normal text-center">請先登入</h1>
-        <div className="col-8">
+  return (<>
+
+    <div className="login-bg-img">
+    <div className="container login-bg login mt-5">
+      <div className="row justify-content-center justify-content-md-end">
+
+        <div className="col-12 col-md-6">
+          <h2 className="h3 mb-3 font-weight-normal text-center title-text-H3 text-secondary-900">會員登入</h2>
+
+            <div className=" px-0">
           <form id="form" className="form-signin" onSubmit={handleSubmit(handleLogin)}>
             <div className="form-floating mb-3">
               <input
@@ -99,11 +104,14 @@ function Login() {
               登入
             </button>
           </form>
+            </div>
+
         </div>
       </div>
       
     </div>
-  );
+    </div>
+  </>);
 }
 
 export default Login;

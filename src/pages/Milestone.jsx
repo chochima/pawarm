@@ -5,7 +5,7 @@ import ImgUpload from "../components/ImgUpload";
 import ImgLibrary from "../components/ImgLibrary";
 import CoBrand from "../components/CoBrand";
 import MilestoneStep from "../components/MilestoneStep";
-import MileD3 from "../components/MileD3";
+import MilePie from "../components/MilePie";
 
 
 import milistoneIMG from "../image/milistone.png";
@@ -113,9 +113,8 @@ export default function Milestone() {
       <h2 className="col mb-0 title-text px-0">捐款動向</h2>
       <div className="row">
         <div>
-      <h1>D3 CDN + React 範例</h1>
-      <MileD3 data={pieData} width={500} height={500} />
-    </div>
+        <MilePie />
+        </div>
 
 
       </div>

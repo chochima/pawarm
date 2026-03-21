@@ -12,6 +12,7 @@ import bgProduct from "../image/bg-product.png";
 import bgActivity from "../image/bg-activity.png";
 import iconShield from "../image/icon-shield.png";
 import iconGPS from "../image/icon-GPS.png";
+import mapImg from "../image/map-img.png";
 
 
 
@@ -24,6 +25,7 @@ export default function Home() {
   {
 
   //HERO CTA
+  
   <section className="hero-bg-img">
     <div className="container">
     <div className="row px-0 pb-md-5">
@@ -42,11 +44,11 @@ export default function Home() {
     </div>
     </div>
   </section>
-
   }
 
   {
     //推薦商品
+    
     <section className="bgImg-postion">
       <img className="bgImg-absolute" src={bgProduct} alt="product-BG"/>
 
@@ -61,13 +63,14 @@ export default function Home() {
 
   {
     //里程碑CTA
+    
   <section className="milestone-section-bg">
     <div className="container">
 
     <div className="row d-flex justify-content-between">
 
       <div className="col-auto col-md-6 px-0">
-        <img src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770228794274.png" alt="首頁里程碑"/>
+        <img className="w-100" src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770228794274.png" alt="首頁里程碑"/>
       </div>
 
       <div className="col col-md-5 px-md-0">
@@ -92,6 +95,7 @@ export default function Home() {
 
   {
     //追蹤動物CTA
+    
   <section className="track-bg-img">
     <div className="container">
     <div className="row px-0">
@@ -114,6 +118,7 @@ export default function Home() {
 
   { 
     //守護動物
+  
   <section className="map-bg-img">
     <div className="container">
 
@@ -121,7 +126,7 @@ export default function Home() {
     <div className="row d-flex justify-content-between align-items-center">
 
       <div className="col-auto col-md-6 pb-24">
-        <img className="logos" src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770488942942.png" alt="首頁動物地圖"/>
+        <img className="logos w-100" src={mapImg} alt="首頁動物地圖"/>
       </div>
 
       <div className="col col-md-5">
@@ -171,6 +176,7 @@ export default function Home() {
 
   {
     //活動資訊
+    
     <section className="bgImg-postion">
       <img className="bgImg-absolute" src={bgActivity} alt="activity-BG"/>
 
