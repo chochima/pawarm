@@ -8,6 +8,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { useDispatch } from "react-redux";
 import { setToken } from "../slice/authSlice";
 import { logout } from "../slice/authSlice";
+import iconUser from "../image/icon-user.png";
 
 const API_BASE = import.meta.env.VITE_URL;
 const API_PATH = import.meta.env.VITE_PATH;
@@ -53,22 +54,9 @@ function MemberCenter() {
                 <button
                     className="btn btn-sm btn-danger px-3 text-white"
                     onClick={() => {
-                        // 1. 關閉確認視窗
                         toast.dismiss(t.id);
-                        
-                        // 2. 執行 Redux 的 logout (裡面已包含刪除 Cookie)
                         dispatch(logout());
-                        
-                        // 3. 清除 Axios
                         delete axios.defaults.headers.common.Authorization;
-
-                        // 4. 顯示成功訊息 (由 App.jsx 的 Toaster 渲染)
-                        toast.success("已成功登出", {
-                            duration: 2000,
-                            position: 'top-center',
-                        });
-
-                        // 5. 延遲跳轉
                         setTimeout(() => navigate('/Login'), 1000);
                     }}
                 >確定</button>
@@ -152,7 +140,7 @@ function MemberCenter() {
                             <div className="bg-white rounded-4 shadow-sm p-24">
                                 <div className="d-flex align-items-center gap-16 mb-32">
                                     <div className="ratio ratio-1x1 shadow-sm rounded-circle overflow-hidden" style={{ width: '80px' }}>
-                                        <img src="src/image/track-img/leopard-cat-description-1.png" alt="avatar" className="object-fit-cover" />
+                                        <img src={iconUser} alt="avatar" className="object-fit-cover" />
                                     </div>
                                     <div>
                                         <h4 className="fs-20 fw-bold mb-1">Tina Liu</h4>

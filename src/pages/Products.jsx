@@ -6,6 +6,7 @@ import loveFill from '../image/love-fill.svg';
 import { createAsyncGetCart } from "../slice/cartSlice";
 import { NavLink,Link } from "react-router";
 import toast from 'react-hot-toast';
+import MechanismLogos from "../components/MechanismLogos";
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
 const mechanismImages = [
@@ -280,18 +281,7 @@ const Products = () => {
 
       {/* 保育機構區塊 */}
       <div className="bg-primary-50 overflow-x-hidden">
-        <div className="container py-120">
-          <div className="fs-36 fw-700 title-text-cart text-black mb-32">瀏覽更多保育機構</div>
-          <div className="row g-20 g-md-32 align-items-center">
-            {(mechanismImages || []).map((item, index) => (
-              <div className="col-6 col-md-3" key={index}>
-                <NavLink className="logo-wrapper d-flex justify-content-center align-items-center">
-                  <img src={item.imageUrl} alt={item.name} className="img-fluid partner-logo" style={{ maxHeight: '80px', width: 'auto', objectFit: 'contain' }} />
-                </NavLink>
-              </div>
-            ))}
-          </div>
-        </div>
+        <MechanismLogos mechanismImages={mechanismImages} />
       </div>
     </>
   );

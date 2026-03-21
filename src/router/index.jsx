@@ -15,7 +15,7 @@ import CheckoutSuccess from "../pages/Success";
 import MemberCenter from "../pages/MemberCenter";
 import About from "../pages/About";
 import Events from "../pages/Events";
-
+import OrderAnalysis from "../Backstage/OrderAnalysis";
 
 
 
@@ -89,6 +89,10 @@ const routes =[
             {
                 path:'order',
                 element:<BackstageOrder/>
+            },
+            {
+                path:'analysis',
+                element:<OrderAnalysis />
             }
         ]
 
