@@ -123,29 +123,7 @@ const Events = () => {
         </div>
       </section>
 
-      {/* 4. 歷史成就 - 更多例子 */}
-      <section className="py-120 bg-gray-50">
-          <div className="container">
-              <h4 className="fw-bold mb-5 text-center text-success-800">已達成計畫里程碑</h4>
-              <div className="row g-4">
-                  <div className="col-md-6 col-lg-3">
-                      <div className="achievement-card p-4 bg-white rounded-4 shadow-sm h-100 border-bottom border-4 border-success">
-                          <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2094&auto=format&fit=crop" className="img-fluid rounded mb-3" alt="海龜" />
-                          <h6 className="fw-bold">小琉球海龜友善季</h6>
-                          <p className="small text-muted mb-0">清理海洋垃圾超過 500 公斤。</p>
-                      </div>
-                  </div>
-                  <div className="col-md-6 col-lg-3">
-                      <div className="achievement-card p-4 bg-white rounded-4 shadow-sm h-100 border-bottom border-4 border-info">
-                        <img src="https://images.unsplash.com/photo-1541414779316-956a5084c0d4?q=80&w=1965&auto=format&fit=crop" className="img-fluid rounded mb-3" alt="鯨魚" />
-                        <h6 className="fw-bold">座頭鯨聲學研究</h6>
-                        <p className="small text-muted mb-0">部署深海收音設備完成。</p>
-                      </div>
-                  </div>
-                  {/* 可以根據你的 JSON 商品再增加更多歷史例子 */}
-              </div>
-          </div>
-      </section>
+     
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');

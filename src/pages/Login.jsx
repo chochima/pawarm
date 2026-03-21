@@ -52,7 +52,6 @@ function Login() {
   );
 
   if (existingToken) {
-    // 如果已經登入過，將 Token 寫回 Redux 確保 Header 圖示狀態正確
     dispatch(setToken(existingToken));
     axios.defaults.headers.common.Authorization = existingToken;
     navigate("/");
