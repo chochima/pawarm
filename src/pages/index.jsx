@@ -125,14 +125,14 @@ export default function Home() {
 
     <div className="row d-flex justify-content-between align-items-center">
 
-      <div className="col-auto col-md-6 pb-24">
+      <div className="col col-lg-6 pb-24">
         <img className="logos w-100" src={mapImg} alt="首頁動物地圖"/>
       </div>
 
-      <div className="col col-md-5">
+      <div className="col col-lg-5">
         <h2 className="mb-0 title-text">守護​動物​的​每​一​步​</h2>
 
-        <div className="fs-16 body-text pt-20 pt-md-32 mb-32 mb -md-48">
+        <div className="fs-16 body-text pt-20 pt-lg-32 mb-32 mb -lg-48">
           <p className="mb-12">透每​次​進行​動物​追蹤​都​會觸發 Pawarm Protection P​ing ​訊號。</p>
 
           <p className="mb-12">根據​我​們​合作​夥伴​制定​的​安全​規程，​訊號會​顯示​每​隻​動物​獨特追蹤路徑，​路徑​可能​是​即時​更新、​延遲​更新​或​歷史​記錄。</p>
