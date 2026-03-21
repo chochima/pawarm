@@ -17,6 +17,14 @@ export const useCart = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
   const isLogin = !!token;
+  const toastConfig = {
+  style: {
+    background: '#333',
+    color: '#fff',
+    borderRadius: '10px',
+  },
+  duration: 2000, // 2秒後自動關閉
+};
 
   const getCart = async () => {
     try {
@@ -78,7 +86,7 @@ export const useCart = () => {
   const applyCoupon = async (code) => {
     try {
       const res = await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/coupon`, { data: { code } });
-      alert(res.data.message);
+      toast.success(res.data.message, toastConfig);
       getCart();
     } catch (err) { alert(err.response?.data?.message || "套用失敗"); }
   };
@@ -86,7 +94,7 @@ export const useCart = () => {
   const removeCoupon = () => {
     setCart(prev => ({ ...prev, final_total: prev.total }));
     setCouponCode("");
-    alert("已暫時移除優惠");
+    toast.success("已暫時移除優惠", toastConfig);
   };
 
   const toggleFavorite = (id) => {
