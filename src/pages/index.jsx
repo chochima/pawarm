@@ -12,6 +12,7 @@ import bgProduct from "../image/bg-product.png";
 import bgActivity from "../image/bg-activity.png";
 import iconShield from "../image/icon-shield.png";
 import iconGPS from "../image/icon-GPS.png";
+import mapImg from "../image/map-img.png";
 
 
 
@@ -24,6 +25,7 @@ export default function Home() {
   {
 
   //HERO CTA
+  
   <section className="hero-bg-img">
     <div className="container">
     <div className="row px-0 pb-md-5">
@@ -36,17 +38,17 @@ export default function Home() {
         <p className="body-text pt-20 pt-md-32 px-0 mb-24 mb-md-48">你​的​每​一​次​購買，​都​是​對​動物​保育​的​貢獻​。​<br/>
         透過​真實​動物​追蹤，​見證​生命​的​軌跡。​</p>
 
-        <button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-14 py-md-16"><NavLink to="products">選擇我的動物​</NavLink></button>
+        <NavLink to="products"><button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-14 py-md-16">選擇我的動物</button>​</NavLink>
       </div>
     
     </div>
     </div>
   </section>
-
   }
 
   {
     //推薦商品
+    
     <section className="bgImg-postion">
       <img className="bgImg-absolute" src={bgProduct} alt="product-BG"/>
 
@@ -61,13 +63,14 @@ export default function Home() {
 
   {
     //里程碑CTA
+    
   <section className="milestone-section-bg">
     <div className="container">
 
     <div className="row d-flex justify-content-between">
 
       <div className="col-auto col-md-6 px-0">
-        <img src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770228794274.png" alt="首頁里程碑"/>
+        <img className="w-100" src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770228794274.png" alt="首頁里程碑"/>
       </div>
 
       <div className="col col-md-5 px-md-0">
@@ -76,7 +79,7 @@ export default function Home() {
 
         <p className="body-text pt-20 pt-md-32 mb-24  mb-md-48">透過​真實​動物​追蹤，​不​只​能​看到​牠們​的​名字、​故事​和​生活​軌跡，​也​能​親眼​看見​自己​的​支持​如何​帶來​改變。​</p>
 
-        <button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-12 py-md-16"><NavLink to="/">我們的里程碑</NavLink></button>
+        <NavLink to="milestone"><button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-12 py-md-16">我們的里程碑</button></NavLink>
       </div>
 
     </div>
@@ -92,6 +95,7 @@ export default function Home() {
 
   {
     //追蹤動物CTA
+    
   <section className="track-bg-img">
     <div className="container">
     <div className="row px-0">
@@ -103,7 +107,7 @@ export default function Home() {
         ​體驗​激動​人心​的​揭密、​精彩​的​旅程​，​<br/>
         ​​為​全球​保育​工作​做出​貢​獻​。​</p>
 
-        <button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-12 py-md-16"><NavLink to="animaltracking">追蹤我的動物​</NavLink></button>
+        <NavLink to="animaltracking"><button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-12 py-md-16">追蹤我的動物</button>​</NavLink>
       </div>
     
     </div>
@@ -114,20 +118,22 @@ export default function Home() {
 
   { 
     //守護動物
+  
   <section className="map-bg-img">
     <div className="container">
 
 
     <div className="row d-flex justify-content-between align-items-center">
 
-      <div className="col-auto col-md-6 pb-24">
-        <img className="logos" src="https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1770488942942.png" alt="首頁動物地圖"/>
+      <div className="colnpm run build
+      col-lg-6 pb-24">
+        <img className="logos w-100" src={mapImg} alt="首頁動物地圖"/>
       </div>
 
-      <div className="col col-md-5">
+      <div className="col col-lg-5">
         <h2 className="mb-0 title-text">守護​動物​的​每​一​步​</h2>
 
-        <div className="fs-16 body-text pt-20 pt-md-32 mb-32 mb -md-48">
+        <div className="fs-16 body-text pt-20 pt-lg-32 mb-32 mb -lg-48">
           <p className="mb-12">透每​次​進行​動物​追蹤​都​會觸發 Pawarm Protection P​ing ​訊號。</p>
 
           <p className="mb-12">根據​我​們​合作​夥伴​制定​的​安全​規程，​訊號會​顯示​每​隻​動物​獨特追蹤路徑，​路徑​可能​是​即時​更新、​延遲​更新​或​歷史​記錄。</p>
@@ -171,6 +177,7 @@ export default function Home() {
 
   {
     //活動資訊
+    
     <section className="bgImg-postion">
       <img className="bgImg-absolute" src={bgActivity} alt="activity-BG"/>
 

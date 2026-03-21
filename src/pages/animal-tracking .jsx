@@ -4,69 +4,49 @@ import { useNavigate } from "react-router";
 import '../style/_fonts.scss';
 import "../style/all.scss";
 import guardAnimalImg from '../image/track-img/guradAnimal.png';
-import waveUp from '../image/track-img/wave-up.png';
-import waveDown from '../image/track-img/wave-down.png';
+import { useAuth } from "../hook/useAuth";
+import request from "../utils/request";
+import AnimalIntro from '../components/AnimalIntro';
+import AnimalNews from '../components/AnimalNews';
+import AnimalAsso from '../components/AnimalAsso';
+import loveIcon from '../image/love.svg'; 
 
-import { NavLink } from 'react-router-dom';
-const API_BASE = import.meta.env.VITE_URL;
+// const API_BASE = import.meta.env.VITE_URL;
 const API_PATH = import.meta.env.VITE_PATH;
 
 
 function AnimalTracking() {
-
-  const [products , setProducts] = useState([]);
+  useAuth();
   const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentAssoIndex, setCurrentAssoIndex] = useState(1);
 
-
-  // const autoLogin = async () =>{
-  //   try {
-  //       // e.preventDefault();
-  //       const response = await axios.post(`${API_BASE}/admin/signin`,formData)
-  //       console.log(response.data);
-  //       const { token, expired} = response.data;
-  //       document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-  //       axios.defaults.headers.common['Authorization'] = token;
-  //       getArticles();
-
-
-  //   } catch (error) {
-  //       // setIsAuth(false);
-  //       console.log(error.response)
-  //   }
-  // }
-
   const getArticles = async ()=>{
     try {
-      const response = await axios.get(`${API_BASE}/api/${API_PATH}/admin/articles`)
-      
+      const response = await request.get(`/api/${API_PATH}/admin/articles`); //利用request來取得token
       console.log('文章內容:',response.data)
       if (response.data.success) {
             setArticles(response.data.articles); 
           }
 
     } catch (error) {
-      console.log(error.response);
+      console.log("資料抓取失敗",error.response);
     }
   };
   
   useEffect(()=>{
+    getArticles();
+  },[])
 
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("hexToken="))
-      ?.split("=")[1];
-    if (token){
-      axios.defaults.headers.common['Authorization'] = token;
-      getArticles();
-    } else{
-      navigate("/Login");
+  useEffect(() => {
+  // 當 currentIndex (動物) 改變時，手動將機構設回 1
+  setCurrentAssoIndex(1);
+  
+}, [currentIndex]); // <--- 監聽動物索引的變化
 
+  const currentAnimal = articles[currentIndex] || {};
 
-    }
-  },[navigate])
   return (
     <div className="animal-tracking-page overflow-hidden">
       <div>
@@ -103,8 +83,8 @@ function AnimalTracking() {
         {articles.length > 0 && ( 
           <div className='container d-flex position-relative pb-120 px-12 px-xl-0 justify-content-xl-start justify-content-center'>
             <img 
-              src={articles[currentIndex]?.icon_image} 
-              alt={articles[currentIndex]?.title} 
+              src={currentAnimal?.icon_image}
+              alt={currentAnimal?.title}
               className='img-fluid'
             />
             <img 
@@ -115,205 +95,39 @@ function AnimalTracking() {
           </div>
         )}
       </div>
-      
-      <div className="pt-120 container d-xl-flex d-block justify-content-between px-12 px-xl-0">
-        <p className='text-serif fs-48 title-underline ' >{articles[currentIndex]?.title}的移動路徑</p>
-        <p className='mt-auto d-flex fs-20 text-secondary justify-content-end '><img src="src\image\love.svg" alt="love-icon" className='love-size mt-auto'/>20000人追蹤中</p>
-      </div>
-      <div className='d-flex justify-content-center mt-32 pb-120 w-100  overflow-x-auto hide-scrollbar '>
-        <img src={articles[currentIndex]?.map} alt="map" className='flex-shrink-0'/>
-      </div>
-      <div className="overflow-hidden">
-        <img src={waveUp} alt="wave-up" className='w-100 d-block'/>
-        <div className='bg-secondary-50 py-120 '>
-          <div className='container  px-12 px-xl-0 '>
-            <p className='text-serif fs-48 title-underline' >{articles[currentIndex]?.title}介紹</p>
-            <div className='row g-48 px-xxl-0 px-12 d-flex '>
-              <div className="col-xl-4 d-flex flex-column">
-                <img src={articles[currentIndex]?.image_1} alt="description-1" className='w-100 description-img-max mx-auto mx-xl-0'/>
-                <h4 className='fw-700 fs-24 text-secondary-900 pt-8'>{articles[currentIndex]?.subject_1}​</h4>
-                <p className='fw-500 fs-20 text-secondary-500'>{articles[currentIndex]?.content_1}​</p>   
-              </div>
-              <div className="col-xl-4  d-flex flex-column">
-                <img src={articles[currentIndex]?.image_2} alt="description-2" className='w-100 description-img-max mx-auto mx-xl-0'/>
-                <h4 className='fw-700 fs-24 text-secondary-900 pt-8'>{articles[currentIndex]?.subject_2}​​</h4>
-                <p className='fw-500 fs-20 text-secondary-500'>{articles[currentIndex]?.content_2}​</p>
-              </div>
-              <div className="col-xl-4 d-flex flex-column">
-                <img src={articles[currentIndex]?.image_3} alt="description-3" className='w-100 description-img-max mx-auto mx-xl-0'/>
-                <h4 className='fw-700 fs-24 text-secondary-900 pt-8'>{articles[currentIndex]?.subject_3}</h4>
-                <p className='fw-500 fs-20 text-secondary-500'>{articles[currentIndex]?.content_3}​​</p>
-              </div>
-            </div>
-        </div>
-        </div>
-        <img src={waveDown} alt="wave-down" className='w-100 d-block' />
-      </div>
-      <div className="pt-120 container px-12 px-xl-0">
-        <p className='text-serif fs-48 title-underline' >{articles[currentIndex]?.title}保育機構</p>
-      </div>
-      <div className="pt-32 container px-12 px-xl-0">
-        <div className='d-flex flex-nowrap overflow-x-auto  pb-2 hide-scrollbar'>
-          {[1, 2, 3].map((num) => {
-            const name = articles[currentIndex]?.[`assoName_${num}`];
-            
-            // 如果該欄位有名字才顯示按鈕
-            return name ? (
-              <button 
-                key={num}
-                className={`btn flex-shrink-0 me-24 py-8 px-24 text-sans border-0 
-                  ${currentAssoIndex === num 
-                    ? 'btn-filled-active text-gray-900' // 選中樣式
-                    : 'btn-secondary-50 text-gray-500'   // 未選中樣式
-                  }`}
-                onClick={() => setCurrentAssoIndex(num)} // 點擊時切換為 1, 2 或 3
-              >
-                {name}
-              </button>
-            ) : null;
-          })}
-          
-        </div>
-        <div className=' height-360 mt-32 px-48 '>
-          <div className='row h-100 d-flex justify-content-center align-items-center'>
-            <div className="col-lg-6 d-flex justify-content-center ">
-              {/* <img src={articles[currentIndex]?.[`assoImg_${currentAssoIndex}`]} className="" alt="logo" /> */}
-              <a 
-              href={articles[currentIndex]?.[`assohref_${currentAssoIndex}`]} // 動態取得 assohref_X
-              target="_blank" // 讓連結在「新分頁」打開
-              rel="noopener noreferrer" // 加上 target="_blank" 時，為了安全性和性能，建議補上這個
-              className="d-block" // 確保 a 標籤跟 div 一樣寬，方便點擊
-              >
-                {/* 2. 把原本的 img 放進去 */}
-                <img 
-                  src={articles[currentIndex]?.[`assoImg_${currentAssoIndex}`]} // 保持原本的圖片路徑
-                  className="img-fluid" // [選填] Bootstrap class，確保圖片在小螢幕時會自動縮放
-                  alt={articles[currentIndex]?.[`assoName_${currentAssoIndex}`] || "logo"} // [選填] 建議把 alt 改為對應的機構名稱，SEO 更好
-                />
-              </a>
-            </div>
-
-            <div className="col-lg-6 ">
-              <h4 className='text-gray-900 fw-700 fs-24 mb-16'>{articles[currentIndex]?.[`assoName_${currentAssoIndex}`]}</h4>
-              <p className='fw-500 fs-20 text-secondary-500 mb-0'>
-                {articles[currentIndex]?.[`assoSubject_${currentAssoIndex}`]}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className='container pt-32  px-12 px-lg-0 pb-48 pb-lg-120'>
-        <div className="row gx-20 gy-20 gx-lg-48 gy-lg-48">
-          {/* <div className="col-lg-6 ">
-            <div className="d-flex align-items-center justify-content-start shadow rounded  bg-secondary-50">
-              <img
-                src="src/image/track-img/leopard-cat-conservation-logo-240.png"
-                alt="conservation-1"
-                className="Asso-size "
-              />
-              <div className='px-12 py-12 px-lg-36'>
-                <p className="mb-12 text-secondary-300 fw-400 fs-16 ">2025 年 12 月 15 日</p>
-                <p className="fw-bold mb-12 text-secondary-900 fs-20">臺灣石虎保育協會 11 月工作報告 & 捐款徵信</p>
-                <p className="fs-18 fw-400 text-secondary-500">感謝虎友們對石虎的關心與支持，馬上來看看協會 11 月的工作成果吧！</p>
-              </div>
-            </div>
+      {articles.length > 0 && (
+        <>
+          <div className="pt-120 container d-xl-flex d-block justify-content-between px-12 px-xl-0">
+            <p className='text-serif fs-48 title-underline'>
+              {currentAnimal?.title}的移動路徑
+            </p>
+            <p className='mt-auto d-flex fs-20 text-secondary justify-content-end '>
+              <img src={loveIcon} alt="love-icon" className='love-size mt-auto'/>
+              20000人追蹤中
+            </p>
           </div>
 
-          <div className="col-lg-6 ">
-            <div className="d-flex align-items-center justify-content-start shadow rounded  bg-secondary-50">
-              <img
-                src="src/image/track-img/leopard-cat-conservation-news-2.png"
-                alt="conservation-2"
-                className="Asso-size "
-              />
-              <div className='px-12 py-12 px-lg-36'>
-                <p className="mb-12 text-secondary-300 fw-400 fs-16">2025 年 12 月 1 日</p>
-                <p className="fw-bold mb-12 text-secondary-900 fs-20">石虎 × 臺灣白海豚 保育｜新春公益捐款回饋</p>
-                <p className="fs-18 fw-400 text-secondary-500">捐款 285 元，領取限量春聯與紅包袋，包個別具意義的紅包給石虎與牠的好朋友吧！</p>
-              </div>
-            </div>
+          <div className='d-flex justify-content-center mt-32 pb-120 w-100 overflow-x-auto hide-scrollbar '>
+            {/* 只有當 currentAnimal.map 真的有網址時，才渲染圖片 */}
+            {currentAnimal?.map ? (
+              <img src={currentAnimal?.map} alt="map" className='flex-shrink-0'/>
+            ) : (
+              <div className="text-secondary-300">地圖資料載入中...</div>
+            )}
           </div>
+        </>
+      )}
+      <AnimalIntro currentAnimal={currentAnimal} />
+      <AnimalAsso 
+        currentAnimal={currentAnimal} 
+        currentAssoIndex={currentAssoIndex} 
+        setCurrentAssoIndex={setCurrentAssoIndex} 
+      />
 
-          <div className="col-lg-6 ">
-            <div className="d-flex align-items-center justify-content-start shadow  rounded bg-secondary-50">
-              <img
-                src="src/image/track-img/leopard-cat-conservation-news-3.png"
-                alt="conservation-3"
-                className="Asso-size"
-              />
-              <div className='px-12 py-12 px-lg-36'>
-                <p className="mb-12 text-secondary-300 fw-400 fs-16">2025 年 11 月 15 日</p>
-                <p className="fw-bold mb-12 text-secondary-900 fs-20">對野生動物友善的標章 & 它的產地</p>
-                <p className="fs-18 fw-400 text-secondary-500">近日「友善石虎農作標章」走進大眾視野，相信虎友們一定摩拳擦掌，想用新台幣支持友善農作。</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-6 ">
-            <div className="d-flex align-items-center justify-content-start shadow rounded bg-secondary-50">
-              <img
-                src="src/image/track-img/leopard-cat-conservation-news-4.png"
-                alt="conservation-4"
-                className="Asso-size "
-              />
-              <div className='px-12 py-12 px-lg-36'>
-                <p className="mb-12 text-secondary-300 fw-400 fs-16">2025 年 10 月 27 日</p>
-                <p className="fw-bold mb-12 text-secondary-900 fs-20">石虎重要廊道植被遭清空？！</p>
-                <p className="fs-18 fw-400 text-secondary-500">50 隻以上的石虎會利用的重要環境——苗栗後龍溪至西湖溪的高灘地，整片植被遭清理一空😱</p>
-              </div>
-            </div>
-          </div> */}
-
-          {[1, 2, 3, 4].map((num) => {
-            // 1. 動態組合 Key 名稱
-            const newsDate = articles[currentIndex]?.[`newsDate_${currentAssoIndex}_${num}`];
-            const newsSubject = articles[currentIndex]?.[`newsSubject_${currentAssoIndex}_${num}`];
-            const newsContent = articles[currentIndex]?.[`newsContent_${currentAssoIndex}_${num}`];
-            const newsImg = articles[currentIndex]?.[`newsImg_${currentAssoIndex}_${num}`];
-            const newsHref = articles[currentIndex]?.[`newshref_${currentAssoIndex}_${num}`];
-
-                        // 2. 只有當標題存在時，才渲染這則新聞卡片
-                        return newsSubject ? (
-                          <div className="col-lg-6" key={num}>
-                            <div className="d-flex align-items-center justify-content-start shadow rounded bg-secondary-50 h-100">
-                              {/* 新聞圖片：套用你剛設定的縮放裁切 CSS */}
-                              <a 
-                                href={articles[currentIndex]?.[`newshref_${currentAssoIndex}_${num}`]} // 關鍵：三重動態綁定網址
-                                target="_blank" // 新分頁打開
-                                rel="noopener noreferrer" // [安全性配置
-                                className="d-flex align-items-center justify-content-start shadow rounded bg-secondary-50 h-100 text-decoration-none" // 保持原本的 Flex 佈局，並移除超連結下底線
-                                style={{ cursor: 'pointer' }} //手型游標
-                              >
-                                {/* 新聞圖片：套用你剛設定的縮放裁切 CSS */}
-                                <img
-                                  src={newsImg} // 動態取得 newsImg_X_X 
-                                  alt={articles[currentIndex]?.[`newsSubject_${currentAssoIndex}_${num}`] || `news-${num}`} 
-                                  className="Asso-size object-fit-cover"
-                                  style={{ width: '240px', height: '240px', flexShrink: 0 }}
-                                />
-                                <div className='px-12 py-12 px-lg-36'>
-                                  <p className="mb-12 text-secondary-300 fw-400 fs-16">
-                                    {newsDate}
-                                  </p>
-                                  <p className="fw-bold mb-12 text-secondary-900 fs-20">
-                                    {newsSubject}
-                                  </p>
-                                  <p className="fs-18 fw-400 text-secondary-500">
-                                    {/* 加上 slice 控制字數*/}
-                                    {newsContent?.length > 50 ? `${newsContent.slice(0, 50)}...` : newsContent}
-                                  </p>
-                                </div>
-                                
-                              </a>
-
-                            </div>
-                          </div>
-                        ) : null;
-                      })}
-        </div>
-      </div>
- 
-
+      <AnimalNews 
+        currentAnimal={currentAnimal} 
+        currentAssoIndex={currentAssoIndex} 
+      />
     </div>
   );
 }

@@ -91,6 +91,14 @@
     }
 }
 
+.color-dot {
+    width: 40px;       /* 小球直徑 */
+    height: 40px;
+    border-radius: 50%; /* 變圓形 */
+    display: inline-block;
+    flex-shrink: 0;
+}
+
 
 
 //手機板
@@ -147,6 +155,11 @@
     img {
     max-width: 280px;
     }
+}
+
+.color-dot {
+    width: 16px;
+    height: 16px;
 }
 
 

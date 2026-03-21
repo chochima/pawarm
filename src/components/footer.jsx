@@ -14,7 +14,7 @@ export default function Footer() {
   <div className="container text-sans gap-48">
   <div className="row">
 
-    <div className="col-12 col-md-6 px-md-0 footer-style">
+    <div className="col-12 col-md-6 footer-style">
       <h1><NavLink to="/"><img src={logoPawarm} alt="pawarm LOGO" /></NavLink></h1>
       
       <div className="col align-self-center ps-0 pe-0 pb-48 footer-style">
@@ -38,7 +38,7 @@ export default function Footer() {
     </div>
     
 
-    <div className="col col-md-6 px-md-0">
+    <div className="col col-md-6">
       <h2 className="fw-700 mb-20">訂閱電子報</h2>
       <div className="d-flex flex-column flex-md-row mb-3 email-input">
         <input type="email" className="form-control fw-500 eNews" id="eNewsLetterEmail" aria-describedby="inputENewsLetterEmail" placeholder="請輸入 E-mail"/>
