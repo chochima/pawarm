@@ -38,7 +38,7 @@ export default function Home() {
         <p className="body-text pt-20 pt-md-32 px-0 mb-24 mb-md-48">你​的​每​一​次​購買，​都​是​對​動物​保育​的​貢獻​。​<br/>
         透過​真實​動物​追蹤，​見證​生命​的​軌跡。​</p>
 
-        <button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-14 py-md-16"><NavLink to="products">選擇我的動物​</NavLink></button>
+        <NavLink to="products"><button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-14 py-md-16">選擇我的動物</button>​</NavLink>
       </div>
     
     </div>
@@ -79,7 +79,7 @@ export default function Home() {
 
         <p className="body-text pt-20 pt-md-32 mb-24  mb-md-48">透過​真實​動物​追蹤，​不​只​能​看到​牠們​的​名字、​故事​和​生活​軌跡，​也​能​親眼​看見​自己​的​支持​如何​帶來​改變。​</p>
 
-        <button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-12 py-md-16"><NavLink to="/">我們的里程碑</NavLink></button>
+        <NavLink to="milestone"><button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-12 py-md-16">我們的里程碑</button></NavLink>
       </div>
 
     </div>
@@ -107,7 +107,7 @@ export default function Home() {
         ​體驗​激動​人心​的​揭密、​精彩​的​旅程​，​<br/>
         ​​為​全球​保育​工作​做出​貢​獻​。​</p>
 
-        <button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-12 py-md-16"><NavLink to="animaltracking">追蹤我的動物​</NavLink></button>
+        <NavLink to="animaltracking"><button type="button" className="btn btn-outline-primary-500 btn-text btn-outline fs-14 px-36 px-md-44 py-12 py-md-16">追蹤我的動物</button>​</NavLink>
       </div>
     
     </div>
@@ -125,7 +125,8 @@ export default function Home() {
 
     <div className="row d-flex justify-content-between align-items-center">
 
-      <div className="col col-lg-6 pb-24">
+      <div className="colnpm run build
+      col-lg-6 pb-24">
         <img className="logos w-100" src={mapImg} alt="首頁動物地圖"/>
       </div>
 
