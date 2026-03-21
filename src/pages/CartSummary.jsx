@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from "react-router";
 import toast from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 const CartSummary = ({ 
   cart, 
@@ -11,6 +12,8 @@ const CartSummary = ({
   applyCoupon, 
   removeCoupon 
 }) => {
+const navigate = useNavigate();
+
   return (
     <div className="col-lg-3">
       <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護計畫</div>
@@ -93,13 +96,20 @@ const CartSummary = ({
           </NavLink>
         ) : (
           <button 
-            onClick={() => {
-              toast.error('守護生命前，請先登入會員', { icon: '👤' });
-            }}
-            className="btn-filled bg-gray-400 text-white fw-bold fs-18 px-44 py-16 text-center border-0 cursor-not-allowed"
-          >
-            請先登入會員
-          </button>
+      onClick={() => {
+        toast.error('守護生命前，請先登入會員', { 
+          icon: '👤',
+          duration: 2000 
+        });
+        setTimeout(() => {
+          navigate('/login');
+        }, 1200);
+      }}
+      className="btn-filled bg-gray-400 text-white fw-bold fs-18 px-44 py-16 text-center border-0"
+      style={{ cursor: 'pointer' }} // 🚩 既然可以點擊跳轉，建議拿掉原本的 cursor-not-allowed
+    >
+      請先登入會員
+    </button>
         )}
 
         {/* 保育贊助說明 */}

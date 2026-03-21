@@ -4,7 +4,7 @@ import CheckoutStepper from "../components/Stepper";
 import PartnerSection from "../components/RelatedSection";
 import MechanismLogos from "../components/MechanismLogos";
 import CartList from "../components/CartList";
-import CartSummary from "./CartSummary";// 記得把右側 Summary 也拆出去
+import CartSummary from "./CartSummary";
 
 const mechanismImages = [
   { name: '台北市立動物園', imageUrl: "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1771161922826.png" },

@@ -54,22 +54,9 @@ function MemberCenter() {
                 <button
                     className="btn btn-sm btn-danger px-3 text-white"
                     onClick={() => {
-                        // 1. 關閉確認視窗
                         toast.dismiss(t.id);
-                        
-                        // 2. 執行 Redux 的 logout (裡面已包含刪除 Cookie)
                         dispatch(logout());
-                        
-                        // 3. 清除 Axios
                         delete axios.defaults.headers.common.Authorization;
-
-                        // 4. 顯示成功訊息 (由 App.jsx 的 Toaster 渲染)
-                        toast.success("已成功登出", {
-                            duration: 2000,
-                            position: 'top-center',
-                        });
-
-                        // 5. 延遲跳轉
                         setTimeout(() => navigate('/Login'), 1000);
                     }}
                 >確定</button>
