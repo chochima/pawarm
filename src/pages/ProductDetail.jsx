@@ -79,7 +79,7 @@ const ProductDetail = () => {
   const handleBuyNow = async()=>{
     await addToCart();
     toast.success('已加入守護清單，準備前往結帳！')
-    navigate("/checkout")
+    navigate("/carts")
   }
   const visibleReviews = showAllReviews ? data.reviews : data.reviews.slice(0, 3);
   return (
