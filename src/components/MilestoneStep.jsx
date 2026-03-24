@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import mileage from "../services/mileage.json";
 
 
-import iconMiliDot from "../image/icon-miliDot.png";
 import iconMiliDotMob from "../image/icon-miliDot-mob.png";
+import iconMiliDot from "../image/icon-miliDot.png";
 import bgMileVector from "../image/mile-Vector.png";
 
 

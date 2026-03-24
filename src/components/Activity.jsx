@@ -1,4 +1,4 @@
-import React, { act, useState } from "react";
+import { useState } from "react";
 import actitiveData from "../services/activity.json";
 
 const actitive = actitiveData;

@@ -1,16 +1,13 @@
 import React from "react";
-import { useSelector , useDispatch} from "react-redux";
-import { NavLink ,Outlet} from "react-router"
-import ImgUpload from "../components/ImgUpload";
-import ImgLibrary from "../components/ImgLibrary";
+import { NavLink } from "react-router";
 import CoBrand from "../components/CoBrand";
-import MilestoneStep from "../components/MilestoneStep";
 import MilePie from "../components/MilePie";
+import MilestoneStep from "../components/MilestoneStep";
 
 
-import milistoneIMG from "../image/milistone.png";
-import bgMilestone from "../image/bg-milestone.png";
 import bgMilestoneMob from "../image/bg-milestone-mobile.png";
+import bgMilestone from "../image/bg-milestone.png";
+import milistoneIMG from "../image/milistone.png";
 
 
 

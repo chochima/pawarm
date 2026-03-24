@@ -1,9 +1,8 @@
 
-import { useSelector , useDispatch} from "react-redux";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router";
 import { createAsyncGetCart } from "../slice/cartSlice";
-import { NavLink ,Outlet} from "react-router"
-import { setToken } from "../slice/authSlice";
 
 import iconLogin from "../image/icon-login.png";
 import iconUser from "../image/icon-user.png";

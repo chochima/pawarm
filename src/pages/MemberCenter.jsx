@@ -1,14 +1,13 @@
 import axios from "axios";
-import { useState, useEffect, useMemo } from "react";
-import { useNavigate, Link } from 'react-router-dom';
-import '../style/_fonts.scss';
-import "../style/all.scss";
-import notificationsData from '../data/notifications.json'; 
+import { useEffect, useMemo, useState } from "react";
 import { toast, Toaster } from 'react-hot-toast';
 import { useDispatch } from "react-redux";
-import { setToken } from "../slice/authSlice";
-import { logout } from "../slice/authSlice";
+import { Link, useNavigate } from 'react-router-dom';
+import notificationsData from '../data/notifications.json';
 import iconUser from "../image/icon-user.png";
+import { logout } from "../slice/authSlice";
+import '../style/_fonts.scss';
+import "../style/all.scss";
 
 const API_BASE = import.meta.env.VITE_URL;
 const API_PATH = import.meta.env.VITE_PATH;

@@ -1,17 +1,13 @@
 import React from "react";
-import { useSelector , useDispatch} from "react-redux";
-import { NavLink ,Outlet} from "react-router"
-import ImgUpload from "../components/ImgUpload";
-import ImgLibrary from "../components/ImgLibrary";
+import { NavLink } from "react-router";
 import Activity from "../components/activity";
 import LogoSwiper from "../components/LogoSwiper";
-import CardSingle from "../components/CardSingle";
 import ProductSwiper from "../components/ProductSwiper";
 
-import bgProduct from "../image/bg-product.png";
 import bgActivity from "../image/bg-activity.png";
-import iconShield from "../image/icon-shield.png";
+import bgProduct from "../image/bg-product.png";
 import iconGPS from "../image/icon-GPS.png";
+import iconShield from "../image/icon-shield.png";
 import mapImg from "../image/map-img.png";
 
 

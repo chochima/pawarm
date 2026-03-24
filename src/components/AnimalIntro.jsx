@@ -1,7 +1,6 @@
 // AnimalIntro.jsx
-import React from 'react';
-import waveUp from '../image/track-img/wave-up.png';
 import waveDown from '../image/track-img/wave-down.png';
+import waveUp from '../image/track-img/wave-up.png';
 
 // 我們把需要的資料 (currentAnimal) 透過 props 傳進來
 function AnimalIntro({ currentAnimal }) {

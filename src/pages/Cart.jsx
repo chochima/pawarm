@@ -1,9 +1,9 @@
+import CartList from "../components/CartList";
+import MechanismLogos from "../components/MechanismLogos";
+import PartnerSection from "../components/RelatedSection";
+import CheckoutStepper from "../components/Stepper";
 import { useCart } from "../hook/useCart";
 import { currency } from "../utils/filter";
-import CheckoutStepper from "../components/Stepper";
-import PartnerSection from "../components/RelatedSection";
-import MechanismLogos from "../components/MechanismLogos";
-import CartList from "../components/CartList";
 import CartSummary from "./CartSummary";
 
 const mechanismImages = [

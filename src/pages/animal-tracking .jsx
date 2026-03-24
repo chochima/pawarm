@@ -1,15 +1,14 @@
-import { useState ,useEffect } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import '../style/_fonts.scss';
-import "../style/all.scss";
-import guardAnimalImg from '../image/track-img/guradAnimal.png';
-import { useAuth } from "../hook/useAuth";
-import request from "../utils/request";
+import AnimalAsso from '../components/AnimalAsso';
 import AnimalIntro from '../components/AnimalIntro';
 import AnimalNews from '../components/AnimalNews';
-import AnimalAsso from '../components/AnimalAsso';
-import loveIcon from '../image/love.svg'; 
+import { useAuth } from "../hook/useAuth";
+import loveIcon from '../image/love.svg';
+import guardAnimalImg from '../image/track-img/guradAnimal.png';
+import '../style/_fonts.scss';
+import "../style/all.scss";
+import request from "../utils/request";
 
 // const API_BASE = import.meta.env.VITE_URL;
 const API_PATH = import.meta.env.VITE_PATH;

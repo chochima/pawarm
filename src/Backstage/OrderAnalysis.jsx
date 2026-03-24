@@ -9,19 +9,6 @@ const OrderAnalysis = () => {
   const [stats, setStats] = useState({ totalRevenue: 0, totalQty: 0, orderCount: 0 });
   const [productRanking, setProductRanking] = useState([]);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/admin/orders`);
-        const orderData = res.data.orders || [];
-        setOrders(orderData);
-        calculateStats(orderData);
-      } catch (err) {
-        console.error("抓取訂單失敗", err);
-      }
-    };
-    fetchOrders();
-  }, []);
 
   const calculateStats = (data) => {
     let revenue = 0;
@@ -59,6 +46,21 @@ const OrderAnalysis = () => {
     
     setProductRanking(sortedRanking);
   };
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/admin/orders`);
+        const orderData = res.data.orders || [];
+        setOrders(orderData);
+        calculateStats(orderData);
+      } catch (err) {
+        console.error("抓取訂單失敗", err);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  
 
   return (
     <div className="container-fluid">

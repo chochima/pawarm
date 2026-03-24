@@ -1,5 +1,4 @@
 // AnimalAsso.jsx
-import React from 'react';
 
 function AnimalAsso({ currentAnimal, currentAssoIndex, setCurrentAssoIndex }) {
   if (!currentAnimal) return null;

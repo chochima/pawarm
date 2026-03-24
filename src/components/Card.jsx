@@ -1,7 +1,7 @@
-import { useState,useEffect } from "react";
-import  axios from 'axios'
-import love from '../image/love.svg'
-import loveFill from '../image/love-fill.svg'
+import axios from 'axios';
+import { useEffect, useState } from "react";
+import loveFill from '../image/love-fill.svg';
+import love from '../image/love.svg';
 //import animalCard from '../image/Animal-Card.svg'
 import AnimalCard from '../image/Animal-Card.svg?react';
 
