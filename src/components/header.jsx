@@ -1,15 +1,15 @@
 
-import { useSelector , useDispatch} from "react-redux";
 import { useEffect } from "react";
-import { NavLink ,Outlet} from "react-router"
-import { createAsyncGetCart } from "../slice/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router";
 import { setToken } from "../slice/authSlice";
+import { createAsyncGetCart } from "../slice/cartSlice";
 import HeaderMobile from "./header-mobile";
 
 import logoPawarm from "../assets/images/pawarm.svg";
 import iconLogin from "../image/icon-login.png";
 import iconUser from "../image/icon-user.png";
-import iconCart from"../image/type=cart.png";
+import iconCart from "../image/type=cart.png";
 
 
 

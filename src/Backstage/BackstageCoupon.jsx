@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import toast from 'react-hot-toast';
 import * as bootstrap from "bootstrap";
 import Pagination from "../components/Pagination";
 import CouponModal from "../components/CouponModal"; 
@@ -14,13 +15,21 @@ const BackstageCoupons = () => {
   const [modalType, setModalType] = useState("");
   
   // 優惠券初始資料結構
-  const [templateData, setTemplateData] = useState({
+  const [templateData, setTemplateData] = useState(()=>({
     title: "",
     is_enabled: 0,
     percent: 100,
     due_date: Math.floor(Date.now() / 1000), // 預設今天
     code: "",
-  });
+  }));
+  const toastConfig = {
+  style: {
+    background: '#333',
+    color: '#fff',
+    borderRadius: '10px',
+  },
+  duration: 2000, // 2秒後自動關閉
+};
 
   const navigate = useNavigate();
 
@@ -80,8 +89,9 @@ const BackstageCoupons = () => {
       await axios[method](url, couponData);
       closeModal();
       getCouponData();
+      toast.success("成功", toastConfig);
     } catch (err) {
-      alert(modalType === "edit" ? "更新失敗" : "新增失敗");
+      toast.success(modalType === "edit" ? "更新失敗" : "新增失敗", toastConfig);
     }
   };
 

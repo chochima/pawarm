@@ -1,9 +1,9 @@
 
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import love from '../image/love.svg';
 import loveFill from '../image/love-fill.svg';
+import love from '../image/love.svg';
 
 const PartnerSection = ({ 
   randomProducts, 

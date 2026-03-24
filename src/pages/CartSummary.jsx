@@ -1,6 +1,5 @@
-import React from 'react';
-import { NavLink } from "react-router";
 import toast from 'react-hot-toast';
+import { NavLink } from "react-router";
 import { useNavigate } from "react-router-dom";
 
 const CartSummary = ({ 

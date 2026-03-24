@@ -1,5 +1,4 @@
 // AnimalNews.jsx
-import React from 'react';
 
 function AnimalNews({ currentAnimal, currentAssoIndex }) {
   // 防禦性檢查：如果沒有資料就先不渲染

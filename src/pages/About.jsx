@@ -1,6 +1,5 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
 import 'animate.css';
+import { NavLink } from 'react-router-dom';
 
 const About = () => {
   // 核心價值：直接對應商品特色

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router";
 import CheckoutStepper from "../components/Stepper";
 
 const { VITE_URL, VITE_PATH } = import.meta.env;

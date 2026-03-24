@@ -1,13 +1,13 @@
 
-import { useState, useEffect} from "react";
-import  axios from 'axios'
+import axios from 'axios';
+import { useEffect, useState } from "react";
 
 
 
 
-import { currency} from"../utils/filter";
-import CheckoutStepper from "../components/Stepper";
 import CheckoutForm from "../components/CheckoutForm";
+import CheckoutStepper from "../components/Stepper";
+import { currency } from "../utils/filter";
 
 
 
@@ -20,17 +20,6 @@ const Checkout=()=>{
   const [cart, setCart] = useState([]);
   const [couponCode, setCouponCode] = useState("");
   
-
-
-
-  
- 
-
-
-  
-
-
-
 
   //購物車
   const getCart = async () => {

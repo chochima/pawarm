@@ -1,6 +1,5 @@
 import React from "react";
-import { useSelector , useDispatch} from "react-redux";
-import { NavLink ,Outlet} from "react-router"
+import { NavLink } from "react-router";
 
 import logoPawarm from "../assets/images/pawarm.svg";
 

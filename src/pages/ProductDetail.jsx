@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router"; 
-import { useNavigate } from "react-router";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { createAsyncGetCart } from "../slice/cartSlice";
-import { NavLink } from "react-router";
+import { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
+import { useDispatch } from "react-redux";
+import { NavLink, useNavigate, useParams } from "react-router";
+import { createAsyncGetCart } from "../slice/cartSlice";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
+import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
@@ -79,7 +77,7 @@ const ProductDetail = () => {
   const handleBuyNow = async()=>{
     await addToCart();
     toast.success('已加入守護清單，準備前往結帳！')
-    navigate("/checkout")
+    navigate("/carts")
   }
   const visibleReviews = showAllReviews ? data.reviews : data.reviews.slice(0, 3);
   return (
