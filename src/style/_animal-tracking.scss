@@ -1,38 +1,39 @@
-.Asso-size{
-/* 1. 限制容器大小 */
-    width: 240px;
-    height: 240px;
-
-    /* 2. 核心指令：等比例縮放並填滿，多出的裁切 */
-    object-fit: cover;
-
-    /* 3. 選用：確保圖片置中裁切 (預設就是 center) */
-    object-position: center;
-
-    /* 4. 如果你想讓它在 RWD 時縮小，可以改用 max-width */
-    max-width: 100%;
+// 圖片尺寸控制
+.Asso-size {
+  width: 240px;
+  height: 240px;
+  object-fit: cover;
+  object-position: center;
+  max-width: 100%;
 }
 
+.description-img-max {
+  max-width: 400px;
+  max-height: 244px;
+  width: 100%;
+  height: 100%;
+}
 
-.hide-scrollbar { //隱藏滾動條
+.love-size {
+  width: 20px;
+  height: 20px;
+}
+
+// 隱藏捲軸
+.hide-scrollbar {
   &::-webkit-scrollbar {
     display: none;
   }
-  -ms-overflow-style: none;  
-  scrollbar-width: none;  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
-.description-img-max{
-    max-width: 400px;
-    max-height: 244px;
-    width: 100%;
-    height: 100%;
-}
 
-
-.btn-filled-primary { //按鈕效果
+// 按鈕效果
+.btn-filled-primary {
   transition: background-color .2s ease, transform .2s ease;
-   @include media-breakpoint-up(md) {
+
+  @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 
@@ -47,6 +48,7 @@
     background-color: $primary-50 !important;
     color: $primary-500 !important;
   }
+
   &:disabled,
   &.disabled {
     background-color: $primary-50 !important;
@@ -56,96 +58,72 @@
     opacity: 0.65;
   }
 }
-.btn-filled-active{
-    background-color: $primary-50 !important;
-    color: $primary-500 !important;
+
+.btn-filled-active {
+  background-color: $primary-50 !important;
+  color: $primary-500 !important;
 }
 
+// 標題底線裝飾
 .title-underline {
   position: relative;
-  display: inline-block; 
-  padding-bottom: 24px; 
+  display: inline-block;
+  padding-bottom: 24px;
 
   &::after {
-    content: ""; 
+    content: "";
     position: absolute;
     left: 0;
     bottom: 0;
-    
-    width: 148px;         
-    height: 2px;        
-    background-color: #B28440; 
-    
+    width: 148px;
+    height: 2px;
+    background-color: #B28440;
+  }
+
+  @media (max-width: 1200px) {
+    padding-bottom: 20px;
+
+    &::after {
+      width: 120px;
+    }
   }
 }
-.py-58{
-    padding-top: 58px;
-    padding-bottom: 58px;
+
+// 佈局與位置控制
+.py-58 {
+  padding-top: 58px;
+  padding-bottom: 58px;
 }
 
-.height-360{
-    height: 360px;
+.height-360 {
+  height: 360px;
+
+  @media (max-width: 992px) {
+    min-height: 360px;
+    height: auto;
+  }
 }
 
-.photo-size-240{
-    height: 240px;
+.photo-size-240 {
+  height: 240px;
+
+  @media (max-width: 992px) {
+    height: 100px;
+    margin-left: 12px;
+  }
 }
 
-.test-border{
-    border: 1px solid red;
-}
+.photo-position {
+  top: 146px;
+  right: -212px;
+  display: block;
 
-
-.photo-position{
-    top: 146px;
-    right: -212px;
-    display: block;
-}
-
-.love-size{
-    width: 20px;
-    height: 20px;
-}
-
-
-
-@media (max-width: 1200px) {
-
-    .photo-position{
-    top: 146px;
-    right: -212px;
+  @media (max-width: 1200px) {
     display: none;
-    }
-    .title-underline {
-        position: relative;
-        display: inline-block; 
-        padding-bottom: 20px; 
-
-        &::after {
-            content: ""; 
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            
-            width: 120px;         
-            height: 2px;        
-            background-color: #B28440; 
-            
-        }
-    }
+  }
 }
 
-
-@media (max-width: 992px) {
-
-    .height-360{
-        min-height: 360px; // 使用 min-height 而不是 height
-        height: auto;      // 讓內容可以自由撐開
-    }
-
-    
-    .photo-size-240{
-        height: 100px;
-        margin-left: 12px;
-    }
+// 開發調試工具
+.test-border {
+  border: 1px solid red;
 }
