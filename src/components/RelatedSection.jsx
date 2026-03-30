@@ -22,7 +22,7 @@ const PartnerSection = ({
             與牠們相遇：「下一位等著您守護的夥伴」
           </div>
           <div className="row">
-            <div className="col-lg-9 col-12">
+            <div className="col-lg-9">
               
               {/* 手機版 Swiper 容器 */}
               <div className="d-md-none">

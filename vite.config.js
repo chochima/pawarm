@@ -7,7 +7,7 @@ import svgr from 'vite-plugin-svgr'
 export default defineConfig({
   base:process.env.NODE_ENV === 'production' ? '/pawarm/' : '/',
   plugins: [react(),
-     svgr({
+    svgr({
       exportAsDefault: true, 
     }),
   ],

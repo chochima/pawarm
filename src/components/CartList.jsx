@@ -8,7 +8,7 @@ const CartList = ({
   isUpdating 
 }) => {
   return (
-    <div className="col-md-9">
+    <div className="col-xl-9">
       <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護清單</div>
 
       {/* --- 桌機版 --- */}
