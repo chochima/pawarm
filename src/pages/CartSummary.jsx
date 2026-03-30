@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import toast from 'react-hot-toast';
 import { NavLink } from "react-router";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +12,13 @@ const CartSummary = ({
   applyCoupon, 
   removeCoupon 
 }) => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  // 🚩 1. 判斷購物車是否為空
+  const isCartEmpty = !cart.carts || cart.carts.length === 0;
 
   return (
-    <div className="col-lg-3">
+    <div className="col-xl-3">
       <div className="fs-36 fw-700 title-text-cart text-black mb-32">守護計畫</div>
       <div className="bg-gray-50 p-20 d-flex flex-column gap-20">
         
@@ -26,10 +30,10 @@ const navigate = useNavigate();
           </div>
         </div>
 
-        {/* 折扣顯示 (僅在有折扣時出現) */}
+        {/* 折扣顯示 */}
         {cart.final_total !== cart.total && (
-          <div className="d-flex justify-content-between mb-2">
-            <div className="fs-18 lh-base fw-500 text-gray-900">守護回饋碼</div>
+          <div className="d-flex justify-content-between mb-2 text-success">
+            <div className="fs-18 lh-base fw-500">守護回饋碼</div>
             <div className="fs-20 lh-base fw-500">
               -${Math.round(cart.total - cart.final_total).toLocaleString()}
             </div>
@@ -40,7 +44,6 @@ const navigate = useNavigate();
         <div className="mb-4">
           <hr />
           <div className="text-gray-500 mb-8">輸入守護回饋碼</div>
-          
           {cart.final_total !== cart.total ? (
             <div className="d-flex justify-content-between align-items-center px-16 py-8 bg-gray-100 border rounded">
               <div className="fs-16 lh-base text-gray-300">
@@ -61,11 +64,13 @@ const navigate = useNavigate();
                 placeholder="請輸入折扣碼" 
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
+                disabled={isCartEmpty} // 🚩 購物車空時也禁止輸入折扣碼
               />
               <button 
                 className="btn btn-outline-dark" 
                 type="button"
                 onClick={() => applyCoupon(couponCode)}
+                disabled={isCartEmpty || !couponCode}
               >
                 套用
               </button>
@@ -85,30 +90,40 @@ const navigate = useNavigate();
           </div>
         </div>
           
-        {/* 登入檢查與導向按鈕 */}
-        {isLogin ? (
+        {/* 🚩 2. 登入檢查與購物車檢查 */}
+        {!isLogin ? (
+          // 未登入狀態：導向登入
+          <button 
+            type="button"
+            onClick={() => {
+              toast.error('守護生命前，請先登入會員', { 
+                icon: '👤',
+                duration: 2000 
+              });
+              setTimeout(() => navigate('/login'), 1200);
+            }}
+            className="btn-filled bg-gray-400 text-white fw-bold fs-18 px-44 py-16 text-center border-0"
+          >
+            請先登入會員
+          </button>
+        ) : isCartEmpty ? (
+          // 已登入但購物車空：顯示下一步但 disabled
+          <button 
+            type="button"
+            disabled
+            className="btn-filled bg-gray-300 text-white fw-bold fs-18 px-44 py-16 text-center border-0"
+            style={{ cursor: 'not-allowed' }}
+          >
+            購物車尚無品項
+          </button>
+        ) : (
+          // 已登入且有品項：正常進入結帳
           <NavLink 
             to="/checkout"  
             className="btn-filled bg-primary-500 text-white fw-bold fs-18 px-44 py-16 text-center text-decoration-none shadow-sm transition-all"
           >
             下一步
           </NavLink>
-        ) : (
-          <button 
-      onClick={() => {
-        toast.error('守護生命前，請先登入會員', { 
-          icon: '👤',
-          duration: 2000 
-        });
-        setTimeout(() => {
-          navigate('/login');
-        }, 1200);
-      }}
-      className="btn-filled bg-gray-400 text-white fw-bold fs-18 px-44 py-16 text-center border-0"
-      style={{ cursor: 'pointer' }} // 🚩 既然可以點擊跳轉，建議拿掉原本的 cursor-not-allowed
-    >
-      請先登入會員
-    </button>
         )}
 
         {/* 保育贊助說明 */}

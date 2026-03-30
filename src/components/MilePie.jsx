@@ -10,40 +10,40 @@ export default function MilePie() {
     const chartHeight = window.innerWidth < 768 ? 300 : 400; // <768 為手機板
 
     chartRef.current = c3.generate({
-    bindto: "#chart",
+      bindto: "#chart",
 
-    data: {
-      columns: [
-        ["data1", 60],
-        ["data2", 25],
-        ["data3", 10],
-        ["data4", 5]
-      ],
-      type: "donut",
-      colors: {
-        data1: "#B28440",
-        data2: "#B0B0B0",
-        data3: "#3D3D3D",
-        data4: "#dbb54d"
+      data: {
+        columns: [
+          ["data1", 60],
+          ["data2", 25],
+          ["data3", 10],
+          ["data4", 5]
+        ],
+        type: "donut",
+        colors: {
+          data1: "#B28440",
+          data2: "#B0B0B0",
+          data3: "#3D3D3D",
+          data4: "#dbb54d"
+        },
+        onmouseover: function (d) {
+          setActive(d.id);
+        }
       },
-      onmouseover: function (d) {
-        setActive(d.id);
+      legend: {
+        show: false  // 關閉下方顏色圖例
       }
-    },
-    legend: {
-      show: false  // 關閉下方顏色圖例
-    }
-  });
+    });
 
-  const handleResize = () => {
-    const newHeight = window.innerWidth < 768 ? 300 : 400;
-    chartRef.current.resize({ height: newHeight });
-  };
-  window.addEventListener("resize", handleResize);
+    const handleResize = () => {
+      const newHeight = window.innerWidth < 768 ? 300 : 400;
+      chartRef.current.resize({ height: newHeight });
+    };
+    window.addEventListener("resize", handleResize);
 
-  return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
 
-}, []);
+  }, []);
 
   const details = [
     {
@@ -73,52 +73,52 @@ export default function MilePie() {
   ];
 
   return (
-  <div className="row pt-20 pt-md-48 ">
+    <div className="row pt-20 pt-md-48 ">
 
-  {/* chart */}
-  <div className="col-md-6 px-40 py-40">
-    <div id="chart"></div>
-  </div>
+      {/* chart */}
+      <div className="col-md-6 px-40 py-40">
+        <div id="chart"></div>
+      </div>
 
-  {/* accordion */}
-  <div className="col-md-6 px-md-40 py-md-40">
-    <div className="accordion accordion-flush" id="mileAccordion">
-      {details.map((item, index) => {
-        const isOpen =
+      {/* accordion */}
+      <div className="col-md-6 px-md-40 py-md-40">
+        <div className="accordion accordion-flush" id="mileAccordion">
+          {details.map((item, index) => {
+            const isOpen =
         (active === `data${index + 1}` && active !== null) ||
         openItem === index;
 
-        return (
-          <div className="accordion-item border-0" key={item.id}>
-            <h2 className="accordion-header">
-              <button
-                type="button"
-                aria-expanded={isOpen}
-                className={`accordion-button ${!isOpen ? "collapsed" : ""}`}
-                onClick={() =>
-                  setOpenItem(openItem === index ? null : index)
-                }
-              >
-                <span
-                  className="color-dot"
-                  style={{backgroundColor: item.color,}}></span>
-                <span className="title-text-H3 ps-12">{item.title}</span>
-              </button>
-            </h2>
+            return (
+              <div className="accordion-item border-0" key={item.id}>
+                <h2 className="accordion-header">
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    className={`accordion-button ${!isOpen ? "collapsed" : ""}`}
+                    onClick={() =>
+                      setOpenItem(openItem === index ? null : index)
+                    }
+                  >
+                    <span
+                      className="color-dot"
+                      style={{backgroundColor: item.color,}}></span>
+                    <span className="title-text-H3 ps-12">{item.title}</span>
+                  </button>
+                </h2>
 
-            <div
-              className={`accordion-collapse collapse ${isOpen ? "show" : ""}`}
-            >
-              <div className="accordion-body body-text">
-                {item.content}
+                <div
+                  className={`accordion-collapse collapse ${isOpen ? "show" : ""}`}
+                >
+                  <div className="accordion-body body-text">
+                    {item.content}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </div>
+            );
+          })}
+        </div>
+      </div>
 
-</div>
+    </div>
   );
 }

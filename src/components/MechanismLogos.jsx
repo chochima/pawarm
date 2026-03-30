@@ -12,7 +12,7 @@ const MechanismLogos = ({ mechanismImages = [] }) => {
 
           <div className="row">
             {/* 左側 Logo 區域：維持 col-lg-9 比例 */}
-            <div className="col-lg-9 col-12">
+            <div className="col-lg-9">
               <div className="row g-20 g-md-32 align-items-center">
                 {(mechanismImages || []).map((item, index) => (
                   <div className="col-6 col-lg-3" key={index}>

@@ -18,13 +18,13 @@ export const useCart = () => {
   const { token } = useSelector((state) => state.auth);
   const isLogin = !!token;
   const toastConfig = {
-  style: {
-    background: '#333',
-    color: '#fff',
-    borderRadius: '10px',
-  },
-  duration: 2000, // 2秒後自動關閉
-};
+    style: {
+      background: '#333',
+      color: '#fff',
+      borderRadius: '10px',
+    },
+    duration: 2000, // 2秒後自動關閉
+  };
 
   const getCart = async () => {
     try {

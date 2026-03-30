@@ -1,22 +1,22 @@
 import js from '@eslint/js'
-import globals from 'globals'
+import react from 'eslint-plugin-react' // 1. 補上這個匯入
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
+import globals from 'globals'
 
 export default defineConfig([
-  // 1. 忽略路徑 (排除不需要檢查的資料夾)
   globalIgnores(['dist', 'node_modules', 'public']),
   
   {
     files: ['**/*.{js,jsx}'],
     plugins: {
+      'react': react, // 2. 註冊 react 插件
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
     languageOptions: {
       ecmaVersion: 2020,
-      // 同時引入瀏覽器與 Node 環境，解決 process, window, console 報錯
       globals: {
         ...globals.browser,
         ...globals.node,
@@ -28,23 +28,26 @@ export default defineConfig([
         sourceType: 'module',
       },
     },
+    // 3. 告訴 ESLint 如何偵測 React 版本
+    settings: {
+      react: { version: 'detect' },
+    },
     rules: {
-      // 載入 JS 與 React Hooks 基礎規則
       ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules, // 4. 載入 React 基礎規則
+      ...react.configs['jsx-runtime'].rules, // 5. 支援 React 17+ 免寫 import React 的規則
       ...reactHooks.configs.recommended.rules,
       
-      // 🚩 解決 152 個警告：把「未使用變數」設為 warn，不再噴整面黃字
-      'no-unused-vars': 'warn',
+      'indent': ['error', 2],
+      'no-unused-vars': 'error',
+      'react-hooks/set-state-in-effect': 'error',
+      'no-irregular-whitespace': 'error',
+      'no-undef': 'error',
+      'react-refresh/only-export-components': 'warn',
 
-      // 🚩 解決 12 個錯誤：關閉 useEffect 中使用 setState 的強烈限制
-      'react-hooks/set-state-in-effect': 'off',
-
-      // 🚩 解決之前的空白報錯：徹底關閉不規則空白檢查
-      'no-irregular-whitespace': 'off',
-
-      // 其他環境相容性設定
-      'no-undef': 'warn',
-      'react-refresh/only-export-components': 'off',
+      // 🚩 最關鍵的兩行：強制讓 ESLint 認得 JSX 裡的變數使用
+      'react/jsx-uses-react': 'error',
+      'react/jsx-uses-vars': 'error',
     },
   },
 ])

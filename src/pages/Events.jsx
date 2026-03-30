@@ -101,23 +101,23 @@ const Events = () => {
       {/* 3. 數據看板 - 強調「真實性」 */}
       <section className="py-100 bg-success-900 text-white">
         <div className="container">
-            <div className="row g-5 text-center">
-                <div className="col-md-4">
-                    <i className="bi bi-broadcast fs-1 text-warning mb-3 d-block"></i>
-                    <h4 className="fw-bold">24HR</h4>
-                    <p className="opacity-50">棲地影像即時傳輸</p>
-                </div>
-                <div className="col-md-4 border-start border-white border-opacity-10">
-                    <i className="bi bi-people fs-1 text-warning mb-3 d-block"></i>
-                    <h4 className="fw-bold">1,200+</h4>
-                    <p className="opacity-50">參與志工人次</p>
-                </div>
-                <div className="col-md-4 border-start border-white border-opacity-10">
-                    <i className="bi bi-pin-map fs-1 text-warning mb-3 d-block"></i>
-                    <h4 className="fw-bold">42</h4>
-                    <p className="opacity-50">全球監測座標點</p>
-                </div>
+          <div className="row g-5 text-center">
+            <div className="col-md-4">
+              <i className="bi bi-broadcast fs-1 text-warning mb-3 d-block"></i>
+              <h4 className="fw-bold">24HR</h4>
+              <p className="opacity-50">棲地影像即時傳輸</p>
             </div>
+            <div className="col-md-4 border-start border-white border-opacity-10">
+              <i className="bi bi-people fs-1 text-warning mb-3 d-block"></i>
+              <h4 className="fw-bold">1,200+</h4>
+              <p className="opacity-50">參與志工人次</p>
+            </div>
+            <div className="col-md-4 border-start border-white border-opacity-10">
+              <i className="bi bi-pin-map fs-1 text-warning mb-3 d-block"></i>
+              <h4 className="fw-bold">42</h4>
+              <p className="opacity-50">全球監測座標點</p>
+            </div>
+          </div>
         </div>
       </section>
 

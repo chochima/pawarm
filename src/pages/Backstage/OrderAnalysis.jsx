@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { currency } from "../utils/filter";
+import { currency } from "../../utils/filter";
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
 

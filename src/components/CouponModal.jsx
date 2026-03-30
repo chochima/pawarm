@@ -25,8 +25,8 @@ function CouponModal({
               {modalType === "delete"
                 ? "刪除優惠券"
                 : modalType === "edit"
-                ? "編輯優惠券"
-                : "新增優惠券"}
+                  ? "編輯優惠券"
+                  : "新增優惠券"}
             </h5>
             <button
               type="button"
