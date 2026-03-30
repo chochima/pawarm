@@ -1,25 +1,27 @@
-/* 評價摘要區塊 */
+// 1. 評價摘要總覽區 (Review Summary)
 .review-summary {
   background-color: #F9F9F9;
   padding: 40px;
   border-radius: 4px;
 }
 
-/* 金色進度條 */
+// 2. 金色進度條 (Rating Progress Bar)
 .rating-bar {
   height: 8px;
   background-color: #E0E0E0;
   border-radius: 4px;
   flex-grow: 1;
   margin: 0 15px;
-}
-.rating-fill {
-  height: 100%;
-  background-color: #FFB800; /* 星星金 */
-  border-radius: 4px;
+  overflow: hidden; // 🚩 確保內部的 fill 不會超出圓角
+
+  .rating-fill {
+    height: 100%;
+    background-color: #FFB800; // 星星金
+    border-radius: 4px;
+  }
 }
 
-/* 評論圖片 */
+// 3. 評論附圖 (Review Images)
 .review-img {
   width: 80px;
   height: 80px;
@@ -27,17 +29,19 @@
   border-radius: 2px;
 }
 
-/* 修改 Bootstrap 按鈕為你的金色系 */
+// 4. Bootstrap 按鈕覆寫 (Custom Gold Buttons)
 .btn-primary {
   background-color: #B28B45 !important;
   border-color: #B28B45 !important;
   color: #fff !important;
 }
+
 .btn-outline-primary {
   color: #B28B45 !important;
   border-color: #B28B45 !important;
-}
-.btn-outline-primary:hover {
-  background-color: #B28B45 !important;
-  color: #fff !important;
+
+  &:hover {
+    background-color: #B28B45 !important;
+    color: #fff !important;
+  }
 }

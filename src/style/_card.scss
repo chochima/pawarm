@@ -1,0 +1,12 @@
+.product-card {
+  border-radius: 16px;
+  border: 1px solid #eee;
+  background-color: #fff; // 🚩 補上背景色，確保陰影效果正常顯示
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden; // 🚩 確保內部圖片或內容不會超出 16px 圓角
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  }
+}

@@ -24,6 +24,7 @@ function AnimalTracking() {
       const response = await request.get(`/api/${API_PATH}/admin/articles`);
       if (response.data.success) {
         setArticles(response.data.articles);
+
       } else {
         toast.error(response.data.message || '無法取得文章內容');
       }

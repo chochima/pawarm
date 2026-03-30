@@ -1,7 +1,8 @@
-//btn-hover
+// 按鈕效果 (Button Hover & States)
 .btn-filled {
   transition: background-color .2s ease, transform .2s ease;
-    @include media-breakpoint-up(md) {
+
+  @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 
@@ -13,6 +14,7 @@
   &:active {
     transform: translateY(0);
   }
+
   &:disabled,
   &.disabled {
     background-color: #D1D1D1 !important;
@@ -25,8 +27,9 @@
 
 .btn-outline {
   transition: background-color .2s ease, transform .2s ease;
-  border-radius: 0%;
-    @include media-breakpoint-up(md) {
+  border-radius: 0; // 🚩 改為 0
+
+  @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 
@@ -43,34 +46,36 @@
 
 .btn-text {
   transition: background-color .2s ease, transform .2s ease;
-  border-radius: 0%;
-    @include media-breakpoint-up(md) {
+  border-radius: 0;
+
+  @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 
   &:hover {
-    border-bottom: solid 2px $gray-900;
+    border-bottom: 2px solid $gray-900; // 🚩 調整順序為標準寫法
   }
 
   &.selected {
     color: $primary-600 !important;
-    border-bottom: solid 2px $primary-600;
-  
+    border-bottom: 2px solid $primary-600;
   }
 }
+
 .text-link {
   transition: background-color .2s ease, transform .2s ease;
-  border-radius: 0%;
-    @include media-breakpoint-up(md) {
+  border-radius: 0;
+
+  @include media-breakpoint-up(md) {
     font-size: 1.125rem !important;
   }
 
   &:hover {
-    border-bottom: solid 2px $primary-500;
+    border-bottom: 2px solid $primary-500;
   }
 }
 
-//color
+// 顏色工具類 (Color Utilities)
 .text-gray-900 {
   color: $gray-900 !important;
 }

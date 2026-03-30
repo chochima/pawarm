@@ -7,7 +7,7 @@ import BackstageOrder from "../pages/Backstage/BackstageOrder";
 import BackstageProducts from "../pages/Backstage/BackstageProducts";
 import OrderAnalysis from "../pages/Backstage/OrderAnalysis";
 import About from "../pages/About";
-import AnimalTracking from "../pages/animal-tracking "; // 修正：移除路徑末端空格
+import AnimalTracking from "../pages/animal-tracking"; 
 import Carts from "../pages/Cart";
 import Checkout from "../pages/Checkout";
 import Events from "../pages/Events";
