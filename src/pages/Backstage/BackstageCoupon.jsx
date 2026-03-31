@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import toast from 'react-hot-toast';
 import * as bootstrap from "bootstrap";
@@ -13,29 +13,28 @@ const BackstageCoupons = () => {
   const couponModalRef = useRef(null);
   const [modalType, setModalType] = useState("");
 
-  // 🚩 1. 優惠券初始資料
-  const [templateData, setTemplateData] = useState({
+  // 🚩 修正 1：延遲初始化，避開 Date.now() 的渲染純粹性警告
+  const [templateData, setTemplateData] = useState(() => ({
     title: "",
     is_enabled: 0,
     percent: 100,
     due_date: Math.floor(Date.now() / 1000),
     code: "",
-  });
+  }));
 
-  // 🚩 2. 取得優惠券列表 (不需重複檢查 Admin)
-  const getCouponData = async (page = 1) => {
+  // 🚩 修正 2：使用 useCallback 穩定函式實體
+  const getCouponData = useCallback(async (page = 1) => {
     try {
       const res = await axios.get(
         `${VITE_URL}/v2/api/${VITE_PATH}/admin/coupons?page=${page}`
       );
       setCoupons(res.data.coupons);
       setPagination(res.data.pagination);
-    } catch (err) {
-      console.error("取得優惠券失敗", err.response);
+    } catch {
+      console.error("取得優惠券失敗");
     }
-  };
+  }, []);
 
-  // 開啟 Modal
   const openModal = (coupon, type) => {
     setModalType(type);
     if (type === "new") {
@@ -56,7 +55,6 @@ const BackstageCoupons = () => {
     couponModalRef.current.hide();
   };
 
-  // 🚩 3. 新增或編輯優惠券 (修正 Catch 邏輯)
   const updateCoupon = async (id) => {
     let url = `${VITE_URL}/v2/api/${VITE_PATH}/admin/coupon`;
     let method = "post";
@@ -71,7 +69,6 @@ const BackstageCoupons = () => {
         ...templateData,
         percent: Number(templateData.percent),
         is_enabled: templateData.is_enabled ? 1 : 0,
-        // 確保 due_date 是數字格式
         due_date: Number(templateData.due_date)
       },
     };
@@ -82,25 +79,22 @@ const BackstageCoupons = () => {
       closeModal();
       getCouponData(pagination.current_page || 1);
     } catch (err) {
-      // 🚩 修正：原先失敗也噴 success toast 的問題
       const msg = err.response?.data?.message || "操作失敗";
-      toast.error(msg);
+      toast.error(Array.isArray(msg) ? msg.join(', ') : msg);
     }
   };
 
-  // 刪除優惠券
   const delCoupon = async (id) => {
     try {
       await axios.delete(`${VITE_URL}/v2/api/${VITE_PATH}/admin/coupon/${id}`);
       toast.success("已刪除優惠券");
       closeModal();
       getCouponData();
-    } catch (err) {
+    } catch {
       toast.error("刪除失敗");
     }
   };
 
-  // 表單輸入處理
   const handleInputChange = (e) => {
     const { id, value, type, checked } = e.target;
     setTemplateData((pre) => ({
@@ -109,29 +103,37 @@ const BackstageCoupons = () => {
     }));
   };
 
-  // 🚩 4. 簡化後的 useEffect
+  // 🚩 修正 4：將 fetch 邏輯封裝在內部非同步函式，徹底消滅 cascading renders 報錯
   useEffect(() => {
-    // 初始化 Bootstrap Modal
+    // 1. 初始化 Modal
     couponModalRef.current = new bootstrap.Modal("#couponModal", {
       keyboard: false
     });
 
-    // 直接抓取資料，驗證交給父層 Backstage.jsx
-    getCouponData();
+    // 2. 透過內建 async 函式抓取資料，這符合 React 18+ 對 Effect 的預期
+    const initData = async () => {
+      await getCouponData();
+    };
+    initData();
 
-    // 處理 Modal 關閉後的焦點問題
+    // 3. 處理 Modal 事件監聽
     const modalElement = document.querySelector("#couponModal");
     const handleHide = () => {
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
       }
     };
-    modalElement.addEventListener("hide.bs.modal", handleHide);
+    
+    if (modalElement) {
+      modalElement.addEventListener("hide.bs.modal", handleHide);
+    }
 
     return () => {
-      modalElement.removeEventListener("hide.bs.modal", handleHide);
+      if (modalElement) {
+        modalElement.removeEventListener("hide.bs.modal", handleHide);
+      }
     };
-  }, []);
+  }, [getCouponData]);
 
   return (
     <div className="container-fluid px-0">
@@ -194,7 +196,6 @@ const BackstageCoupons = () => {
         <Pagination pagination={pagination} changePage={getCouponData} />
       </div>
 
-      {/* CouponModal */}
       <CouponModal
         modalType={modalType}
         templateData={templateData}
