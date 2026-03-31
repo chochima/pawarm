@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import toast from 'react-hot-toast';
+import axios from 'axios';
 import AnimalAsso from '../components/AnimalAsso';
 import AnimalIntro from '../components/AnimalIntro';
 import AnimalNews from '../components/AnimalNews';
@@ -11,6 +12,7 @@ import "../style/all.scss";
 import request from "../utils/request";
 
 const API_PATH = import.meta.env.VITE_PATH;
+const{VITE_PATH,VITE_URL}=import.meta.env;
 
 function AnimalTracking() {
   useAuth();
@@ -21,9 +23,10 @@ function AnimalTracking() {
   // 取得文章列表 (使用 useCallback 避免不必要的函式重建)
   const getArticles = useCallback(async () => {
     try {
-      const response = await request.get(`/api/${API_PATH}/admin/articles`);
+      const response = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/articles`);
       if (response.data.success) {
         setArticles(response.data.articles);
+        console.log(response.data.articles);
 
       } else {
         toast.error(response.data.message || '無法取得文章內容');

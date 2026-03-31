@@ -1,24 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+// 🚩 1. 引入 createHashRouter
+import { createHashRouter, RouterProvider } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
 
-
-
-import './style/all.scss'
-import 'bootstrap'
+import routes from './router/index' 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import { RouterProvider ,createHashRouter} from 'react-router';
-import routes from './router';
-import { Provider } from 'react-redux';
-import { store } from './store/store';
+// 🚩 2. 使用 createHashRouter 來建立實體
+const router = createHashRouter(routes);
 
-
-const router=createHashRouter(routes);
-
-
-createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
-    <RouterProvider router={router}/>
-  </Provider>
-  
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </React.StrictMode>,
 )
