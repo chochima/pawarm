@@ -2,24 +2,6 @@ import 'animate.css';
 import { NavLink } from 'react-router-dom';
 
 const About = () => {
-  const coreValues = [
-    { 
-      title: "全球保育串聯", 
-      desc: "從台北市立動物園到世界自然基金會(WWF)，我們與全球頂尖保育機構合作，確保資源精準投入。", 
-      icon: "bi-globe-americas" 
-    },
-    { 
-      title: "100% 棲地守護", 
-      desc: "我們承諾將收益資助對應物種的 GPS 追蹤技術與棲地復育計畫。", 
-      icon: "bi-shield-fill-check" 
-    },
-    { 
-      title: "真實數據見證", 
-      desc: "您可以透過專屬代碼查看計畫進度，掌握穿山甲或雪豹在野外的遷徙路徑。", 
-      icon: "bi-graph-up-arrow" 
-    }
-  ];
-
   return (
     <div className="about-page bg-white overflow-hidden">
       
@@ -47,12 +29,12 @@ const About = () => {
       {/* 2. Mission Section */}
       <section className="py-80">
         <div className="container">
-          <div className="row align-items-center g-4 g-lg-5">
-            <div className="col-lg-6 animate__animated animate__zoomIn">
+          <div className="row align-items-center g-5"> {/* 加大間距 */}
+            <div className="col-lg-6 animate__animated animate__zoomIn mb-4 mb-lg-0">
               <div className="rounded-4 overflow-hidden shadow-lg border border-5 border-white">
                 <img 
-                  src="https://plus.unsplash.com/premium_photo-1661830833851-a545aa10211d?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                  alt="台灣穿山甲在野外" 
+                  src="https://plus.unsplash.com/premium_photo-1661830833851-a545aa10211d?q=80&w=870&auto=format&fit=crop" 
+                  alt="台灣穿山甲" 
                   className="img-fluid w-100 object-fit-cover"
                   style={{ height: '480px' }}
                 />
@@ -61,30 +43,31 @@ const About = () => {
             <div className="col-lg-6">
               <h2 className="fw-bold text-primary-600 mb-24">守護生命，從擁有一份紀念開始</h2>
               <p className="text-gray-600 fs-18 mb-4">
-                無論是棲地破碎化的<strong>台灣穿山甲</strong>（如左圖），還是因氣候變遷失去海冰的<strong>北極熊</strong>。我們思考：如何讓大眾能更直接且持久地支持這些生命？
+                無論是棲地破碎化的<strong>台灣穿山甲</strong>，還是因氣候變遷失去海冰的<strong>北極熊</strong>。我們思考：如何讓大眾能更直接且持久地支持這些生命？
               </p>
               <div className="border-start border-4 border-primary-400 ps-4 py-2 mb-4 bg-primary-50">
                 <h5 className="fw-bold text-primary-700">我們的初衷</h5>
                 <p className="mb-0 text-gray-700 italic">「讓保育不再遙遠，而是手中一份溫暖且具有意義的質感紀念。」</p>
               </div>
               <p className="text-gray-600 fs-18 mb-0">
-                我們提供一個整合平台，讓大眾能輕鬆搜尋到最需要幫助的動物，並與<strong>成都大熊貓繁育基地、Snow Leopard Trust</strong> 等專業機構合作，確保資源分配的正義。
+                我們提供一個整合平台，讓大眾能輕鬆搜尋到最需要幫助的動物，並與專業機構合作，確保資源分配的正義。
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. Core Values - 修正點：加大間距 (g-lg-5) 並美化卡片 */}
+      {/* 3. Core Values - 🚩 重點修正：使用自定義超大間距 custom-gutter */}
       <section className="py-120 bg-gray-50">
         <div className="container text-center">
           <h2 className="fw-bold mb-60">我們如何實現改變</h2>
-          {/* 使用 g-4 (手機) 到 g-xl-5 (桌機) 的響應式間距 */}
-          <div className="row g-4 g-xl-5 justify-content-center">
+          
+          {/* 使用 custom-gutter 類名來控制間距 */}
+          <div className="row custom-gutter justify-content-center">
             {[
               { 
                 title: "台灣淺山守護", 
-                img: "https://plus.unsplash.com/premium_photo-1664302811081-f814458b856d?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+                img: "https://plus.unsplash.com/premium_photo-1664302811081-f814458b856d?q=80&w=880&auto=format&fit=crop", 
                 desc: "資助台灣石虎保育協會，進行棲地巡護與紅外線監測。"
               },
               { 
@@ -94,14 +77,19 @@ const About = () => {
               },
               { 
                 title: "高山幽靈追蹤", 
-                img: "https://plus.unsplash.com/premium_photo-1661952443167-05d723e6bb3a?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+                img: "https://plus.unsplash.com/premium_photo-1661952443167-05d723e6bb3a?q=80&w=870&auto=format&fit=crop", 
                 desc: "資助 Snow Leopard Trust，建立人豹共存社區與 GPS 監測。"
               }
             ].map((value, index) => (
-              <div className="col-md-6 col-lg-4 mb-4" key={index}>
+              <div className="col-md-6 col-lg-4 mb-5" key={index}>
                 <div className="card h-100 border-0 shadow-sm hover-shadow-lg overflow-hidden rounded-4 transition-all">
                   <div className="overflow-hidden">
-                    <img src={value.img} className="card-img-top object-fit-cover transition-transform-hover" style={{ height: '240px' }} alt={value.title} />
+                    <img 
+                      src={value.img} 
+                      className="card-img-top object-fit-cover transition-transform-hover" 
+                      style={{ height: '240px' }} 
+                      alt={value.title} 
+                    />
                   </div>
                   <div className="card-body p-4 text-start">
                     <h5 className="fw-bold mb-3 text-success-800">{value.title}</h5>
@@ -114,10 +102,10 @@ const About = () => {
         </div>
       </section>
 
-      {/* 4. 物種範圍統計 */}
+      {/* 4. Statistics */}
       <section className="py-80 bg-primary-50">
         <div className="container">
-          <div className="row g-4 text-center">
+          <div className="row g-5 text-center">
             {[
               { num: "12+", label: "守護物種系列" },
               { num: "10+", label: "全球合作機構" },
@@ -154,10 +142,24 @@ const About = () => {
         .overflow-hidden { overflow-x: hidden; }
         .py-120 { padding-top: 120px; padding-bottom: 120px; }
         .py-80 { padding-top: 80px; padding-bottom: 80px; }
+        
+        /* 🚩 強制加大卡片間距的關鍵 CSS */
+        .custom-gutter {
+          --bs-gutter-x: 4rem; /* 桌面版橫向間距 64px */
+          --bs-gutter-y: 4rem; /* 桌面版縱向間距 64px */
+        }
+
+        @media (max-width: 992px) {
+          .custom-gutter {
+            --bs-gutter-x: 2rem; /* 平板/手機橫向間距 32px */
+            --bs-gutter-y: 2.5rem; /* 平板/手機縱向間距 40px */
+          }
+        }
+
         .transition-all { transition: all 0.3s ease-in-out; }
         .hover-shadow-lg:hover { 
           transform: translateY(-12px);
-          box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+          box-shadow: 0 1.5rem 4rem rgba(0,0,0,0.12) !important;
         }
         .transition-transform-hover { transition: transform 0.5s ease; }
         .card:hover .transition-transform-hover { transform: scale(1.08); }

@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"; // 🚩 確保引入 PropTypes
+
 function CouponModal({
   modalType,
   templateData,
@@ -87,14 +89,12 @@ function CouponModal({
                     id="due_date"
                     type="date"
                     className="form-control"
-                    // 將 Timestamp 轉回 YYYY-MM-DD 格式顯示在 input
                     value={
                       templateData.due_date
                         ? new Date(templateData.due_date * 1000).toISOString().split("T")[0]
                         : ""
                     }
                     onChange={(e) => {
-                      // 將 input 日期字串轉回 Timestamp 秒數傳回父組件
                       const timestamp = Math.floor(new Date(e.target.value).getTime() / 1000);
                       onInputChange({
                         target: { id: "due_date", value: timestamp },
@@ -185,5 +185,22 @@ function CouponModal({
     </div>
   );
 }
+
+// 🚩 補齊 PropTypes 驗證，解決 react/prop-types 錯誤
+CouponModal.propTypes = {
+  modalType: PropTypes.string.isRequired,
+  templateData: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    code: PropTypes.string,
+    due_date: PropTypes.number,
+    percent: PropTypes.number,
+    is_enabled: PropTypes.number,
+  }).isRequired,
+  onCloseModal: PropTypes.func.isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  onUpdateCoupon: PropTypes.func.isRequired,
+  onDeleteCoupon: PropTypes.func.isRequired,
+};
 
 export default CouponModal;

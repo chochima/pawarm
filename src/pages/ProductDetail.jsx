@@ -14,88 +14,78 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
-
 const ProductDetail = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [product, setProduct] = useState({});
   const [qty, setQty] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const [mainImage, setMainImage] = useState(""); 
-  const [showAllReviews, setShowAllReviews] = useState(false); // 控制評論顯示數量
+  const [showAllReviews, setShowAllReviews] = useState(false);
   const [data, setData] = useState({ summary: { averageRating: 0, totalReviews: 0 }, reviews: [] });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
-  // 取得單一產品資料
-  const getProduct = async () => {
-    try {
-      const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/product/${id}`);
-    
-      if (res.data.success) {
-        setProduct(res.data.product);
-        setMainImage(res.data.product.imageUrl);
-      } else {
-        toast.error("找不到該商品資訊");
-      }
-
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || "讀取產品失敗";
-    
-      toast.error(`錯誤：${errorMsg}`, {
-        id: 'product-detail-error', 
-      });
-
-    // setTimeout(() => navigate('/products'), 3000);
-    }
-  };
-
   useEffect(() => {
-    fetch('https://pawarm-api.onrender.com/api/reviews')
-      .then(res => res.json())
-      .then(data => setData(data))
-      .catch(err => console.error("抓取失敗:", err));
+    const getReviews = async () => {
+      try {
+        const res = await fetch('https://pawarm-api.onrender.com/api/reviews');
+        const result = await res.json();
+        setData(result);
+      } catch (err) {
+        console.error("抓取評論失敗:", err);
+      }
+    };
+
+    const getProduct = async () => {
+      try {
+        const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/product/${id}`);
+        if (res.data.success) {
+          setProduct(res.data.product);
+        } else {
+          toast.error("找不到該商品資訊");
+        }
+      } catch (err) {
+        const errorMsg = err.response?.data?.message || "讀取產品失敗";
+        toast.error(`錯誤：${errorMsg}`, { id: 'product-detail-error' });
+      }
+    };
+
+    getReviews();
     getProduct();
   }, [id]);
 
   const allImages = [product.imageUrl, ...(product.imagesUrl || [])].filter(Boolean);
 
-  // 加入購物車
   const addToCart = async () => {
     try {
-      const data = { product_id: id, qty };
-      await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data });
-      dispatch(createAsyncGetCart()); // 更新 Navbar 數量
+      const cartData = { product_id: id, qty };
+      await axios.post(`${VITE_URL}/v2/api/${VITE_PATH}/cart`, { data: cartData });
+      dispatch(createAsyncGetCart());
       toast.success('已加入守護清單！', {
-        duration: 3000, // 持續 3 秒
-        position: 'top-center', // 顯示在右上角
-        style: {
-          background: '#333',
-          color: '#fff',
-        },
+        duration: 3000,
+        position: 'top-center',
+        style: { background: '#333', color: '#fff' },
       });
     } catch (err) {
       toast.error('加入失敗，請稍後再試', {
         duration: 3000,
         position: 'top-center',
-        style: {
-          background: '#333',
-          color: '#fff',
-        },
+        style: { background: '#333', color: '#fff' },
       });
       console.error("加入購物車出錯:", err);
     }
   };
-  const handleBuyNow = async()=>{
+
+  const handleBuyNow = async () => {
     await addToCart();
-    toast.success('已加入守護清單，準備前往結帳！')
-    navigate("/carts")
-  }
+    toast.success('已加入守護清單，準備前往結帳！');
+    navigate("/carts");
+  };
+
   const visibleReviews = showAllReviews ? data.reviews : data.reviews.slice(0, 3);
+
   return (
     <>
       <div className="container py-5">
-        {/* 麵包屑 Breadcrumb */}
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb fs-14">
             <li className="breadcrumb-item"><NavLink to="/">首頁</NavLink></li>
@@ -105,11 +95,9 @@ const ProductDetail = () => {
         </nav>
 
         <div className="row">
-        
           {/* 左側：圖片區 */}
-
           <div className="col-xl-6">
-            {/* 1. 主圖輪播 (Main Swiper) */}
+            {/* 1. 主圖輪播 */}
             <Swiper
               style={{
                 '--swiper-navigation-color': '#fff',
@@ -123,27 +111,32 @@ const ProductDetail = () => {
             >
               {allImages.map((img, idx) => (
                 <SwiperSlide key={idx}>
-                  <img src={img} className="w-100 object-fit-cover" style={{ height: '520px' }} alt="main" />
+                  <img 
+                    src={img} 
+                    className="w-100 object-fit-cover" 
+                    style={{ height: '520px' }} 
+                    alt={`${product.title} 展示圖 ${idx + 1}`} 
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
 
-            {/* 2. 縮圖輪播 (Thumbs Swiper) */}
+            {/* 2. 縮圖輪播 */}
             <Swiper
               onSwiper={setThumbsSwiper}
-              slidesPerView={5.5} 
-              freeMode={true}
+              slidesPerView={4.2}         
+              spaceBetween={12}           
               watchSlidesProgress={true}
               modules={[FreeMode, Navigation, Thumbs]}
-              className="thumbs-swiper"
+              className="thumbs-swiper mb-5 mb-xl-0" 
             >
               {allImages.map((img, idx) => (
                 <SwiperSlide key={idx} className="cursor-pointer">
-                  <img 
-                    src={img} 
-                    className=" rounded-1 " 
-                    style={{ height: '100px', width:'100px', objectFit: 'cover' }} 
-                    alt="thumb" 
+                  <img
+                    src={img}
+                    className="rounded-1 border w-100"
+                    style={{ height: '100px', objectFit: 'cover' }}
+                    alt={`${product.title} 縮圖 ${idx + 1}`}
                   />
                 </SwiperSlide>
               ))}
@@ -155,26 +148,21 @@ const ProductDetail = () => {
           {/* 右側：內容區 */}
           <div className="col-xl-5">
             <p className="fw-bold fs-48 title-text-product mb-32">{product.title}</p>
-          
-          
-            <div className="fs-20 fw-500 lh-base text-gray-500 mb-16">
-              {product.description}
-            </div>
-            <div className="fs-20 fw-500 lh-base text-gray-500 ">
-              <div>每​一​次​購買，​都​是​一​份​愛心</div>
+            <div className="fs-20 fw-500 lh-base text-gray-500 mb-16">{product.description}</div>
+            <div className="fs-20 fw-500 lh-base text-gray-500">
+              <div>每一次購買，都是一份愛心</div>
             </div>
             <ul className="custom-list fs-20 fw-500 lh-base text-gray-500 mb-16">
-              <li>每​筆​營收​的​一​部分，​專門​投入​於​動物​的​緊急​救治與​醫療</li>
-              <li>每​個​商品​都​能​解鎖互​動式​追蹤​地圖，​售​出款​項​支援​保護​組織​工作</li>
+              <li>每筆營收的一部分，專門投入於動物的緊急救治與醫療</li>
+              <li>每個商品都能解鎖互動式追蹤地圖，售出款項支援保護組織工作</li>
             </ul>
             <div className="fs-20 fw-500 lh-base text-gray-500 mb-32">
-              <div>現​在​就​加入，​讓​每​次​購買​都​成為拯​救​生命​的​關鍵​力量。​</div>
+              <div>現在就加入，讓每次購買都成為拯救生命的關鍵力量。</div>
             </div>
 
-            <div className="d-flex  align-items-center mb-24">
+            <div className="d-flex align-items-center mb-24">
               <div className="d-flex align-items-center">
-                {/* 減少數量按鈕 */}
-                <button 
+                <button
                   type="button"
                   className="btn btn-outline-dark rounded-circle d-flex align-items-center justify-content-center"
                   style={{ width: '36px', height: '36px', padding: 0 }}
@@ -183,18 +171,14 @@ const ProductDetail = () => {
                 >
                   <i className="bi bi-dash-lg"></i>
                 </button>
-  
-                {/* 數量顯示：使用 input 但拿掉邊框，模擬設計稿純文字感 */}
-                <input 
-                  type="text" 
-                  className="form-control text-center bg-transparent border-0 fw-bold fs-20" 
+                <input
+                  type="text"
+                  className="form-control text-center bg-transparent border-0 fw-bold fs-20"
                   style={{ width: '60px' }}
-                  value={qty} 
-                  readOnly 
+                  value={qty}
+                  readOnly
                 />
-  
-                {/* 增加數量按鈕 */}
-                <button 
+                <button
                   type="button"
                   className="btn btn-outline-dark rounded-circle d-flex align-items-center justify-content-center"
                   style={{ width: '36px', height: '36px', padding: 0 }}
@@ -202,16 +186,11 @@ const ProductDetail = () => {
                 >
                   <i className="bi bi-plus-lg"></i>
                 </button>
-
-                {/* 價格顯示：放在按鈕旁邊 (依據設計稿) */}
-  
               </div>
               <span className="ms-auto text-primary-500 fw-bold fs-36">
-           ${(product.price * qty).toLocaleString()}
+                ${(product.price * qty).toLocaleString()}
               </span>
             </div>
-
-       
 
             <div className="row g-12 mb-32">
               <div className="col-6">
@@ -222,58 +201,52 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* 備註小字 */}
             <div className="fs-18 fw-500 text-gray-300 lh-base">
-              <div >*本​頁僅​含​吊墜​部分，​若須​鏈子​或​掛繩請點​選 <span><a href="#">額外​配​件</a></span>​</div>
-              <div >*隨買 3 件或以上即可享有免運費！</div>
-              <div >*售​出利潤​的​ 10% 捐給​我​們​的​非營利​合作​夥伴</div>
-              <div >*產品符合 SSL 安全結帳</div>
+              <div>*本頁僅含吊墜部分，若須鏈子或掛繩請點選 <span><a href="#">額外配件</a></span></div>
+              <div>*隨買 3 件或以上即可享有免運費！</div>
+              <div>*售出利潤的 10% 捐給我們的非營利合作夥伴</div>
+              <div>*產品符合 SSL 安全結帳</div>
             </div>
           </div>
         </div>
       </div>
+
       <div className="bg-gray-50">
         <div className="container py-120">
-          <div className="fs-48 title-text-product mb-60 ">產品說明</div>
-          <div className="fs-36 fw-700 text-gray-900 orange-vertical-line mb-32">每​件​飾品​都​是​一​份​愛心​，皆​可​追蹤​一​隻​真正​的
-            {product.title?.replace('吊飾', '')}
+          <div className="fs-48 title-text-product mb-60">產品說明</div>
+          <div className="fs-36 fw-700 text-gray-900 orange-vertical-line mb-32">
+            每件飾品都是一份愛心，皆可追蹤一隻真正的 {product.title?.replace('吊飾', '')}
           </div>
           <div className="row g-24">
             {product.content?.map((text, idx) => (
               <div className="col-md-3 mb-60" key={idx}>
                 <div className="d-flex flex-column h-100">
-                  <img 
-                    src={product.contentImgsUrl[idx]} 
-                    className="img-fluid rounded-1 mb-3 object-fit-cover" 
-          
-                    alt="介紹圖" 
+                  <img
+                    src={product.contentImgsUrl?.[idx]}
+                    className="img-fluid rounded-1 mb-3 object-fit-cover"
+                    alt="介紹圖"
                   />
-                  <div>
-                    <div className="fs-20 ">{text}</div>
-                  </div>
+                  <div><div className="fs-20">{text}</div></div>
                 </div>
               </div>
-    
-    
             ))}
             <div className="fs-36 fw-700 text-gray-900 orange-vertical-line">追蹤是如何運作的</div>
             <ul className="custom-list fs-20 fw-500 lh-base text-gray-500 mb-16 ps-32">
-              <li>動物​的​追蹤​是​透過 ​GPS 項​圈​進行​的​</li>
-              <li>GPS 訊號會​顯示​每​隻​動物​獨特​的​追蹤​路徑，​這些​路徑​數據​可能​是​即時​更新、​延遲​更新，​或​以​歷史​記錄​的​方式​呈現。​</li>
-              <li>為確​保​動物​的​安全，​所有​透過​ GPS 項​圈​追蹤​所得​的​資訊​都​會​以​三種​形式​呈現：​即時​更新、​延遲​更新，​或是​歷史​記錄，​這樣​進​一步​的​保障​了​動物​在​野外​的​安全。​</li>
+              <li>動物的追蹤是透過 GPS 項圈進行的</li>
+              <li>GPS 訊號會顯示每隻動物獨特的追蹤路徑，數據可能即時或延遲。</li>
+              <li>為確保安全，所有追蹤資訊會以即時、延遲或歷史記錄呈現。</li>
             </ul>
           </div>
         </div>
       </div>
+
       <div className="container py-5 mt-5">
         <div className="fw-bold fs-48 title-text-product mb-32">客戶評價</div>
-      
-        {/* 統計區塊 */}
-        <div className=" p-24 mb-5 bg-gray-50">
+        <div className="p-24 mb-5 bg-gray-50">
           <div className="row align-items-center">
             <div className="col-md-4 text-center">
-              <h1 className="display-4 fw-bold text-gray-900 ">{data.summary.averageRating}</h1>
-              <div className="text-gray-900  mb-2">★★★★★</div>
+              <h1 className="display-4 fw-bold text-gray-900">{data.summary.averageRating}</h1>
+              <div className="text-gray-900 mb-2">★★★★★</div>
               <small className="text-muted">(共 {data.summary.totalReviews} 則評價)</small>
             </div>
             <div className="col-md-6">
@@ -289,11 +262,9 @@ const ProductDetail = () => {
                 </div>
               ))}
             </div>
-            <div className="col-md-2"></div>
           </div>
         </div>
 
-        {/* 評論列表區塊 */}
         <div className="review-list">
           {visibleReviews.map((review) => (
             <div key={review.id} className="border-bottom py-4">
@@ -315,10 +286,9 @@ const ProductDetail = () => {
             </div>
           ))}
 
-          {/* 更多按鈕 */}
           {data.reviews.length > 3 && (
             <div className="text-center mt-5">
-              <button 
+              <button
                 className="btn btn-outline-primary-500 px-5 py-2 fw-bold"
                 onClick={() => setShowAllReviews(!showAllReviews)}
               >
@@ -328,10 +298,8 @@ const ProductDetail = () => {
           )}
         </div>
       </div>
-    
     </>
-    
   );
 };
 
-export default ProductDetail
+export default ProductDetail;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'; // 🚩 修正 1：引入 PropTypes 驗證庫
 
 const CartList = ({ 
   cart, 
@@ -90,7 +91,6 @@ const CartList = ({
         {cart.carts?.map((item) => (
           <div key={item.id} className="py-3 border-bottom">
             <div className="d-flex gap-3">
-              {/* 左側：商品圖片 */}
               <div style={{ width: '80px', height: '80px' }}>
                 <img 
                   src={item.product.imageUrl} 
@@ -99,7 +99,6 @@ const CartList = ({
                 />
               </div>
 
-              {/* 右側：內容與操作 */}
               <div className="flex-grow-1">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
@@ -107,7 +106,11 @@ const CartList = ({
                     <p className="text-muted small mb-0">{item.product.agency}</p>
                   </div>
                   <div className="d-flex gap-3 text-muted">
-                    <i className="bi bi-heart" style={{ cursor: 'pointer' }}></i>
+                    <i 
+                      className="bi bi-heart" 
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleMoveToWishlist(item)}
+                    ></i>
                     <i 
                       className="bi bi-trash" 
                       style={{ cursor: 'pointer' }}
@@ -116,7 +119,6 @@ const CartList = ({
                   </div>
                 </div>
 
-                {/* 下方：數量與金額 */}
                 <div className="d-flex justify-content-between align-items-center mt-3">
                   <div className="d-flex align-items-center justify-content-center">
                     <button 
@@ -146,6 +148,32 @@ const CartList = ({
       </div>
     </div>
   );
+};
+
+// 🚩 修正 2：補齊型別驗證，消滅所有 react/prop-types 紅字
+CartList.propTypes = {
+  cart: PropTypes.shape({
+    carts: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        product_id: PropTypes.string.isRequired,
+        qty: PropTypes.number.isRequired,
+        total: PropTypes.number.isRequired,
+        final_total: PropTypes.number.isRequired,
+        product: PropTypes.shape({
+          title: PropTypes.string,
+          imageUrl: PropTypes.string,
+          price: PropTypes.number,
+          agency: PropTypes.string,
+        }),
+      })
+    ),
+  }).isRequired,
+  currency: PropTypes.func.isRequired,
+  updateCart: PropTypes.func.isRequired,
+  deleteCart: PropTypes.func.isRequired,
+  handleMoveToWishlist: PropTypes.func.isRequired,
+  isUpdating: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
 };
 
 export default CartList;

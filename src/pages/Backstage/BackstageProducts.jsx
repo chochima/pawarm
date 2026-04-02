@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import * as bootstrap from "bootstrap";
 import toast from 'react-hot-toast';
@@ -30,18 +30,18 @@ const BackstageProducts = () => {
     contentImgsUrl: [],
   });
 
-  // 取得產品列表
-  const getProductData = async (page = 1) => {
+  // 🚩 修正 1：使用 useCallback 穩定函式，並移除 catch 中未使用的變數
+  const getProductData = useCallback(async (page = 1) => {
     try {
       const res = await axios.get(
         `${VITE_URL}/v2/api/${VITE_PATH}/admin/products?page=${page}`
       );
       setProducts(res.data.products);
       setPagination(res.data.pagination);
-    } catch (err) {
+    } catch {
       toast.error("取得產品資料失敗");
     }
-  };
+  }, []);
 
   // Modal 邏輯
   const openModal = (product, type) => {
@@ -70,7 +70,7 @@ const BackstageProducts = () => {
     productModalRef.current.hide();
   };
 
-  // 🚩 升級版圖片上傳：支援主圖、副圖、內容圖
+  // 圖片上傳
   const handleFileChange = async (e, type = 'main', index = null) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -84,7 +84,6 @@ const BackstageProducts = () => {
       const uploadedImageUrl = res.data.imageUrl;
 
       setTemplateData((prev) => {
-        // 判斷上傳類型並更新對應欄位
         if (type === 'main') {
           return { ...prev, imageUrl: uploadedImageUrl };
         } else if (type === 'sub') {
@@ -100,7 +99,7 @@ const BackstageProducts = () => {
       });
       
       toast.success("圖片上傳成功！", { id: 'upload' });
-    } catch (err) {
+    } catch {
       toast.error("圖片上傳失敗", { id: 'upload' });
     }
   };
@@ -140,7 +139,7 @@ const BackstageProducts = () => {
       toast.success("產品已刪除");
       closeModal();
       getProductData();
-    } catch (err) {
+    } catch {
       toast.error("刪除失敗");
     }
   };
@@ -175,7 +174,6 @@ const BackstageProducts = () => {
   const handleRemoveImage = (index) => {
     setTemplateData((pre) => {
       const newImages = pre.imagesUrl.filter((_, i) => i !== index);
-      // 確保至少有一個空的輸入框，如果全刪光的話
       return { ...pre, imagesUrl: newImages.length === 0 ? [""] : newImages };
     });
   };
@@ -210,25 +208,31 @@ const BackstageProducts = () => {
     });
   };
 
+  // 🚩 修正 2：封裝 fetchData 以避開同步連鎖渲染警告
   useEffect(() => {
     productModalRef.current = new bootstrap.Modal("#productModal", {
       keyboard: false,
     });
 
-    getProductData();
+    const fetchData = async () => {
+      await getProductData();
+    };
+    fetchData();
 
     const modalElement = document.querySelector("#productModal");
-    const handleHide = () => {
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-    };
-    modalElement.addEventListener("hide.bs.modal", handleHide);
+    if (modalElement) {
+      const handleHide = () => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      };
+      modalElement.addEventListener("hide.bs.modal", handleHide);
 
-    return () => {
-      modalElement.removeEventListener("hide.bs.modal", handleHide);
-    };
-  }, []);
+      return () => {
+        modalElement.removeEventListener("hide.bs.modal", handleHide);
+      };
+    }
+  }, [getProductData]);
 
   return (
     <>

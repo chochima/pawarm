@@ -1,35 +1,28 @@
 .login-bg-img {
-        background-image: url("../image/bg-login.jpg");
-        background-size: cover;
-        background-position: center;
-
-
-        width: 100%;
-        height: 100%;
-        padding: 160px 0px 280px 0px;
+  background-image: url("../image/bg-login.jpg");
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  padding: 160px 0px 280px 0px;
 }
 
 .login-bg {
-    background-color: rgb(255, 255, 255,0.5);
-    padding: 120px 80px;
+  background-color: rgb(255, 255, 255, 0.5);
+  padding: 120px 80px;
 }
-
 
 //手機板
 @media (max-width: 768px) {
+  .login-bg-img {
+    background-image: url("../image/bg-login-mob.jpg");
+    padding: 120px 0px 60px 0px;
+  }
 
-.login-bg-img {
-        background-image: url("../image/bg-login-mob.jpg");
-
-        
-        padding: 120px 0px 60px 0px;
-        
-}
-
-.login-bg {
+  .login-bg {
     width: calc(100% - 32px);
     margin: 0 auto;
     padding: 48px 24px;
-    box-sizing: border-box;  // 左右留白
-}
+    box-sizing: border-box; // 左右留白
+  }
 }

@@ -9,9 +9,9 @@ import loveIcon from '../image/love.svg';
 import guardAnimalImg from '../image/track-img/guradAnimal.png';
 import '../style/_fonts.scss';
 import "../style/all.scss";
-import request from "../utils/request";
+//import request from "../utils/request";
 
-const API_PATH = import.meta.env.VITE_PATH;
+//const API_PATH = import.meta.env.VITE_PATH;
 const{VITE_PATH,VITE_URL}=import.meta.env;
 
 function AnimalTracking() {
@@ -26,7 +26,6 @@ function AnimalTracking() {
       const response = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/articles`);
       if (response.data.success) {
         setArticles(response.data.articles);
-        console.log(response.data.articles);
 
       } else {
         toast.error(response.data.message || '無法取得文章內容');

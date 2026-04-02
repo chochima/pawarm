@@ -1,51 +1,49 @@
 .logos {
-    img {
-        filter: grayscale(100%);       // 初始灰白
-        transition: filter 0.3s ease;  // 平滑過渡
+  img {
+    filter: grayscale(100%); // 初始灰白
+    transition: filter 0.3s ease; // 平滑過渡
 
     &:hover {
-      filter: grayscale(0%);       // 滑鼠移上去變彩色
+      filter: grayscale(0%); // 滑鼠移上去變彩色
     }
-    }
+  }
 }
 
 .brandLogo {
-    display: flex;
-    
+  display: flex;
 
-    img {
-        width: auto;
-        height: 118px;
-        justify-content: center;
-    }
+  img {
+    width: auto;
+    height: 118px;
+    justify-content: center;
+  }
 }
 
 .logo-swiper {
-    img {
-        height: 118px;
-    }
+  img {
+    height: 118px;
+  }
 
-    &:hover {
-        filter: grayscale(0%);
-        opacity: 1;
-        transform: scale(1.03);
-    }
+  &:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.03);
+  }
 }
-
 
 //手機板
 @media (max-width: 768px) {
-.brandLogo {
+  .brandLogo {
     img {
-        height: 92px;
+      height: 92px;
     }
-}
+  }
 
-.logo-swiper {
+  .logo-swiper {
     img {
-        padding: 0px;
-        width: auto;
-        height: 60px;
+      padding: 0px;
+      width: auto;
+      height: 60px;
     }
-}
+  }
 }

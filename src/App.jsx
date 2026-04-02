@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux"; 
 import { Outlet } from "react-router";
 import { Toaster } from 'react-hot-toast';
 import { createAsyncGetCart } from "./slice/cartSlice";
@@ -8,11 +8,8 @@ import Footer from "./components/footer";
 
 function App() {
   const dispatch = useDispatch();
-  
-  const carts = useSelector(state => state.cart.carts);
-  
-  const cartCount = carts?.reduce((acc, cur) => acc + (cur.qty || 0), 0) || 0;
 
+  // 核心邏輯：整個前台應用程式初始化時，只發送這一次請求
   useEffect(() => {
     dispatch(createAsyncGetCart());
   }, [dispatch]);
@@ -20,7 +17,8 @@ function App() {
   return (
     <>
       <Toaster />
-      <Header cartCount={cartCount} />
+      
+      <Header />
       
       <main className="min-vh-100">
         <Outlet />

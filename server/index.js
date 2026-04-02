@@ -10,7 +10,7 @@ app.use(express.json());
 app.get('/api/reviews', (req, res) => {
   const reviews = [
     { id: 1, userName: "Tina Liu", rating: 5, date: "2025-12-08", comment: "這款好看又可愛，質感超乎預期！", images: ["https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1772813398169.png", "https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1772813435873.png"] },
-    { id: 2, userName: "Gary Wu", rating: 5, date: "2025-12-07", comment: "很喜歡！分享給大家。很喜歡！分享給大家。", images: [] },
+    { id: 2, userName: "Gary Wu", rating: 5, date: "2025-12-07", comment: "很喜歡！分享給大家。", images: [] },
     { id: 3, userName: "王小明", rating: 4, date: "2025-11-20", comment: "出貨速度很快，包裝也很精緻，唯一的缺點是顏色比照片稍微深一點。", images: [] },
     { id: 4, userName: "陳雅婷", rating: 5, date: "2025-11-18", comment: "送給朋友當生日禮物，她超級開心！", images: ["https://storage.googleapis.com/vue-course-api.appspot.com/pawarm/1772813486601.png"] },
     { id: 5, userName: "張志偉", rating: 3, date: "2025-11-15", comment: "東西是不錯，但盒子有點壓到了，希望能加強保護。", images: [] },
@@ -26,11 +26,11 @@ app.get('/api/reviews', (req, res) => {
   // 1. 計算總評論數
   const totalReviews = reviews.length;
 
-  // 2. 計算平均分數 (總分 / 筆數)
+  // 2. 計算平均分數
   const sumRating = reviews.reduce((acc, curr) => acc + curr.rating, 0);
   const averageRating = totalReviews > 0 ? (sumRating / totalReviews).toFixed(1) : 0;
 
-  // 3. 回傳動態結果
+  // 3. 回傳結果
   res.json({
     summary: { 
       averageRating: parseFloat(averageRating), 
@@ -40,9 +40,5 @@ app.get('/api/reviews', (req, res) => {
   });
 });
 
-const server = app.listen(PORT, () => {
-  // 只有在非測試環境才印出 Log
-  if (process.env.NODE_ENV !== 'test') {
-    console.log(`[OK] Pawarm API 運行中：http://localhost:${PORT}`);
-  }
-});
+// 啟動伺服器，不印出啟動日誌
+app.listen(PORT);
