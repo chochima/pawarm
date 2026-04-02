@@ -7,11 +7,9 @@ const { VITE_URL } = import.meta.env;
 
 const Backstage = () => {
   const navigate = useNavigate();
-  // 🚩 1. 權限狀態：預設 false，驗證通過才放行
   const [isAuth, setIsAuth] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // 🚩 2. 統一驗證邏輯 (老師建議的重點)
   useEffect(() => {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, "$1");
     
@@ -21,14 +19,14 @@ const Backstage = () => {
       return;
     }
 
-    // 設定全域 Header
     axios.defaults.headers.common.Authorization = token;
 
     const checkAdmin = async () => {
       try {
         await axios.post(`${VITE_URL}/v2/api/user/check`);
-        setIsAuth(true); // 🚩 驗證成功
-      } catch (err) {
+        setIsAuth(true);
+      } catch {
+        // 🚩 修正：如果不需要使用錯誤細節，直接省略 (err) 即可
         toast.error("身分驗證失效，請重新登入");
         navigate("/login");
       }
@@ -43,12 +41,12 @@ const Backstage = () => {
       delete axios.defaults.headers.common.Authorization;
       toast.success('已安全登出');
       navigate("/login");
-    } catch (error) {
+    } catch {
+      // 🚩 修正：同樣省略 (error)
       toast.error('登出失敗');
     }
   };
 
-  // 🚩 3. 驗證中不顯示內容，避免畫面閃爍 (Flash of Unauthenticated Content)
   if (!isAuth) {
     return (
       <div className="vh-100 d-flex flex-column justify-content-center align-items-center bg-dark text-white">

@@ -1,123 +1,119 @@
 .title-text {
-    font-family: "Noto Serif TC" ;
-    font-size: $font-size-base * 3 ;
-    font-weight: 700;
+  font-family: "Noto Serif TC";
+  font-size: $font-size-base * 3;
+  font-weight: 700;
 
-    padding-bottom: $spacer * 2;
-    //border-bottom: 2px solid $primary-500;
+  padding-bottom: $spacer * 2;
+  //border-bottom: 2px solid $primary-500;
 
-    color: $gray-900;
-    position: relative; // 一定要有
+  color: $gray-900;
+  position: relative; // 一定要有
 }
 
 .title-text::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 200px;          // 控制長度
-    height: 2px;
-    background-color: $primary-500;
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200px; // 控制長度
+  height: 2px;
+  background-color: $primary-500;
 }
 
-
-
 .title-text-cart {
-    font-family: "Noto Serif TC" ;
-    font-size: $font-size-base * 3 ;
-    font-weight: 700;
-    line-height: 1.2;
+  font-family: "Noto Serif TC";
+  font-size: $font-size-base * 3;
+  font-weight: 700;
+  line-height: 1.2;
 
-    padding-bottom: $spacer * 2;
-    //border-bottom: 2px solid $primary-500;
+  padding-bottom: $spacer * 2;
+  //border-bottom: 2px solid $primary-500;
 
-    color: $primary-500;
-    position: relative; // 一定要有
+  color: $primary-500;
+  position: relative; // 一定要有
 }
 
 .title-text-cart::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 50px;          // 控制長度
-    height: 2px;
-    background-color: $primary-500;
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px; // 控制長度
+  height: 2px;
+  background-color: $primary-500;
 }
 
 .title-text-product {
-    font-family: "Noto Serif TC" ;
-    font-weight: 700;
-    line-height: 1.2;
+  font-family: "Noto Serif TC";
+  font-weight: 700;
+  line-height: 1.2;
 
-    padding-bottom: 24px;
-    //border-bottom: 2px solid $primary-500;
+  padding-bottom: 24px;
+  //border-bottom: 2px solid $primary-500;
 
-    color: #3D3D3D;
-    position: relative; // 一定要有
+  color: #3D3D3D;
+  position: relative; // 一定要有
 }
 
 .title-text-product::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 150px;          // 控制長度
-    height: 2px;
-    background-color: $primary-500;
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 150px; // 控制長度
+  height: 2px;
+  background-color: $primary-500;
 }
 
 .title-text-H3 {
-    font-size: 28px;
-    font-weight: 700;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 .body-text {
-    font-size: 20px;
+  font-size: 20px;
 }
 
-.body-text-4{
-    font-size: 16px;
-    color: $gray-300;
-    line-height: 1.5;
-    font-weight: 500;
+.body-text-4 {
+  font-size: 16px;
+  color: $gray-300;
+  line-height: 1.5;
+  font-weight: 500;
 }
 
 //手機板
 @media (max-width: 768px) {
-
-.title-text {
-    font-size: $font-size-base * 1.75 ;
+  .title-text {
+    font-size: $font-size-base * 1.75;
     padding-bottom: $spacer * 1.25;
-}
-.title-text::after {
+  }
+
+  .title-text::after {
     content: "";
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 120px;          // 控制長度
+    width: 120px; // 控制長度
     height: 2px;
     background-color: $primary-500;
-}
+  }
 
-.title-text-H3 {
+  .title-text-H3 {
     font-size: 18px;
-}
+  }
 
-
-.body-text {
+  .body-text {
     font-size: 16px;
-}
+  }
 
-.body-text-4{
+  .body-text-4 {
     font-size: 14px;
-}
+  }
 
-
-.orange-vertical-line {
-    font-family: "Noto Serif TC" ;  
-    border-left: 5px solid #B28B45; 
+  .orange-vertical-line {
+    font-family: "Noto Serif TC";
+    border-left: 5px solid #B28B45;
     padding-left: 1rem;
     line-height: 1.2;
-}
+  }
 }

@@ -1,5 +1,3 @@
-
-
 import App from "../App";
 import Backstage from "../pages/Backstage/Backstage";
 import BackstageCoupon from "../pages/Backstage/BackstageCoupon";
@@ -7,7 +5,7 @@ import BackstageOrder from "../pages/Backstage/BackstageOrder";
 import BackstageProducts from "../pages/Backstage/BackstageProducts";
 import OrderAnalysis from "../pages/Backstage/OrderAnalysis";
 import About from "../pages/About";
-import AnimalTracking from "../pages/animal-tracking"; 
+import AnimalTracking from "../pages/animal-tracking";
 import Carts from "../pages/Cart";
 import Checkout from "../pages/Checkout";
 import Events from "../pages/Events";
@@ -18,7 +16,7 @@ import Milestone from "../pages/Milestone";
 import ProductDetail from "../pages/ProductDetail";
 import Products from "../pages/Products";
 import CheckoutSuccess from "../pages/Success";
-import NotFound from "../pages/NotFound ";
+import NotFound from "../pages/NotFound";
 
 const routes = [
   {
@@ -98,8 +96,8 @@ const routes = [
     ]
   },
   {
-  path: "*",
-  element: <NotFound />,
+    path: "*",
+    element: <NotFound />
   }
 ];
 

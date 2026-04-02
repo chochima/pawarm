@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'; // 移除 React，保留 hook
 import axios from 'axios';
 import { currency } from "../../utils/filter";
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
 const OrderAnalysis = () => {
-  const [orders, setOrders] = useState([]);
+  // 修正：如果 orders 只是為了傳給計算函式而不需要渲染在畫面上，
+  // 其實可以考慮移除這個 state。目前先移除它以解決 ESLint 報錯。
   const [stats, setStats] = useState({ totalRevenue: 0, totalQty: 0, orderCount: 0 });
   const [productRanking, setProductRanking] = useState([]);
-
 
   const calculateStats = (data) => {
     let revenue = 0;
@@ -46,12 +46,13 @@ const OrderAnalysis = () => {
     
     setProductRanking(sortedRanking);
   };
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/admin/orders`);
         const orderData = res.data.orders || [];
-        setOrders(orderData);
+        // 修正：直接把獲取的資料丟進計算函式，不再存入未使用的 orders state
         calculateStats(orderData);
       } catch (err) {
         console.error("抓取訂單失敗", err);
@@ -59,8 +60,6 @@ const OrderAnalysis = () => {
     };
     fetchOrders();
   }, []);
-
-  
 
   return (
     <div className="container-fluid">
@@ -135,7 +134,7 @@ const OrderAnalysis = () => {
           <div className="p-4 bg-white border rounded-4 shadow-sm h-100">
             <h5 className="fw-bold mb-4">銷量視覺分析</h5>
             {productRanking.slice(0, 4).map((item, index) => {
-              const percentage = (item.qty / stats.totalQty) * 100;
+              const percentage = stats.totalQty > 0 ? (item.qty / stats.totalQty) * 100 : 0;
               return (
                 <div className="mb-4" key={item.title}>
                   <div className="d-flex justify-content-between mb-2">

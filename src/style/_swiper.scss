@@ -1,31 +1,31 @@
 /* 設定 Swiper 分頁點的容器位置 */
 .my-swiper .swiper-pagination {
-    bottom: 8px !important;
+  bottom: 8px !important;
 }
 
 /* 未選中的點點 */
 .my-swiper .swiper-pagination-bullet {
-    width: 12px;
-    height: 12px;
-    background: #d1d1d1; /* 灰色 */
-    opacity: 1;
-    margin: 16px 0px;
+  width: 12px;
+  height: 12px;
+  background: #d1d1d1; /* 灰色 */
+  opacity: 1;
+  margin: 16px 0px;
 }
 
 .my-swiper .swiper-wrapper {
-    padding-bottom: 52px;
+  padding-bottom: 52px;
 }
 
 .my-swiper .swiper-pagination-horizontal {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 
 /* 選中的點點：變成金色外圈 */
 .my-swiper .swiper-pagination-bullet-active {
-    background: #b68d4c !important; /* 你的金色 */
-    outline: 2px solid #b68d4c;
-    outline-offset: 3px;
-    margin: 0 8px !important; /* 增加一點間距讓外圈不擠 */
+  background: #b68d4c !important; /* 你的金色 */
+  outline: 2px solid #b68d4c;
+  outline-offset: 3px;
+  margin: 0 8px !important; /* 增加一點間距讓外圈不擠 */
 }

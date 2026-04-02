@@ -25,7 +25,6 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 取得評論資料
     const getReviews = async () => {
       try {
         const res = await fetch('https://pawarm-api.onrender.com/api/reviews');
@@ -36,7 +35,6 @@ const ProductDetail = () => {
       }
     };
 
-    // 取得單一產品資料
     const getProduct = async () => {
       try {
         const res = await axios.get(`${VITE_URL}/v2/api/${VITE_PATH}/product/${id}`);
@@ -53,11 +51,10 @@ const ProductDetail = () => {
 
     getReviews();
     getProduct();
-  }, [id]); // 依賴項為 id，當路由變換時重新抓取
+  }, [id]);
 
   const allImages = [product.imageUrl, ...(product.imagesUrl || [])].filter(Boolean);
 
-  // 加入購物車
   const addToCart = async () => {
     try {
       const cartData = { product_id: id, qty };
@@ -100,6 +97,7 @@ const ProductDetail = () => {
         <div className="row">
           {/* 左側：圖片區 */}
           <div className="col-xl-6">
+            {/* 1. 主圖輪播 */}
             <Swiper
               style={{
                 '--swiper-navigation-color': '#fff',
@@ -113,26 +111,32 @@ const ProductDetail = () => {
             >
               {allImages.map((img, idx) => (
                 <SwiperSlide key={idx}>
-                  <img src={img} className="w-100 object-fit-cover" style={{ height: '520px' }} alt="main" />
+                  <img 
+                    src={img} 
+                    className="w-100 object-fit-cover" 
+                    style={{ height: '520px' }} 
+                    alt={`${product.title} 展示圖 ${idx + 1}`} 
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
 
+            {/* 2. 縮圖輪播 */}
             <Swiper
               onSwiper={setThumbsSwiper}
-              slidesPerView={5.5}
-              freeMode={true}
+              slidesPerView={4.2}         
+              spaceBetween={12}           
               watchSlidesProgress={true}
               modules={[FreeMode, Navigation, Thumbs]}
-              className="thumbs-swiper"
+              className="thumbs-swiper mb-5 mb-xl-0" 
             >
               {allImages.map((img, idx) => (
                 <SwiperSlide key={idx} className="cursor-pointer">
                   <img
                     src={img}
-                    className="rounded-1"
-                    style={{ height: '100px', width: '100px', objectFit: 'cover' }}
-                    alt="thumb"
+                    className="rounded-1 border w-100"
+                    style={{ height: '100px', objectFit: 'cover' }}
+                    alt={`${product.title} 縮圖 ${idx + 1}`}
                   />
                 </SwiperSlide>
               ))}
