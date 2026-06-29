@@ -9,7 +9,7 @@ const { VITE_PATH, VITE_URL } = import.meta.env;
 export const useCart = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [cart, setCart] = useState([]);
-  const [isUpdating] = useState(""); // 🚩 移除未使用的 setIsUpdating
+  const [isUpdating] = useState(""); 
   const [randomProducts, setRandomProducts] = useState([]);
   const [couponCode, setCouponCode] = useState("");
   const [favorites, setFavorites] = useState(() => JSON.parse(localStorage.getItem('fav')) || []);
